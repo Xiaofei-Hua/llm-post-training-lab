@@ -1,6 +1,6 @@
 # Research Output Manifest
 
-> Auto-maintained by ARIS skills. Tracks all generated artifacts across the research lifecycle.
+> Tracks artifacts produced by planning skills and subsequent development modules.
 
 | Timestamp | Skill | File | Stage | Description |
 |-----------|-------|------|-------|-------------|
@@ -121,3 +121,8 @@
 | 2026-09-03 16:14 | /research-refine-pipeline | refine-logs/REFINE_STATE.json | final | 完成状态 latest copy |
 | 2026-09-03 16:14 | /research-refine-pipeline | configs/{data,eval,models,train}/.gitkeep | scaffold | 保留未来配置目录结构 |
 | 2026-09-03 16:14 | /research-refine-pipeline | src/posttrain_lab/{analysis,data,evaluation,rewards,train}/.gitkeep | scaffold | 保留未来代码包目录结构 |
+| 2026-09-03 16:54 | manual D01 | .python-version, pyproject.toml, uv.lock | environment | Python 3.12 与 PyTorch/NumPy/pytest/Hypothesis/Ruff 可复现环境 |
+| 2026-09-03 16:54 | manual D01 | src/posttrain_lab/train/loss_budget.py | implementation | 紧凑 reservation、精确 counter、checkpoint schema 与 update ledger |
+| 2026-09-03 16:54 | manual D01 | src/posttrain_lab/train/torch_loss_budget.py | implementation | 生产 PyTorch masks、GRPO group filter、tensor prefix selection 与 digest |
+| 2026-09-03 16:54 | manual D01 | tests/test_{loss_budget,torch_loss_budget}.py | verification | 27 个 CPU tests 与 275 个 Hypothesis 生成案例 |
+| 2026-09-03 16:54 | manual D01 | docs/algorithms/LOSS_TOKEN_BUDGET.md | documentation | D01 API、状态机、分布式/累积边界、验证与未完成项 |

@@ -3,9 +3,9 @@
 ## Pipeline Status
 
 - language: zh
-- phase: planning
+- phase: cpu-framework-development
 - project_type: algorithm-first LLM post-training portfolio
-- execution_status: no training authorized yet
+- execution_status: CPU-only algorithm/framework development; no GPU training authorized
 
 ## Problem Anchor
 
@@ -23,6 +23,8 @@
 6. 不得把内部文档正文、业务数据、指标、模型或同事信息提交到仓库；内部阅读笔记放在被忽略的 `notes/private/`。
 7. 不声称尚未运行的结果；规划值、预期方向和实测值必须明确区分。
 8. 新增算法前先完成 deletion test：证明现有最小方案不足。
+9. 每轮只开发一个已声明模块；当前用户未授权 MPS/CUDA 或 GPU 训练。
+10. Python 环境只通过 `uv.lock` 复现；替换实现时删除失效 API、测试与说明，不保留废弃副本。
 
 ## Canonical Documents
 
@@ -33,6 +35,7 @@
 - 实验追踪：`refine-logs/EXPERIMENT_TRACKER.md`
 - 数据计划：`docs/data/DATA_PLAN.md`
 - 评测协议：`docs/evaluation/BENCHMARK_PLAN.md`
+- 当前实现：`docs/algorithms/LOSS_TOKEN_BUDGET.md`
 
 ## Stage Gates
 

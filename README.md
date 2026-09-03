@@ -51,6 +51,7 @@ Base
 | 训练与评测系统边界 | `docs/architecture/SYSTEM_DESIGN.md` |
 | Gemma 4 前沿模型选择 | `docs/architecture/FRONTIER_MODEL_MATRIX.md` |
 | 算法公式与对照关系 | `docs/algorithms/ALGORITHM_MAP.md` |
+| D01 loss mask 与精确预算实现 | `docs/algorithms/LOSS_TOKEN_BUDGET.md` |
 | 数据来源、质量、去污染 | `docs/data/DATA_PLAN.md` |
 | benchmark、统计与防泄漏 | `docs/evaluation/BENCHMARK_PLAN.md` |
 | 算力分档与成本 gate | `docs/planning/COMPUTE_BUDGET.md` |
@@ -67,4 +68,12 @@ Base
 
 ## 当前状态
 
-前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。尚未下载数据、安装训练环境或启动 GPU 实验，因此 **Execution CONDITIONAL**；下一道 gate 是确认 GPU、做 C0/C3/C4/C5 correctness/profile 并冻结精确版本。
+前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。当前进入逐模块的 CPU-only 算法/框架开发：D01 已完成生产 PyTorch tensor mask、GRPO zero-variance group 排除、确定性末批截断和带审计 digest 的精确 Student loss-token 预算事务。当前 27 个测试及 275 个 Hypothesis 生成案例全部通过。
+
+开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0 与 NumPy 2.5.2。尚未下载模型或数据、未启动 MPS/CUDA，也未把 C1/C2/C3 correctness gate 标为完成。下一模块只能在后续单独一轮开始；不得把 D01 误报为 masked CE、GRPO 或 OPD loss 已实现。
+
+```bash
+uv sync --frozen --all-groups
+uv run ruff check .
+uv run pytest -q
+```

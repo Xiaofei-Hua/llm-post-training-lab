@@ -1,8 +1,17 @@
 project:
   name: llm-post-training-lab
   status: planning_ready_execution_conditional
+  development_status: d01_loss_budget_complete_cpu_only
   language: zh
   target: post-training-algorithm-internship-portfolio
+
+development_environment:
+  manager: uv
+  python: "3.12"
+  lockfile: uv.lock
+  torch: "2.14.0"
+  numpy: "2.5.2"
+  accelerator_execution_authorized: false
 
 scope:
   primary_domain: verifiable_math_reasoning
