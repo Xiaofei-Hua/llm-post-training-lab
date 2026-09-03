@@ -55,6 +55,7 @@ Base
 | D02 masked causal CE 实现 | `docs/algorithms/MASKED_CAUSAL_CE.md` |
 | D03 exact-reward Dr.GRPO surrogate 实现 | `docs/algorithms/GRPO_SURROGATE.md` |
 | D04 OPD full-vocabulary reverse-KL 实现 | `docs/algorithms/OPD_REVERSE_KL.md` |
+| D05 exact/symbolic verifier 与 reward audit | `docs/algorithms/EXACT_MATH_VERIFIER.md` |
 | D01–D24 完整训练链路与 X01–X08 扩展总表 | `docs/planning/DEVELOPMENT_MODULES.md` |
 | 数据来源、质量、去污染 | `docs/data/DATA_PLAN.md` |
 | benchmark、统计与防泄漏 | `docs/evaluation/BENCHMARK_PLAN.md` |
@@ -72,11 +73,11 @@ Base
 
 ## 当前状态
 
-前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。核心端到端链路固定为 D01–D24：D01–D12 是 CPU 算法/框架，D13–D20 是真实模型、GPU correctness、anchors、pilots 与算力闭合，D21–D22 是五臂两阶段三 seed 正式训练，D23–D24 是冻结评测、统计、claim audit 与作品交付。当前完成 4/24：D01 精确 loss-token 预算、D02 masked causal CE、D03 exact-reward Dr.GRPO surrogate，以及 D04 OPD full-vocabulary reverse-KL。另有 X01–X08 八个 post-core 扩展，不计入核心完成度。
+前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。核心端到端链路固定为 D01–D24：D01–D12 是 CPU 算法/框架，D13–D20 是真实模型、GPU correctness、anchors、pilots 与算力闭合，D21–D22 是五臂两阶段三 seed 正式训练，D23–D24 是冻结评测、统计、claim audit 与作品交付。当前完成 5/24：D01 精确 loss-token 预算、D02 masked causal CE、D03 exact-reward Dr.GRPO surrogate、D04 OPD full-vocabulary reverse-KL，以及 D05 exact/symbolic math verifier。另有 X01–X08 八个 post-core 扩展，不计入核心完成度。
 
-D04 支持不同 Student/Teacher hidden width、selected-position 双 LM-head 分块、Gemma-style logit softcap、低精度稳定计算和 accumulation/DDP 全局 token mean。当前 108 个测试及 575 个 Hypothesis 生成案例全部通过。
+D05 在 pinned Math-Verify 外冻结 last-terminal-answer extraction、single-surface/normalization validation、reference/prediction 失败语义、strict structural/assignment guard、timeout/长度边界和带 corpus/source/lock/Git 指纹的 deterministic JSON audit。当前 340 个 CPU tests、875 个 Hypothesis 生成案例及 257 个冻结 adversarial verifier cases 全部通过。
 
-开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0 与 NumPy 2.5.2。尚未下载模型或数据、未启动 MPS/CUDA，也未把 C1/C2/C3 correctness gate 标为完成。D01–D04 是可接入训练器的张量核心，但不得误报为 Gemma 4 trainer、完整 GRPO rollout 或完整 OPD pipeline 已完成；D05 reward parser/verifier 尚未开始。
+开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0、NumPy 2.5.2、Math-Verify 0.9.0 与 ANTLR runtime 4.13.2。尚未下载模型或真实训练数据、未启动 MPS/CUDA，也未把 G1/G3 等真实执行 gate 标为完成。D01–D05 是可接入后续 runtime 的 production contracts，但不得误报为 Gemma 4 trainer、完整 GRPO rollout、完整 OPD pipeline 或正式 benchmark evaluator 已完成；下一模块为 D06 data registry/split/contamination。
 
 ```bash
 uv sync --frozen --all-groups

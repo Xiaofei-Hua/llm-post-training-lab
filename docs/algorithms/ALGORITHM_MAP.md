@@ -79,6 +79,8 @@ r_total = r_correct
 
 Reward 必须通过以下攻击测试：空答案、重复答案、多重 boxed、复制题目、超长废话、NaN/异常表达式、prompt injection 字符串。
 
+D05 已将该合同实现为 `posttrain_lab.rewards.ExactMathVerifier`：最后一个显式 terminal answer 生效，malformed last marker 不回退，prediction 不可解析为 0，reference/backend 错误阻断 batch；pinned Math-Verify 外另加 single-surface、normalization/juxtaposition cross-check 与 structural/assignment guard。冻结的 257-case CPU attack corpus 已全部通过，但真实模型输出的盲化人工一致率仍待 EVAL-002，因此 G1/G3 未据此宣告通过。
+
 ## 核心交互问题
 
 - GRPO 提供稀疏但直接面向任务的 verifier reward；

@@ -24,3 +24,10 @@
 - `U` 被定义为真正进入已执行 optimizer update 的有效 objective positions；prompt、padding、EOS 后 token、纯 rollout 与 skipped groups 不计。
 - OPD 固定每 update 刷新 rollout、`num_iterations=1`、completion-only mask 和全 batch token normalization。
 - LoRA 是主矩阵唯一参数高效训练形式；QLoRA 不能作为资源不足时的静默 fallback。
+
+## 2026-09-03 — D05 exact/symbolic verifier
+
+- Math-Verify 0.9.0 可以承担 symbolic comparison backend，但其 best-effort extraction 不能直接作为冻结 reward 合同；项目在外层固定 last-surface-wins、malformed-last fail-closed、prediction/reference 分离失败语义和有界输入。
+- 第一轮对抗审计发现上游可将 finite set 与 tuple/interval 跨结构判为等价；初始 guard 令 corpus 从 122/128 提升到 128/128。随后独立攻防继续发现 malformed/escaped command precedence、trailing-math/numeric-gap/nested-container hijack、任意 text-unit 消隐、constant juxtaposition 语义漂移、Markdown fence 误闭合，以及 scalar/伪等式/Boolean-relation/assignment-RHS-family false positive。最终用完整 candidate validation、原式/显式乘法双解析和 structural guard 将冻结 corpus 扩为 257/257。这里记录的是 verifier correctness 修复，不是模型效果。
+- prediction 不可提取、不可解析或 comparison timeout 可以安全计 0；reference 不可解析、backend exception 与非进程主线程调用必须让 logical batch fail fast，避免把基础设施或 gold 错误训练成模型负样本。
+- D05 只完成 CPU reward/evaluator 共用语义及 adversarial audit；真实模型输出的至少 100 条盲审、数据 revision 校验、GRPO lifecycle 接入和所有 GPU 运行仍分别留给后续 gates/modules。

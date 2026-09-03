@@ -101,8 +101,10 @@ MathArena 06/2026 只有 49 题，不能独自承载主 claim；G0 先确认 E2B
 - SFT、GRPO、OPD 共用唯一 canonical prompt registry，并按来源/题型/template family 分组切分。
 - 题目、参考解答和 reasoning trace 都做规范化近重复检查，不只查 prompt exact match。
 - 只能声称“本项目后训练数据未包含测试集”；无法证明 Gemma 4 预训练或 Teacher 从未见过公开题目。
-- answer parser 先在合成 edge cases 上冻结；模型训练后不得放宽规则。
-- 对多个 `boxed`、复制题面答案、矛盾答案和异常 LaTeX 设置明确规则。
+- answer parser 已在 D05 的 257 个合成 adversarial cases 上冻结；模型训练后不得放宽规则。完整合同见 `docs/algorithms/EXACT_MATH_VERIFIER.md`。
+- 多个 `boxed`/answer marker 采用最后 surface 生效；最后 surface malformed 时不回退；unanchored prose、code fence、控制字符与异常表达式不能从中捞取正确数字。
+- prediction 错误/不可解析计 0；reference 不可解析、依赖异常或错误线程上下文必须阻断 batch，不能污染模型负样本。
+- finite set、interval、tuple、relation 与 matrix 先做 structural-family guard，防止 symbolic backend 的跨类型 false positive。
 - 随机抽查至少 100 个模型输出，并给 evaluator 误差矩阵。
 - 每次 benchmark 运行保存原始 generations，主报告只消费不可变结果文件。
 

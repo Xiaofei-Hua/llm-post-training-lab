@@ -1,14 +1,14 @@
 project:
   name: llm-post-training-lab
   status: planning_ready_execution_conditional
-  development_status: d04_full_vocabulary_reverse_kl_complete_cpu_only
+  development_status: d05_exact_symbolic_verifier_complete_cpu_only
   core_pipeline_modules_total: 24
-  core_pipeline_modules_complete: 4
+  core_pipeline_modules_complete: 5
   module_catalog_total_including_extensions: 32
   extension_modules_total: 8
   extension_modules_complete: 0
-  current_module: D04
-  next_module: D05
+  current_module: D05
+  next_module: D06
   completion_denominator: core_pipeline_modules_total
   language: zh
   target: post-training-algorithm-internship-portfolio
@@ -22,13 +22,37 @@ development_environment:
   accelerator_execution_authorized: false
 
 module_plan:
-  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 4}
+  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 5}
   real_model_gpu_readiness_and_pilots: {ids: D13-D20, total: 8, complete: 0}
   formal_training_evidence_and_delivery: {ids: D21-D24, total: 4, complete: 0}
   post_core_extensions: {ids: X01-X08, total: 8, complete: 0, counted_in_core: false}
   gpu_entry_module: D13
   formal_training_entry_module: D21
   gpu_execution_authorized: false
+
+reward_verifier_contract:
+  backend: math-verify
+  backend_version: 0.9.0
+  antlr_runtime_version: 4.13.2
+  extraction: last_explicit_terminal_surface_or_concise_direct_math
+  multiple_answer_policy: last_surface_wins
+  malformed_last_surface_policy: fail_closed_without_fallback
+  prediction_unparseable_reward: 0
+  reference_unparseable_policy: fail_logical_batch
+  binary_rewards: [0, 1]
+  float_rounding: 12
+  numeric_precision: 30
+  strict_symbol_matching: true
+  strict_structural_family_guard: true
+  parsing_timeout_seconds: 5
+  verification_timeout_seconds: 5
+  max_input_chars: 32768
+  max_candidate_chars: 4096
+  audit_cases: 257
+  audit_corpus_sha256: 45496b679cdd13971a050f9b573b2cbc4974da56b67d54a18ee1edaaaa0d50c7
+  audit_policy_sha256: a6331e8c2c2a6a57fcbdd08a7c385404b62013fe30e1fbfaab5d701853138d13
+  audit_requires_clean_git_inputs: true
+  real_output_human_audit_complete: false
 
 scope:
   primary_domain: verifiable_math_reasoning

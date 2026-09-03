@@ -13,11 +13,11 @@
 
 因此：
 
-- 核心项目完成分母：`24`；当前 `4/24`；
-- 包含延后研究线的完整目录：`32`；当前 `4/32`；
+- 核心项目完成分母：`24`；当前 `5/24`；
+- 包含延后研究线的完整目录：`32`；当前 `5/32`；
 - `LEARNING_CURRICULUM.md` 的 12 个知识章节只是学习索引，不是另一组执行模块，不进入上述分母。
 
-当前 D01–D04 已在 CPU 完成并验证；下一模块仍是 D05。D13 之后的 accelerator 动作全部只是计划，当前未获 MPS/CUDA/GPU 执行授权。
+当前 D01–D05 已在 CPU 完成并验证；下一模块是 D06。D13 之后的 accelerator 动作全部只是计划，当前未获 MPS/CUDA/GPU 执行授权。
 
 ## Layer 1：CPU 算法与框架（D01–D12）
 
@@ -27,8 +27,8 @@
 | D02 | production masked causal cross-entropy | causal shift、selected-position chunking、value/gradient/accumulation/DDP oracle 通过 | COMPLETE（CPU） |
 | D03 | exact-reward Dr.GRPO advantage 与 clipped surrogate | zero-variance、ratio/clipping、active normalizer、value/gradient/DDP oracle 通过 | COMPLETE（CPU） |
 | D04 | OPD full-vocabulary chunked reverse-KL | full-vocab reference、双 LM-head chunking、mask、Teacher stop-grad、value/gradient/DDP oracle 通过 | COMPLETE（CPU） |
-| D05 | exact/symbolic parser、verifier 与 reward audit | 覆盖数值/分数/表达式/拒绝路径；100–300 条 adversarial cases；reward 与 evaluator 共用 canonical semantics | PLANNED（NEXT） |
-| D06 | data registry、license/revision lineage、family split 与 contamination | immutable manifests/checksums；split determinism；exact/fuzzy contamination fixtures；泄漏失败闭锁 | PLANNED |
+| D05 | exact/symbolic parser、verifier 与 reward audit | 覆盖数值/分数/表达式/拒绝路径；100–300 条 adversarial cases；reward 与 evaluator 共用 canonical semantics | COMPLETE（CPU） |
+| D06 | data registry、license/revision lineage、family split 与 contamination | immutable manifests/checksums；split determinism；exact/fuzzy contamination fixtures；泄漏失败闭锁 | PLANNED（NEXT） |
 | D07 | sealed benchmark evaluator、generation/result schema 与 metric contracts | test-answer access boundary；greedy/sampling reproducibility；item-level raw records；evaluator version hash | PLANNED |
 | D08 | paired statistics core | item bootstrap、paired randomization/sign-flip、Holm、TOST、pass@k 与 synthetic null/effect coverage 通过 | PLANNED |
 | D09 | model/tokenizer/parameter contracts | tokenizer/vocab/hash、LoRA target allowlist、text-only freeze/checksum、nested model-output adapters 可在 fixtures 验证 | PLANNED |
@@ -103,6 +103,6 @@ X01–X08 only by a new decision
 ```
 
 - 每轮只允许一个核心模块处于 `IN_PROGRESS`；完成、验证并 commit 后才移动。
-- 当前只允许继续 D05–D12 的 CPU 工作；不得因为模块已列入计划而自动获得 GPU、模型下载或训练授权。
+- 当前只允许继续 D06–D12 的 CPU 工作；不得因为模块已列入计划而自动获得 GPU、模型下载或训练授权。
 - D13 进入前必须由用户明确切换 accelerator execution 状态；D20 未通过时不得启动 D21。
 - 模块状态、run 状态和 gate 状态是三套不同字段：代码完成不能代替 gate evidence，run 完成也不能代替 claim audit。

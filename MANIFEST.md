@@ -147,3 +147,31 @@
 | 2026-09-03 18:21 | /experiment-plan | README.md | implementation | 项目地图与当前进度改为 4/24 核心模块 |
 | 2026-09-03 18:21 | /experiment-plan | configs/project.yaml | implementation | 机器可读 24-core/32-catalog 计数、模块分层与 GPU 边界 |
 | 2026-09-03 18:21 | /experiment-plan | AGENTS.md | implementation | 项目指令同步完整模块口径与 accelerator 起点 |
+| 2026-09-03 20:54 | /experiment-bridge | idea-stage/docs/research_contract.md | implementation | 从最终方案冻结 claim、evidence 与 anti-claim 合同 |
+| 2026-09-03 20:54 | /experiment-bridge | pyproject.toml | implementation | 固定 Math-Verify 与 ANTLR runtime 生产依赖 |
+| 2026-09-03 20:54 | /experiment-bridge | uv.lock | implementation | 锁定 D05 parser backend 完整依赖图 |
+| 2026-09-03 20:54 | /experiment-bridge | src/posttrain_lab/rewards/verifier.py | implementation | terminal-answer extraction、symbolic parse、strict guards 与 fail-fast reward API |
+| 2026-09-03 20:54 | /experiment-bridge | src/posttrain_lab/rewards/audit.py | implementation | strict adversarial corpus、provenance 与 deterministic audit report |
+| 2026-09-03 20:54 | /experiment-bridge | src/posttrain_lab/rewards/__init__.py | implementation | D05 canonical public API |
+| 2026-09-03 20:54 | /experiment-bridge | scripts/audit_verifier.py | implementation | 正式 verifier audit 薄 CLI |
+| 2026-09-03 20:54 | /experiment-bridge | tests/test_math_verifier.py | implementation | extraction、parse、equivalence、failure 与 property tests |
+| 2026-09-03 20:54 | /experiment-bridge | tests/test_verifier_audit.py | implementation | corpus schema、provenance、report 与 CLI tests |
+| 2026-09-03 20:54 | /experiment-bridge | tests/fixtures/verifier_adversarial.jsonl | implementation | 257 条、17 类冻结 adversarial cases |
+| 2026-09-03 20:54 | /experiment-bridge | docs/algorithms/EXACT_MATH_VERIFIER.md | implementation | D05 deletion test、数学语义、失败合同与审计边界 |
+| 2026-09-03 20:54 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260903_205304.md | implementation | fresh-agent D05 审查历史版本与 evidence closure 条件 |
+| 2026-09-03 20:54 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | implementation | fresh-agent D05 审查 latest copy |
+| 2026-09-03 20:54 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN_20260903_193644.md | implementation | D05 完成状态与 D06 下一模块历史版本 |
+| 2026-09-03 20:54 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN.md | implementation | D05 完成状态与 D06 下一模块 latest copy |
+| 2026-09-03 20:54 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER_20260903_193644.md | implementation | D05 CPU evidence 与未通过真实 gates 历史版本 |
+| 2026-09-03 20:54 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER.md | implementation | D05 CPU evidence 与未通过真实 gates latest copy |
+| 2026-09-03 20:54 | /experiment-bridge | README.md | implementation | 项目进度更新为 5/24 并声明 D05 边界 |
+| 2026-09-03 20:54 | /experiment-bridge | AGENTS.md | implementation | canonical documents 与当前模块同步到 D05 |
+| 2026-09-03 20:54 | /experiment-bridge | configs/project.yaml | implementation | 机器可读 verifier policy、audit hashes 与 5/24 状态 |
+| 2026-09-03 20:54 | /experiment-bridge | docs/algorithms/ALGORITHM_MAP.md | implementation | 注册 canonical verifier reward contract |
+| 2026-09-03 20:54 | /experiment-bridge | docs/evaluation/BENCHMARK_PLAN.md | implementation | 训练 reward 与 future evaluator 一致性及 EVAL-002 边界 |
+| 2026-09-03 20:54 | /experiment-bridge | docs/planning/DEVELOPMENT_MODULES.md | implementation | D05 COMPLETE、D06 NEXT 与 5/24 计数 |
+| 2026-09-03 20:54 | /experiment-bridge | artifacts/README.md | implementation | verifier audit artifact schema 与证据边界 |
+| 2026-09-03 20:54 | /experiment-bridge | scripts/README.md | implementation | 注册 D05 audit CLI |
+| 2026-09-03 20:54 | /experiment-bridge | src/posttrain_lab/README.md | implementation | rewards package 边界与 D05 API |
+| 2026-09-03 20:54 | /experiment-bridge | tests/README.md | implementation | D05 suite、property examples 与 corpus coverage |
+| 2026-09-03 20:54 | /experiment-bridge | findings.md | implementation | D05 parser/reward 风险与实现结论 |
