@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+
+# IDE / OS
+.DS_Store
+.idea/
+.vscode/
+
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+
+# Models, datasets, generated samples, and experiment outputs
+/data/
+/checkpoints/
+/outputs/
+/wandb/
+/results/raw/
+/artifacts/models/
+/artifacts/datasets/
+
+# Internal or confidential notes must never enter a public portfolio.
+/notes/private/
+*.private.md

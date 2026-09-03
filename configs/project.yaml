@@ -1,0 +1,106 @@
+project:
+  name: llm-post-training-lab
+  status: planning_ready_execution_conditional
+  language: zh
+  target: post-training-algorithm-internship-portfolio
+
+scope:
+  primary_domain: verifiable_math_reasoning
+  core_methods: [sft_continuation, grpo, opd]
+  shadow_methods: [dpo]
+  deferred_methods: [orpo, gspo, tis, prm, agentic_rl]
+  non_goals: [pretraining_from_scratch, inference_optimization, production_serving, sota_chasing]
+
+model:
+  smoke_student: google/gemma-4-E2B
+  main_student: google/gemma-4-E2B
+  teacher_base: google/gemma-4-E4B
+  teacher_construction: same_d_anchor_sft_then_freeze
+  stretch_teachers: [google/gemma-4-12B, google/gemma-4-31B-it]
+  fallback_policy: same_model_lower_U_or_shorter_context_then_reprofile
+  freeze_non_text_encoders: true
+  require_shared_tokenizer_for_opd: true
+
+core_design:
+  stage_count: 2
+  student_backward_loss_tokens_per_stage: 2000000
+  reset_optimizer_and_scheduler_each_stage: true
+  arms:
+    A0: [sft, sft]
+    A1: [grpo, grpo]
+    A2: [opd, opd]
+    A3: [opd, grpo]
+    A4: [grpo, opd]
+
+shadow_baselines: [dpo]
+
+budget_estimands:
+  primary_matched_denominator: student_backward_loss_tokens
+  audited_not_claimed_matched: [prompt_exposures, student_forward_flops, student_backward_flops]
+  practical_efficiency: [all_forward_flops, all_backward_flops, rollout_tokens, accelerator_seconds, gpu_hours, peak_memory]
+  cost_components: [C_anchor, C_teacher, C_arm]
+
+data:
+  sft_candidate: open-r1/OpenR1-Math-220k
+  d_anchor_examples: 10000
+  d_core_prompts: 2000
+  d_select_examples: 500
+  d_teacher_gate_examples: 500
+  d_dev_examples: 500
+  benchmark_contamination_check: required
+  immutable_revisions: required
+
+evaluation:
+  confirmatory_primary: MATH-500
+  secondary: [GSM8K, MathArena_ArXivMath_2026_06]
+  hard: [AIME_2026]
+  retention: [IFEval, MMLU-Pro]
+  seeds: 3
+  freeze_decoding: true
+  minimum_meaningful_effect_pp: 2
+  c1_multiplicity: holm_familywise_0.05
+  c2_equivalence_band_pp: [-2, 2]
+
+grpo_contract:
+  loss_type: dr_grpo
+  group_size: 8
+  epsilon: 0.2
+  beta: 0.0
+  num_iterations: 1
+  importance_sampling_level: token
+  scale_rewards: group
+  temperature: 1.0
+  old_policy_refresh: every_generation_batch
+  weight_sync: every_generation_batch
+  zero_variance_group_resampling: false
+
+opd_contract:
+  sampling: fully_on_policy
+  num_iterations: 1
+  refresh: new_current_policy_completions_every_update
+  divergence: reverse_kl
+  temperature: 1.0
+  vocabulary: full_chunked
+  loss_mask: generated_completion_through_first_eos_only
+  normalization: sum_token_kl_over_all_valid_tokens
+  teacher_frozen: true
+
+loss_token_counter:
+  definition: valid_objective_positions_entering_an_executed_optimizer_update
+  count_prompt_tokens: false
+  count_padding_or_post_eos: false
+  count_skipped_zero_variance_grpo_groups: false
+  count_each_position_per_update: once
+
+invariants:
+  same_objective_uses_identical_config_hash_across_arms_and_stages: true
+  qlora_requires_new_experiment_family: true
+
+gates:
+  G0: hardware_and_throughput_calibrated
+  G1: data_and_evaluator_audited
+  G2: base_and_sft_reproduced
+  G3: reward_audit_passed
+  G4: distillation_compatibility_passed
+  G5: main_runs_repeated
+  G6: claims_audited
