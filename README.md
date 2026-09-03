@@ -55,7 +55,7 @@ Base
 | D02 masked causal CE 实现 | `docs/algorithms/MASKED_CAUSAL_CE.md` |
 | D03 exact-reward Dr.GRPO surrogate 实现 | `docs/algorithms/GRPO_SURROGATE.md` |
 | D04 OPD full-vocabulary reverse-KL 实现 | `docs/algorithms/OPD_REVERSE_KL.md` |
-| D01–D12 CPU 开发模块总表 | `docs/planning/DEVELOPMENT_MODULES.md` |
+| D01–D24 完整训练链路与 X01–X08 扩展总表 | `docs/planning/DEVELOPMENT_MODULES.md` |
 | 数据来源、质量、去污染 | `docs/data/DATA_PLAN.md` |
 | benchmark、统计与防泄漏 | `docs/evaluation/BENCHMARK_PLAN.md` |
 | 算力分档与成本 gate | `docs/planning/COMPUTE_BUDGET.md` |
@@ -72,7 +72,9 @@ Base
 
 ## 当前状态
 
-前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。CPU 算法/框架开发固定为 D01–D12，目前完成 4/12：D01 精确 loss-token 预算、D02 masked causal CE、D03 exact-reward Dr.GRPO surrogate，以及 D04 OPD full-vocabulary reverse-KL。D04 支持不同 Student/Teacher hidden width、selected-position 双 LM-head 分块、Gemma-style logit softcap、低精度稳定计算和 accumulation/DDP 全局 token mean。当前 108 个测试及 575 个 Hypothesis 生成案例全部通过。
+前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。核心端到端链路固定为 D01–D24：D01–D12 是 CPU 算法/框架，D13–D20 是真实模型、GPU correctness、anchors、pilots 与算力闭合，D21–D22 是五臂两阶段三 seed 正式训练，D23–D24 是冻结评测、统计、claim audit 与作品交付。当前完成 4/24：D01 精确 loss-token 预算、D02 masked causal CE、D03 exact-reward Dr.GRPO surrogate，以及 D04 OPD full-vocabulary reverse-KL。另有 X01–X08 八个 post-core 扩展，不计入核心完成度。
+
+D04 支持不同 Student/Teacher hidden width、selected-position 双 LM-head 分块、Gemma-style logit softcap、低精度稳定计算和 accumulation/DDP 全局 token mean。当前 108 个测试及 575 个 Hypothesis 生成案例全部通过。
 
 开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0 与 NumPy 2.5.2。尚未下载模型或数据、未启动 MPS/CUDA，也未把 C1/C2/C3 correctness gate 标为完成。D01–D04 是可接入训练器的张量核心，但不得误报为 Gemma 4 trainer、完整 GRPO rollout 或完整 OPD pipeline 已完成；D05 reward parser/verifier 尚未开始。
 

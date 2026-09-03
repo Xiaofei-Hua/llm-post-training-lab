@@ -139,3 +139,11 @@
 | 2026-09-03 18:07 | manual D04 | tests/test_opd_reverse_kl.py | verification | 37 个 CPU tests、100 个 Hypothesis 生成 batch、value/gradient/memory/accumulation/DDP oracle |
 | 2026-09-03 18:07 | manual D04 | docs/algorithms/OPD_REVERSE_KL.md | documentation | deletion test、数学/精度/Teacher/分布式合同与上游语义审计 |
 | 2026-09-03 18:07 | manual D04 | README.md, AGENTS.md, configs/project.yaml | status | 当前实现、12 模块总数与机器可读 OPD 合同同步到 D04 |
+| 2026-09-03 18:21 | /experiment-plan | refine-logs/EXPERIMENT_PLAN_20260903_181628.md | implementation | 端到端 24 个核心模块与 GPU/full-training block 映射历史版本 |
+| 2026-09-03 18:21 | /experiment-plan | refine-logs/EXPERIMENT_PLAN.md | implementation | 端到端 24 个核心模块与 GPU/full-training block 映射 latest copy |
+| 2026-09-03 18:21 | /experiment-plan | refine-logs/EXPERIMENT_TRACKER_20260903_181628.md | implementation | 分阶段训练状态、GPU coverage 与八项扩展队列历史版本 |
+| 2026-09-03 18:21 | /experiment-plan | refine-logs/EXPERIMENT_TRACKER.md | implementation | 分阶段训练状态、GPU coverage 与八项扩展队列 latest copy |
+| 2026-09-03 18:21 | /experiment-plan | docs/planning/DEVELOPMENT_MODULES.md | implementation | 将错误的 CPU-only 总数修正为 D01–D24 核心链路和 X01–X08 扩展目录 |
+| 2026-09-03 18:21 | /experiment-plan | README.md | implementation | 项目地图与当前进度改为 4/24 核心模块 |
+| 2026-09-03 18:21 | /experiment-plan | configs/project.yaml | implementation | 机器可读 24-core/32-catalog 计数、模块分层与 GPU 边界 |
+| 2026-09-03 18:21 | /experiment-plan | AGENTS.md | implementation | 项目指令同步完整模块口径与 accelerator 起点 |

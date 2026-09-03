@@ -6,6 +6,8 @@
 - phase: cpu-framework-development
 - project_type: algorithm-first LLM post-training portfolio
 - execution_status: CPU-only algorithm/framework development; no GPU training authorized
+- core_modules: D01-D24 (4/24 complete); GPU/full-training begins at D13
+- extension_modules: X01-X08 (deferred until D24; excluded from core completion)
 
 ## Problem Anchor
 
@@ -35,7 +37,7 @@
 - 实验追踪：`refine-logs/EXPERIMENT_TRACKER.md`
 - 数据计划：`docs/data/DATA_PLAN.md`
 - 评测协议：`docs/evaluation/BENCHMARK_PLAN.md`
-- CPU 开发模块总表：`docs/planning/DEVELOPMENT_MODULES.md`
+- 完整端到端模块总表：`docs/planning/DEVELOPMENT_MODULES.md`
 - 当前实现 D01：`docs/algorithms/LOSS_TOKEN_BUDGET.md`
 - 当前实现 D02：`docs/algorithms/MASKED_CAUSAL_CE.md`
 - 当前实现 D03：`docs/algorithms/GRPO_SURROGATE.md`

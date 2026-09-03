@@ -2,8 +2,14 @@ project:
   name: llm-post-training-lab
   status: planning_ready_execution_conditional
   development_status: d04_full_vocabulary_reverse_kl_complete_cpu_only
-  development_modules_total: 12
-  development_modules_complete: 4
+  core_pipeline_modules_total: 24
+  core_pipeline_modules_complete: 4
+  module_catalog_total_including_extensions: 32
+  extension_modules_total: 8
+  extension_modules_complete: 0
+  current_module: D04
+  next_module: D05
+  completion_denominator: core_pipeline_modules_total
   language: zh
   target: post-training-algorithm-internship-portfolio
 
@@ -14,6 +20,15 @@ development_environment:
   torch: "2.14.0"
   numpy: "2.5.2"
   accelerator_execution_authorized: false
+
+module_plan:
+  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 4}
+  real_model_gpu_readiness_and_pilots: {ids: D13-D20, total: 8, complete: 0}
+  formal_training_evidence_and_delivery: {ids: D21-D24, total: 4, complete: 0}
+  post_core_extensions: {ids: X01-X08, total: 8, complete: 0, counted_in_core: false}
+  gpu_entry_module: D13
+  formal_training_entry_module: D21
+  gpu_execution_authorized: false
 
 scope:
   primary_domain: verifiable_math_reasoning
