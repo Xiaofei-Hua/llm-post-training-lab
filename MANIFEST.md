@@ -175,3 +175,7 @@
 | 2026-09-03 20:54 | /experiment-bridge | src/posttrain_lab/README.md | implementation | rewards package 边界与 D05 API |
 | 2026-09-03 20:54 | /experiment-bridge | tests/README.md | implementation | D05 suite、property examples 与 corpus coverage |
 | 2026-09-03 20:54 | /experiment-bridge | findings.md | implementation | D05 parser/reward 风险与实现结论 |
+| 2026-09-03 20:56 | /experiment-bridge | artifacts/audits/D05_VERIFIER_AUDIT_20260903_205630.json | implementation | 绑定实现 revision 的 257-case verifier audit 历史版本 |
+| 2026-09-03 20:56 | /experiment-bridge | artifacts/audits/D05_VERIFIER_AUDIT.json | implementation | 绑定实现 revision 的 257-case verifier audit latest copy |
+| 2026-09-03 20:56 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260903_205630.md | implementation | stale evidence blocker 关闭后的 APPROVE 历史版本 |
+| 2026-09-03 20:56 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | implementation | fresh-agent D05 APPROVE latest copy |

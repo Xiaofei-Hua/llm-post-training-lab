@@ -1,0 +1,124 @@
+{
+  "backend_versions": {
+    "antlr4-python3-runtime": "4.13.2",
+    "latex2sympy2-extended": "1.11.0",
+    "math-verify": "0.9.0",
+    "sympy": "1.14.0"
+  },
+  "case_schema_version": "d05-verifier-audit-case-v1",
+  "category_counts": {
+    "ambiguous_juxtaposition": {
+      "failed": 0,
+      "passed": 19,
+      "total": 19
+    },
+    "answer_surface_precedence": {
+      "failed": 0,
+      "passed": 20,
+      "total": 20
+    },
+    "decimal_percent_units": {
+      "failed": 0,
+      "passed": 10,
+      "total": 10
+    },
+    "injection_payload": {
+      "failed": 0,
+      "passed": 19,
+      "total": 19
+    },
+    "integer_exact": {
+      "failed": 0,
+      "passed": 12,
+      "total": 12
+    },
+    "integer_mismatch": {
+      "failed": 0,
+      "passed": 12,
+      "total": 12
+    },
+    "invalid_reference": {
+      "failed": 0,
+      "passed": 6,
+      "total": 6
+    },
+    "malformed_surface": {
+      "failed": 0,
+      "passed": 19,
+      "total": 19
+    },
+    "nonfinite_and_ambiguous": {
+      "failed": 0,
+      "passed": 6,
+      "total": 6
+    },
+    "rational_equivalence": {
+      "failed": 0,
+      "passed": 12,
+      "total": 12
+    },
+    "sets_and_relations": {
+      "failed": 0,
+      "passed": 10,
+      "total": 10
+    },
+    "symbolic_equivalence": {
+      "failed": 0,
+      "passed": 12,
+      "total": 12
+    },
+    "symbolic_mismatch": {
+      "failed": 0,
+      "passed": 10,
+      "total": 10
+    },
+    "text_payload": {
+      "failed": 0,
+      "passed": 14,
+      "total": 14
+    },
+    "trailing_math_hijack": {
+      "failed": 0,
+      "passed": 36,
+      "total": 36
+    },
+    "unanchored_prose": {
+      "failed": 0,
+      "passed": 20,
+      "total": 20
+    },
+    "unsafe_relation": {
+      "failed": 0,
+      "passed": 20,
+      "total": 20
+    }
+  },
+  "corpus_path": "tests/fixtures/verifier_adversarial.jsonl",
+  "corpus_sha256": "45496b679cdd13971a050f9b573b2cbc4974da56b67d54a18ee1edaaaa0d50c7",
+  "failed_cases": 0,
+  "failures": [],
+  "passed": true,
+  "passed_cases": 257,
+  "policy_sha256": "a6331e8c2c2a6a57fcbdd08a7c385404b62013fe30e1fbfaab5d701853138d13",
+  "provenance": {
+    "dependency_lock_path": "uv.lock",
+    "dependency_lock_sha256": "689d616cbfbc26df0818da448a0098197cb716782089256a9694666c574817f4",
+    "git_revision": "a59c478558eeb90a6b74250faffbaf6070ce5c92",
+    "implementation_source_sha256": "510cf1fdc73a227665f0c3467cda76c5578c07d091affec3948e298251bbd125",
+    "source_files_sha256": {
+      "scripts/audit_verifier.py": "2fa9b94b27fd2fbe595fe94ce91deaab68992184cd42a9721d84be1890a8ced8",
+      "src/posttrain_lab/rewards/audit.py": "8249e8dfb1af92ed9a37130902c186c412eb9e1c8cc490ce35ca888e3e51a77a",
+      "src/posttrain_lab/rewards/verifier.py": "63b87853a03757a43d95f1923b03db08de5766781f519dbe22ee3923d64f1bb0"
+    },
+    "tracked_input_paths": [
+      "src/posttrain_lab/rewards/verifier.py",
+      "src/posttrain_lab/rewards/audit.py",
+      "scripts/audit_verifier.py",
+      "uv.lock",
+      "tests/fixtures/verifier_adversarial.jsonl"
+    ],
+    "tracked_inputs_match_git": true
+  },
+  "schema_version": "d05-verifier-audit-report-v1",
+  "total_cases": 257
+}
