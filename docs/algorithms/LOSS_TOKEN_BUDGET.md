@@ -95,12 +95,12 @@ uv run pytest -q
 
 本机 Apple arm64 CPU 的非门槛诊断中，`[64, 4096]` mask（196,608 candidates、100,000 selected）的 budget plan 约 1.14 ms。该数字只用于防止实现退化，不作为跨硬件性能结论。
 
-## 尚未完成（不属于 D01）
+## D01 范围外
 
-- masked CE 数值与梯度；
+- masked CE 数值与梯度已由 D02 `MASKED_CAUSAL_CE.md` 实现；
 - GRPO surrogate；
 - OPD full-vocabulary reverse-KL；
 - optimizer/AMP、gradient accumulation 和 distributed trainer 接线；
 - 模型/tokenizer/LoRA 集成。
 
-所以 D01 完成不等于实验 tracker 的 C1/C2/C3 已通过。
+所以 D01/D02 的张量层完成不等于实验 tracker 的 C1/C2/C3 已通过。

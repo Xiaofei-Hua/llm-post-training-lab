@@ -126,3 +126,7 @@
 | 2026-09-03 16:54 | manual D01 | src/posttrain_lab/train/torch_loss_budget.py | implementation | 生产 PyTorch masks、GRPO group filter、tensor prefix selection 与 digest |
 | 2026-09-03 16:54 | manual D01 | tests/test_{loss_budget,torch_loss_budget}.py | verification | 27 个 CPU tests 与 275 个 Hypothesis 生成案例 |
 | 2026-09-03 16:54 | manual D01 | docs/algorithms/LOSS_TOKEN_BUDGET.md | documentation | D01 API、状态机、分布式/累积边界、验证与未完成项 |
+| 2026-09-03 17:23 | manual D02 | src/posttrain_lab/train/masked_ce.py | implementation | causal shift、masked token CE、重计算分块 LM-head 与全局 logical-update normalization |
+| 2026-09-03 17:23 | manual D02 | tests/test_masked_ce.py | verification | 23 个 CPU tests、100 个 Hypothesis 生成 batch、value/gradient/accumulation/DDP oracle |
+| 2026-09-03 17:23 | manual D02 | docs/algorithms/MASKED_CAUSAL_CE.md | documentation | D02 数学、精度、分块、分布式合同与未完成边界 |
+| 2026-09-03 17:23 | manual D02 | README.md, AGENTS.md, configs/project.yaml | status | 当前实现与机器可读 CE 合同同步到 D02 |

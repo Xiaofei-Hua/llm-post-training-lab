@@ -52,6 +52,7 @@ Base
 | Gemma 4 前沿模型选择 | `docs/architecture/FRONTIER_MODEL_MATRIX.md` |
 | 算法公式与对照关系 | `docs/algorithms/ALGORITHM_MAP.md` |
 | D01 loss mask 与精确预算实现 | `docs/algorithms/LOSS_TOKEN_BUDGET.md` |
+| D02 masked causal CE 实现 | `docs/algorithms/MASKED_CAUSAL_CE.md` |
 | 数据来源、质量、去污染 | `docs/data/DATA_PLAN.md` |
 | benchmark、统计与防泄漏 | `docs/evaluation/BENCHMARK_PLAN.md` |
 | 算力分档与成本 gate | `docs/planning/COMPUTE_BUDGET.md` |
@@ -68,9 +69,9 @@ Base
 
 ## 当前状态
 
-前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。当前进入逐模块的 CPU-only 算法/框架开发：D01 已完成生产 PyTorch tensor mask、GRPO zero-variance group 排除、确定性末批截断和带审计 digest 的精确 Student loss-token 预算事务。当前 27 个测试及 275 个 Hypothesis 生成案例全部通过。
+前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。当前进入逐模块的 CPU-only 算法/框架开发：D01 已完成生产 PyTorch tensor mask 与精确 Student loss-token 预算事务；D02 已完成严格 causal shift 的 masked CE、带 backward 重计算的有效位置 LM-head 分块投影、低精度稳定累加，以及 gradient accumulation/DDP 的全局 token-mean 归一化。当前 50 个测试及 375 个 Hypothesis 生成案例全部通过。
 
-开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0 与 NumPy 2.5.2。尚未下载模型或数据、未启动 MPS/CUDA，也未把 C1/C2/C3 correctness gate 标为完成。下一模块只能在后续单独一轮开始；不得把 D01 误报为 masked CE、GRPO 或 OPD loss 已实现。
+开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0 与 NumPy 2.5.2。尚未下载模型或数据、未启动 MPS/CUDA，也未把 C1/C2/C3 correctness gate 标为完成。D02 是可接入训练器的 loss 核心，但不得误报为 Gemma 4 SFT trainer、GRPO 或 OPD 已完成；下一模块只能在后续单独一轮开始。
 
 ```bash
 uv sync --frozen --all-groups

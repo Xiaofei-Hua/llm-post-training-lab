@@ -7,6 +7,11 @@ from .loss_budget import (
     LossTokenBudget,
     MaskValidationError,
 )
+from .masked_ce import (
+    MaskedCrossEntropyOutput,
+    chunked_masked_causal_linear_cross_entropy,
+    masked_causal_cross_entropy,
+)
 from .torch_loss_budget import (
     TorchBudgetSelection,
     TorchGroupMaskResult,
@@ -24,9 +29,12 @@ __all__ = [
     "BudgetStepRecord",
     "LossTokenBudget",
     "MaskValidationError",
+    "MaskedCrossEntropyOutput",
     "TorchBudgetSelection",
     "TorchGroupMaskResult",
+    "chunked_masked_causal_linear_cross_entropy",
     "commit_torch_loss_budget",
+    "masked_causal_cross_entropy",
     "plan_torch_loss_budget",
     "torch_assistant_target_loss_mask",
     "torch_completion_loss_mask",

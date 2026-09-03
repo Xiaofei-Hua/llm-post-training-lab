@@ -1,7 +1,7 @@
 project:
   name: llm-post-training-lab
   status: planning_ready_execution_conditional
-  development_status: d01_loss_budget_complete_cpu_only
+  development_status: d02_masked_causal_ce_complete_cpu_only
   language: zh
   target: post-training-algorithm-internship-portfolio
 
@@ -100,6 +100,16 @@ loss_token_counter:
   count_padding_or_post_eos: false
   count_skipped_zero_variance_grpo_groups: false
   count_each_position_per_update: once
+
+masked_causal_ce_contract:
+  mask_coordinates: absolute_target_positions
+  causal_alignment: target_t_uses_prediction_t_minus_1
+  reduction: global_logical_update_selected_token_mean
+  default_low_precision_loss_compute_dtype: float32
+  linear_projection: selected_positions_chunked
+  recompute_linear_ce_in_backward: true
+  max_tokens_per_chunk: 128
+  ddp_gradient_reduction: average
 
 invariants:
   same_objective_uses_identical_config_hash_across_arms_and_stages: true

@@ -55,7 +55,7 @@ Immutable Problem Anchor：在有限算力和完全公开、可追溯的数据�
 
 ### Objective contracts
 
-**SFT**：assistant-only masked CE；采用首 assistant token 至模板 EOS（含 EOS）；batch-token mean。
+**SFT**：assistant-only masked CE；采用首 assistant token 至模板 EOS（含 EOS）；logical-update 全局有效 token mean。
 
 **GRPO**：exact/symbolic 0/1 reward；`group_size=8`、`loss_type=dr_grpo`、`epsilon=0.2`、`beta=0`、`num_iterations=1`、token importance sampling、group reward scaling、temperature 1.0；每 generation batch 刷新 old policy 并同步 weights；零方差组不重采样。默认 cap 2048，冻结 pilot truncation>5% 时所有 formal runs 统一改为4096。
 
@@ -72,7 +72,7 @@ Immutable Problem Anchor：在有限算力和完全公开、可追溯的数据�
 1. 数据 license/revision/lineage、family split、污染审计；
 2. 100–300 verifier adversarial tests，盲化人工抽查一致率≥99%；
 3. E2B/E4B tokenizer/hash/token-ID、LoRA target、非文本 zero-grad/checksum；
-4. masked CE、GRPO toy gradient、full-vocab reverse-KL value/limit/gradient oracle；
+4. masked CE、固定合成批次 GRPO gradient、full-vocab reverse-KL value/limit/gradient oracle；
 5. no-vLLM 与 vLLM 两步 GRPO、weight-sync age、skipped-group 语义；
 6. E2B backward、group-8 rollout、E4B SFT、E2B+E4B OPD 各 100-step steady-state profile；
 7. 用 profile 重算 campaign cost，预留 30%。
