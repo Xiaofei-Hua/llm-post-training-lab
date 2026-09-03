@@ -8,7 +8,7 @@ GRPO 和 OPD 的成本主要由 rollout 长度、group size、Teacher forward �
 
 | 档位 | 资源假设 | Student / Teacher | 能完成的范围 | 暂定总量 |
 |---|---|---|---|---|
-| A：代码路径 | 1×24 GB | Gemma 4 E2B / E4B | 仅做单模型 SFT/GRPO 与 tiny-tensor/chunked-KL 正确性测试；full-vocab OPD 主实验不闭合 | 不给主实验工时承诺 |
+| A：代码路径 | 1×24 GB | Gemma 4 E2B / E4B | 仅做单模型 SFT/GRPO 与小型精确 full-logit/chunked-KL 正确性测试；full-vocab OPD 主实验不闭合 | 不给主实验工时承诺 |
 | B：推荐主线 | 2×80 GB 或 4×48 GB | Gemma 4 E2B / same-lineage E4B | 10k 双模型 SFT、五臂全部 3 seeds、完整评测 | profile 前暂估 450–900 GPUh |
 | C：前沿扩展 | 4–8×80 GB | E2B / Gemma 4 12B或31B | 强 Teacher、长上下文与 Teacher/checkpoint transfer | 1000 GPUh 以上 |
 

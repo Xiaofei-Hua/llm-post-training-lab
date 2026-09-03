@@ -201,11 +201,11 @@
 | 模块 | 公式推导 | 最小实现 | 单测/实验 | 面试表达 |
 |---|---|---|---|---|
 | Architecture | TODO | TODO | TODO | TODO |
-| SFT/Data | TODO | TODO | TODO | TODO |
+| SFT/Data | TODO | D02 | D02 CPU oracle | TODO |
 | Preference | TODO | TODO | TODO | TODO |
-| GRPO | TODO | TODO | TODO | TODO |
+| GRPO | TODO | D03 | D03 CPU oracle | TODO |
 | Reward | TODO | TODO | TODO | TODO |
-| OPD | TODO | TODO | TODO | TODO |
+| OPD | TODO | D04 | D04 CPU oracle | TODO |
 | Order | TODO | TODO | TODO | TODO |
 | Off-policy | TODO | TODO | TODO | TODO |
 | Data governance | TODO | TODO | TODO | TODO |

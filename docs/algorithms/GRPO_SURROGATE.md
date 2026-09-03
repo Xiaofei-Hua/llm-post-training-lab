@@ -103,7 +103,7 @@ uv run pytest -q tests/test_grpo_surrogate.py
 uv run pytest -q
 ```
 
-D03 有 21 个 CPU tests，其中包含 100 个 Hypothesis 生成 batch；覆盖独立 advantage/loss oracle、sample std、任意顺序 group IDs、zero-variance active denominator、on-policy signed gradient、双向 clip、autograd gradcheck、固定分母、BF16→FP32、不均匀 accumulation/DDP、空 rank、D01→D03 接线及全部 hard failures。仓库当前全量共 71 个 tests、475 个生成案例。
+D03 有 21 个 CPU tests，其中包含 100 个 Hypothesis 生成 batch；覆盖独立 advantage/loss oracle、sample std、任意顺序 group IDs、zero-variance active denominator、on-policy signed gradient、双向 clip、autograd gradcheck、固定分母、BF16→FP32、不均匀 accumulation/DDP、空 rank、D01→D03 接线及全部 hard failures。仓库当前全量共 108 个 tests、575 个生成案例。
 
 验证没有下载模型或数据，没有访问 MPS/CUDA。D03 通过不等于 `C2-001` 或 G3 已完成：真实模型 forward、rollout freshness、old-policy/weight-sync、reward parser/verifier 与两步集成测试仍未运行。
 

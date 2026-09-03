@@ -18,6 +18,11 @@ from .masked_ce import (
     chunked_masked_causal_linear_cross_entropy,
     masked_causal_cross_entropy,
 )
+from .opd_reverse_kl import (
+    MaskedReverseKLOutput,
+    chunked_masked_causal_linear_reverse_kl,
+    masked_causal_reverse_kl,
+)
 from .torch_loss_budget import (
     TorchBudgetSelection,
     TorchGroupMaskResult,
@@ -38,13 +43,16 @@ __all__ = [
     "LossTokenBudget",
     "MaskValidationError",
     "MaskedCrossEntropyOutput",
+    "MaskedReverseKLOutput",
     "TorchBudgetSelection",
     "TorchGroupMaskResult",
     "chunked_masked_causal_linear_cross_entropy",
+    "chunked_masked_causal_linear_reverse_kl",
     "commit_torch_loss_budget",
     "compute_exact_group_advantages",
     "dr_grpo_token_surrogate",
     "masked_causal_cross_entropy",
+    "masked_causal_reverse_kl",
     "plan_torch_loss_budget",
     "torch_assistant_target_loss_mask",
     "torch_completion_loss_mask",

@@ -134,3 +134,8 @@
 | 2026-09-03 17:50 | manual D03 | tests/test_grpo_surrogate.py | verification | 21 个 CPU tests、100 个 Hypothesis 生成 batch、value/gradient/accumulation/DDP oracle |
 | 2026-09-03 17:50 | manual D03 | docs/algorithms/GRPO_SURROGATE.md | documentation | deletion test、数学/精度/分布式合同、TRL 语义审计与未完成边界 |
 | 2026-09-03 17:50 | manual D03 | README.md, AGENTS.md, configs/project.yaml | status | 当前实现与机器可读 GRPO 合同同步到 D03 |
+| 2026-09-03 18:07 | manual D04 | docs/planning/DEVELOPMENT_MODULES.md | planning | 冻结 D01–D12 共 12 个 CPU framework development modules |
+| 2026-09-03 18:07 | manual D04 | src/posttrain_lab/train/opd_reverse_kl.py | implementation | causal full-vocabulary reverse KL、双 LM-head selected-position chunking 与全局 token normalization |
+| 2026-09-03 18:07 | manual D04 | tests/test_opd_reverse_kl.py | verification | 37 个 CPU tests、100 个 Hypothesis 生成 batch、value/gradient/memory/accumulation/DDP oracle |
+| 2026-09-03 18:07 | manual D04 | docs/algorithms/OPD_REVERSE_KL.md | documentation | deletion test、数学/精度/Teacher/分布式合同与上游语义审计 |
+| 2026-09-03 18:07 | manual D04 | README.md, AGENTS.md, configs/project.yaml | status | 当前实现、12 模块总数与机器可读 OPD 合同同步到 D04 |

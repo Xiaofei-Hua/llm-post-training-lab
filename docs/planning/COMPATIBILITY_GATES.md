@@ -45,8 +45,8 @@
 - logits 最后一维均为 262,144；
 - `num_iterations=1`，每次 update 前由当前 policy 新生成 completion；
 - KL 只 mask 生成 completion 首 token 至第一个 EOS（含 EOS），prompt/padding/EOS 后位置为零；
-- reverse KL 在手工分布上的数值、极限与梯度单测通过，且按全 batch 有效 completion token 数归一化；
-- full-vocab chunked loss 与非 chunked tiny-tensor reference 对齐；
+- reverse KL 的 CPU 数值、极限与梯度 oracle 已由 D04 通过，且按全 batch 有效 completion token 数归一化；真实模型 parity 仍待验证；
+- full-vocab chunked loss 已与独立的小型精确 full-logit reference 对齐；E2B/E4B 接线仍待验证；
 - Teacher 永久 stop-gradient，Student rollout token IDs stop-gradient。
 
 ### C4：Teacher quality

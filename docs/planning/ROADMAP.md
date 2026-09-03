@@ -42,7 +42,7 @@
 
 - 验证 Teacher/Student vocab 兼容。
 - 主配置固定 full-vocab chunked reverse KL、temperature 1.0 与 fully on-policy。
-- 先完成 tiny-tensor 数值/梯度 oracle，再运行 A0–A4 的 stage 1，并在统一 2M 边界重置 optimizer/scheduler。
+- 先完成小型精确 full-logit 数值/梯度 oracle，再运行 A0–A4 的 stage 1，并在统一 2M 边界重置 optimizer/scheduler。
 - Gate：G4 通过；loss 数值和梯度单测无误。
 
 ## Phase 6：五臂 Stage 2 与确认性评测（第 10 周）

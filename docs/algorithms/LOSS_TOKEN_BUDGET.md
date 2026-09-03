@@ -99,8 +99,8 @@ uv run pytest -q
 
 - masked CE 数值与梯度已由 D02 `MASKED_CAUSAL_CE.md` 实现；
 - exact-reward Dr.GRPO surrogate 已由 D03 `GRPO_SURROGATE.md` 实现；
-- OPD full-vocabulary reverse-KL；
+- OPD full-vocabulary reverse-KL 已由 D04 `OPD_REVERSE_KL.md` 实现；
 - optimizer/AMP、gradient accumulation 和 distributed trainer 接线；
 - 模型/tokenizer/LoRA 集成。
 
-所以 D01–D03 的张量层完成不等于实验 tracker 的 C1/C2/C3 已通过。
+所以 D01–D04 的张量层完成不等于实验 tracker 的 C1/C2/C3 已通过。

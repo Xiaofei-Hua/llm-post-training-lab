@@ -1,7 +1,9 @@
 project:
   name: llm-post-training-lab
   status: planning_ready_execution_conditional
-  development_status: d03_exact_reward_dr_grpo_surrogate_complete_cpu_only
+  development_status: d04_full_vocabulary_reverse_kl_complete_cpu_only
+  development_modules_total: 12
+  development_modules_complete: 4
   language: zh
   target: post-training-algorithm-internship-portfolio
 
@@ -99,8 +101,17 @@ opd_contract:
   temperature: 1.0
   vocabulary: full_chunked
   loss_mask: generated_completion_through_first_eos_only
-  normalization: sum_token_kl_over_all_valid_tokens
+  normalization: global_logical_update_selected_token_mean
   teacher_frozen: true
+  mask_coordinates: absolute_target_positions
+  causal_alignment: target_t_uses_prediction_t_minus_1
+  model_logit_transform_order: scale_then_final_softcap_then_temperature
+  temperature_squared_rescaling: false
+  default_low_precision_loss_compute_dtype: float32
+  max_tokens_per_chunk: 128
+  linear_projection: selected_positions_checkpointed
+  teacher_gradient: stopped
+  ddp_gradient_reduction: average_with_world_size_compensation
 
 loss_token_counter:
   definition: valid_objective_positions_entering_an_executed_optimizer_update

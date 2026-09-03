@@ -35,9 +35,11 @@
 - 实验追踪：`refine-logs/EXPERIMENT_TRACKER.md`
 - 数据计划：`docs/data/DATA_PLAN.md`
 - 评测协议：`docs/evaluation/BENCHMARK_PLAN.md`
+- CPU 开发模块总表：`docs/planning/DEVELOPMENT_MODULES.md`
 - 当前实现 D01：`docs/algorithms/LOSS_TOKEN_BUDGET.md`
 - 当前实现 D02：`docs/algorithms/MASKED_CAUSAL_CE.md`
 - 当前实现 D03：`docs/algorithms/GRPO_SURROGATE.md`
+- 当前实现 D04：`docs/algorithms/OPD_REVERSE_KL.md`
 
 ## Stage Gates
 
