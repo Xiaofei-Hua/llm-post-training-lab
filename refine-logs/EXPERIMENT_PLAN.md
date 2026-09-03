@@ -72,7 +72,7 @@ Immutable Problem Anchor：在有限算力和完全公开、可追溯的数据�
 1. 数据 license/revision/lineage、family split、污染审计；
 2. 100–300 verifier adversarial tests，盲化人工抽查一致率≥99%；
 3. E2B/E4B tokenizer/hash/token-ID、LoRA target、非文本 zero-grad/checksum；
-4. masked CE、固定合成批次 GRPO gradient、full-vocab reverse-KL value/limit/gradient oracle；
+4. masked CE 与固定合成批次 GRPO surrogate 的 CPU value/limit/gradient oracle（D02/D03 已完成），以及尚待完成的 full-vocab reverse-KL oracle；
 5. no-vLLM 与 vLLM 两步 GRPO、weight-sync age、skipped-group 语义；
 6. E2B backward、group-8 rollout、E4B SFT、E2B+E4B OPD 各 100-step steady-state profile；
 7. 用 profile 重算 campaign cost，预留 30%。

@@ -2,7 +2,7 @@
 
 ## 模块边界
 
-D02 实现 SFT 的 masked causal cross-entropy 数值核心，并把 D01 的绝对 target-position mask 直接转换为可反向传播的 loss。它不实现 Transformer forward、optimizer、trainer、GRPO surrogate、OPD reverse-KL 或模型集成。
+D02 实现 SFT 的 masked causal cross-entropy 数值核心，并把 D01 的绝对 target-position mask 直接转换为可反向传播的 loss。它不实现 Transformer forward、optimizer、trainer、OPD reverse-KL 或模型集成；GRPO surrogate 后续已由独立 D03 实现，不属于本模块。
 
 - 实现：`src/posttrain_lab/train/masked_ce.py`
 - 公开导出：`src/posttrain_lab/train/__init__.py`
@@ -102,7 +102,7 @@ uv run ruff check .
 uv run pytest -q
 ```
 
-D02 有 23 个 CPU tests，其中包含 100 个 Hypothesis 随机 batch；覆盖独立 log-softmax/gather value oracle、logits/hidden/weight/bias gradients、autograd gradcheck、causal shift、token mean、分块宽度、backward saved-tensor 边界、bfloat16 极值、CPU autocast、不均匀 microbatch、DDP 不均匀 rank 与空 local shard。仓库全量共 50 个 tests、375 个生成案例。
+D02 有 23 个 CPU tests，其中包含 100 个 Hypothesis 随机 batch；覆盖独立 log-softmax/gather value oracle、logits/hidden/weight/bias gradients、autograd gradcheck、causal shift、token mean、分块宽度、backward saved-tensor 边界、bfloat16 极值、CPU autocast、不均匀 microbatch、DDP 不均匀 rank 与空 local shard。仓库当前全量共 71 个 tests、475 个生成案例。
 
 验证没有下载模型或数据，没有访问 MPS/CUDA。D02 通过不等于 tracker 的 `C1-001` 已完成：后者仍依赖 C0 的真实 Gemma 4 tokenizer/model/LoRA 集成与 8-sample overfit。
 
@@ -111,5 +111,5 @@ D02 有 23 个 CPU tests，其中包含 100 个 Hypothesis 随机 batch；覆盖
 - Hugging Face/Gemma 4 forward 与 LoRA target 接线；
 - AMP scaler、optimizer step、gradient clipping 与 distributed collectives；
 - packed/unpacked logits parity 与 8-sample overfit；
-- GRPO surrogate、old-policy ratio 与 reward advantage；
+- exact-reward GRPO surrogate、old-policy ratio 与 reward advantage（已由 D03 实现）；
 - OPD full-vocabulary reverse-KL。

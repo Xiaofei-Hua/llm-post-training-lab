@@ -130,3 +130,7 @@
 | 2026-09-03 17:23 | manual D02 | tests/test_masked_ce.py | verification | 23 个 CPU tests、100 个 Hypothesis 生成 batch、value/gradient/accumulation/DDP oracle |
 | 2026-09-03 17:23 | manual D02 | docs/algorithms/MASKED_CAUSAL_CE.md | documentation | D02 数学、精度、分块、分布式合同与未完成边界 |
 | 2026-09-03 17:23 | manual D02 | README.md, AGENTS.md, configs/project.yaml | status | 当前实现与机器可读 CE 合同同步到 D02 |
+| 2026-09-03 17:50 | manual D03 | src/posttrain_lab/train/grpo_surrogate.py | implementation | exact-reward group advantage、token importance ratio、PPO clipping 与 Dr.GRPO global normalization |
+| 2026-09-03 17:50 | manual D03 | tests/test_grpo_surrogate.py | verification | 21 个 CPU tests、100 个 Hypothesis 生成 batch、value/gradient/accumulation/DDP oracle |
+| 2026-09-03 17:50 | manual D03 | docs/algorithms/GRPO_SURROGATE.md | documentation | deletion test、数学/精度/分布式合同、TRL 语义审计与未完成边界 |
+| 2026-09-03 17:50 | manual D03 | README.md, AGENTS.md, configs/project.yaml | status | 当前实现与机器可读 GRPO 合同同步到 D03 |

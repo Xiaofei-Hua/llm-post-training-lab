@@ -37,6 +37,7 @@
 - 评测协议：`docs/evaluation/BENCHMARK_PLAN.md`
 - 当前实现 D01：`docs/algorithms/LOSS_TOKEN_BUDGET.md`
 - 当前实现 D02：`docs/algorithms/MASKED_CAUSAL_CE.md`
+- 当前实现 D03：`docs/algorithms/GRPO_SURROGATE.md`
 
 ## Stage Gates
 

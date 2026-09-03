@@ -1,5 +1,11 @@
 """Training-contract primitives shared by SFT, GRPO, and OPD."""
 
+from .grpo_surrogate import (
+    DrGRPOSurrogateOutput,
+    ExactGroupAdvantageOutput,
+    compute_exact_group_advantages,
+    dr_grpo_token_surrogate,
+)
 from .loss_budget import (
     BudgetReservation,
     BudgetStateError,
@@ -27,6 +33,8 @@ __all__ = [
     "BudgetReservation",
     "BudgetStateError",
     "BudgetStepRecord",
+    "DrGRPOSurrogateOutput",
+    "ExactGroupAdvantageOutput",
     "LossTokenBudget",
     "MaskValidationError",
     "MaskedCrossEntropyOutput",
@@ -34,6 +42,8 @@ __all__ = [
     "TorchGroupMaskResult",
     "chunked_masked_causal_linear_cross_entropy",
     "commit_torch_loss_budget",
+    "compute_exact_group_advantages",
+    "dr_grpo_token_surrogate",
     "masked_causal_cross_entropy",
     "plan_torch_loss_budget",
     "torch_assistant_target_loss_mask",

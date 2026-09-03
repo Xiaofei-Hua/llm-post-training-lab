@@ -15,5 +15,6 @@
 - `train/torch_loss_budget.py`：D01 的 batched PyTorch masks、GRPO zero-variance group 过滤、tensor prefix 截断与 selection digest；
 - `train/loss_budget.py`：schema-versioned reservation/counter、失败 step 语义、checkpoint state 与 update ledger。
 - `train/masked_ce.py`：D02 的 causal target shift、masked token-mean CE、有效位置 LM-head 分块投影与 global logical-update normalization。
+- `train/grpo_surrogate.py`：D03 的 exact-reward group advantage、zero-variance active-group 语义、token importance ratio、PPO clipping 与 Dr.GRPO global normalization。
 
-当前没有保留旧标量 API、旧 CE 路径或占位 trainer。D01/D02 是训练器可调用的真实张量层；optimizer/AMP orchestration、distributed collectives、真实模型 forward 与 LoRA 集成仍由后续 trainer integration 模块负责。
+当前没有保留旧标量 API、旧 CE/GRPO 路径或占位 trainer。D01–D03 是训练器可调用的真实张量层；reward verifier、rollout/old-policy 生命周期、optimizer/AMP orchestration、distributed collectives、真实模型 forward 与 LoRA 集成仍由后续模块负责。

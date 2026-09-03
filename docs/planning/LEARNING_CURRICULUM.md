@@ -65,7 +65,7 @@
 ### 验收产物
 
 - 从 REINFORCE 推到 GRPO surrogate；
-- 两动作 toy policy 的解析梯度与代码对齐；
+- 两动作 Bernoulli policy 的解析梯度与实现梯度对齐；
 - group size/有效组率诊断；
 - 一张 reward、accuracy、entropy、length 联合曲线。
 
@@ -129,7 +129,7 @@
 
 ### 验收产物
 
-- 两分布 importance sampling toy simulation；
+- 两个可枚举离散分布的 importance-sampling 精确仿真；
 - ratio/ESS/clip fraction 监控说明；
 - 读完 TIS-GSPO 后写一页“何时值得从 GRPO 升级”。
 
