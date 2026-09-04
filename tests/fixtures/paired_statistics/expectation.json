@@ -1,0 +1,17 @@
+{
+  "analysis_report_sha256": "f343e8acb2c891303832c7360fe81f21dc5b5ae4a84dc841190160878e36bd82",
+  "c1a_holm_adjusted_p_ppm": 7440,
+  "c1a_point_ppm": 1000000,
+  "c1a_practical_success": true,
+  "c1a_randomization_extreme_count": 371,
+  "c1b_holm_adjusted_p_ppm": 1000000,
+  "c1b_point_ppm": 0,
+  "c1b_practical_success": false,
+  "c1b_randomization_extreme_count": 100000,
+  "c2_classification": "practical_equivalence",
+  "c2_equivalence_assessed": true,
+  "c2_point_ppm": 0,
+  "panel_sha256": "3f89fb2cadeeba0137b2fa4a2b4c14a8665758c6c146e7dd45641edc68bfe455",
+  "schema_version": "d08-statistics-audit-expectation-v1",
+  "statistics_protocol_sha256": "dc8789a4463691523867f1813d99cd3867b899673f69bfd359bf0307014f575f"
+}

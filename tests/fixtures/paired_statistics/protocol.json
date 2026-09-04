@@ -1,0 +1,21 @@
+{
+  "bootstrap_repetitions": 10000,
+  "bootstrap_seed": 2026090408,
+  "confidence_ppm": 950000,
+  "equivalence_confidence_ppm": 900000,
+  "equivalence_margin_ppm": 20000,
+  "family_alpha_ppm": 50000,
+  "practical_effect_ppm": 20000,
+  "quantile_method": "linear-type7-exact",
+  "randomization_correction": "plus-one",
+  "randomization_repetitions": 100000,
+  "randomization_seed": 2026090409,
+  "rng_algorithm": "numpy-pcg64-v1",
+  "schema_version": "d08-statistics-protocol-v1",
+  "stratum_key": "level",
+  "training_seeds": [
+    101,
+    202,
+    303
+  ]
+}

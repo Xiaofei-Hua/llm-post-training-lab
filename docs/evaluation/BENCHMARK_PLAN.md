@@ -82,7 +82,7 @@ D07 的 6-item synthetic fixture 只验证上述机制，没有下载 MATH-500 �
 
 - 两个确认性 contrasts：`A1−A0`（GRPO）与 `A2−A0`（OPD）。
 - bootstrap 只重采样 item：在每个 MATH level 内有放回抽取原层同数目的 item IDs，每个抽中 item 携带完整的三-seed prediction vectors，重复 10,000 次并报告 percentile 95% CI 与 bootstrap RNG seed。
-- 每个 contrast 的 p-value 来自 100,000 次 item-level paired randomization：对每个 item 以 0.5 概率交换 arm/control 的完整三-seed prediction vectors，等价于对 `d_i` 翻转符号；两个 p-values 使用 Holm step-down 控制 family-wise `α=0.05`。
+- 每个 contrast 的 p-value 来自 100,000 次 item-level paired randomization：对每个 item 以 0.5 概率交换 arm/control 的完整三-seed prediction vectors，等价于对 `d_i` 翻转符号；C1 的预注册方向为 improvement，使用 one-sided `greater`，两个 p-values 使用 Holm step-down 控制 family-wise `α=0.05`。
 - 单独报告三个 paired-seed effects；若方向不一致，主表仍按预注册 estimand 报告，但结论必须标注 seed-instability。
 - 统计 superiority 要求 Holm-adjusted `p<0.05` 且 95% CI 下界 >0；项目层 practical success 还要求点估计至少 +2pp。
 
@@ -92,6 +92,8 @@ D07 的 6-item synthetic fixture 只验证上述机制，没有下载 MATH-500 �
 - superiority 要求 95% CI 不含 0 且绝对点估计至少 2pp。
 - 若 superiority 不成立，只在同一 item-bootstrap estimand 的 TOST 90% CI **完全落入 [-2pp,+2pp]** 时声明 practical equivalence；点估计落入区间不够。
 - A3/A4 与 A0/A1/A2 的其他差异为 exploratory，明确标注且不反推主假设。
+
+所有 bootstrap/randomization base seeds 在结果出现前冻结；派生流只能绑定 protocol、hypothesis、operation 与不含 correctness/report/checkpoint 的 benchmark/resampling identity，不能由观测结果或完整 result panel hash 改变。完整 panel hash单独绑定统计输出。
 
 ### pass@8 与小样本
 

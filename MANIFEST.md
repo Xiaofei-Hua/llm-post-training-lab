@@ -226,3 +226,9 @@
 | 2026-09-04 17:13 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER.md, refine-logs/EXPERIMENT_TRACKER_20260904_163941.md | status | D07-EVALUATOR-FIXTURE 转为 COMPLETE_CPU；D08 NEXT，真实 runs/G1 仍未启动 |
 | 2026-09-04 17:13 | /experiment-bridge | README.md, docs/evaluation/SEALED_EVALUATOR.md, artifacts/README.md, configs/README.md | documentation | 公开 D07 synthetic audit revision/hash 与 anti-claim 边界 |
 | 2026-09-04 17:13 | /experiment-bridge | findings.md | evidence | 记录 D07 formal audit 闭合与 synthetic-only 结论边界 |
+| 2026-09-04 19:16 | /experiment-bridge | src/posttrain_lab/statistics/contracts.py, src/posttrain_lab/statistics/inference.py, src/posttrain_lab/statistics/audit.py, src/posttrain_lab/statistics/__init__.py | implementation | D08 text-free paired panel、exact result contracts、bootstrap/sign-flip/Holm/TOST 与 Git audit implementation |
+| 2026-09-04 19:16 | /experiment-bridge | tests/test_paired_statistics.py, tests/test_statistics_audit.py, tests/fixtures/paired_statistics/ | verification | 33 个 D08 tests、200 个 Hypothesis cases 与完整 10k/100k synthetic oracle inputs |
+| 2026-09-04 19:16 | /experiment-bridge | scripts/audit_paired_statistics.py | implementation | D08 clean-Git formal CPU audit thin entrypoint |
+| 2026-09-04 19:16 | /experiment-bridge | docs/evaluation/PAIRED_STATISTICS.md, docs/evaluation/BENCHMARK_PLAN.md | documentation | 冻结 estimand、one-sided C1、outcome-independent RNG、Holm 与 sequential TOST 边界 |
+| 2026-09-04 19:16 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_191550.md | verification | fresh reviewer 初审、三项 blocker 修复及 APPROVE 历史版本 |
+| 2026-09-04 19:16 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | verification | D08 implementation APPROVED、formal audit pending latest copy |

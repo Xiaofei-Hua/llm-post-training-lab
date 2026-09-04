@@ -1,0 +1,128 @@
+{
+  "benchmark_descriptor_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "evaluator_contract_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+  "evaluator_version_sha256": "7777777777777777777777777777777777777777777777777777777777777777",
+  "generation_protocol_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+  "items": [
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [true, true, true],
+        "A4": [true, true, true]
+      },
+      "item_id": "item-000",
+      "item_index": 0,
+      "stratum": "L1"
+    },
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [false, false, false],
+        "A4": [false, false, false]
+      },
+      "item_id": "item-001",
+      "item_index": 1,
+      "stratum": "L2"
+    },
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [true, false, false],
+        "A4": [true, false, false]
+      },
+      "item_id": "item-002",
+      "item_index": 2,
+      "stratum": "L1"
+    },
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [false, true, false],
+        "A4": [false, true, false]
+      },
+      "item_id": "item-003",
+      "item_index": 3,
+      "stratum": "L2"
+    },
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [true, false, true],
+        "A4": [true, false, true]
+      },
+      "item_id": "item-004",
+      "item_index": 4,
+      "stratum": "L1"
+    },
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [false, false, false],
+        "A4": [false, false, false]
+      },
+      "item_id": "item-005",
+      "item_index": 5,
+      "stratum": "L2"
+    },
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [true, true, false],
+        "A4": [true, true, false]
+      },
+      "item_id": "item-006",
+      "item_index": 6,
+      "stratum": "L1"
+    },
+    {
+      "correctness": {
+        "A0": [false, false, false],
+        "A1": [true, true, true],
+        "A2": [false, false, false],
+        "A3": [false, false, false],
+        "A4": [false, false, false]
+      },
+      "item_id": "item-007",
+      "item_index": 7,
+      "stratum": "L2"
+    }
+  ],
+  "panel_sha256": "3f89fb2cadeeba0137b2fa4a2b4c14a8665758c6c146e7dd45641edc68bfe455",
+  "public_item_set_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "public_items_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "report_refs": [
+    {"arm": "A0", "checkpoint_sha256": "00aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A0-S101", "report_sha256": "00bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 101},
+    {"arm": "A0", "checkpoint_sha256": "01aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A0-S202", "report_sha256": "01bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 202},
+    {"arm": "A0", "checkpoint_sha256": "02aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A0-S303", "report_sha256": "02bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 303},
+    {"arm": "A1", "checkpoint_sha256": "03aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A1-S101", "report_sha256": "03bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 101},
+    {"arm": "A1", "checkpoint_sha256": "04aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A1-S202", "report_sha256": "04bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 202},
+    {"arm": "A1", "checkpoint_sha256": "05aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A1-S303", "report_sha256": "05bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 303},
+    {"arm": "A2", "checkpoint_sha256": "06aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A2-S101", "report_sha256": "06bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 101},
+    {"arm": "A2", "checkpoint_sha256": "07aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A2-S202", "report_sha256": "07bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 202},
+    {"arm": "A2", "checkpoint_sha256": "08aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A2-S303", "report_sha256": "08bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 303},
+    {"arm": "A3", "checkpoint_sha256": "09aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A3-S101", "report_sha256": "09bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 101},
+    {"arm": "A3", "checkpoint_sha256": "0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A3-S202", "report_sha256": "0abbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 202},
+    {"arm": "A3", "checkpoint_sha256": "0baaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A3-S303", "report_sha256": "0bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 303},
+    {"arm": "A4", "checkpoint_sha256": "0caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A4-S101", "report_sha256": "0cbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 101},
+    {"arm": "A4", "checkpoint_sha256": "0daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A4-S202", "report_sha256": "0dbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 202},
+    {"arm": "A4", "checkpoint_sha256": "0eaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "evaluation_run_id": "synthetic-A4-S303", "report_sha256": "0ebbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "training_seed": 303}
+  ],
+  "schema_version": "d08-paired-panel-v1",
+  "sealed_references_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+  "stratum_key": "level",
+  "training_seeds": [101, 202, 303]
+}
