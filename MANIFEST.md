@@ -196,3 +196,8 @@
 | 2026-09-04 13:04 | /experiment-bridge | README.md, AGENTS.md, configs/project.yaml, docs/planning/DEVELOPMENT_MODULES.md | status | 进度同步到 6/24、D06 COMPLETE、D07 NEXT；GPU 与真实数据仍未授权 |
 | 2026-09-04 13:04 | /experiment-bridge | artifacts/README.md, scripts/README.md, src/posttrain_lab/README.md, tests/README.md | documentation | D06 artifact/CLI/package/test 边界与 436/96 test counts |
 | 2026-09-04 13:04 | /experiment-bridge | findings.md | documentation | D06 family leakage、全上下文污染、payload lineage 与 attestation 结论 |
+| 2026-09-04 13:08 | /experiment-bridge | artifacts/audits/D06_DATA_TRUST_AUDIT_20260904_130649.json | evidence | 绑定 `c4c726a` 实现 revision 的 D06 formal data-trust audit 历史版本；passed、0 failures、无 raw text |
+| 2026-09-04 13:08 | /experiment-bridge | artifacts/audits/D06_DATA_TRUST_AUDIT.json | evidence | D06 audit latest copy；1 exact/2 fuzzy、6 quarantine、9 clean train + 4 eval、manifest hash 闭合 |
+| 2026-09-04 13:08 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_130705.md | evidence | implementation commit 与正式 audit artifact 闭合后的 APPROVE 历史版本 |
+| 2026-09-04 13:08 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | evidence | fresh-agent D06 APPROVE 与 non-blocking scale/provenance 边界 latest copy |
+| 2026-09-04 13:08 | /experiment-bridge | configs/project.yaml | evidence | 记录 D06 formal audit revision、canonical report hash、file hash 与 G1=false |

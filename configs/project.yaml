@@ -89,6 +89,10 @@ data_trust_contract:
   synthetic_quarantined_records: 6
   synthetic_clean_training_records: 9
   synthetic_evaluation_records: 4
+  formal_audit_passed: true
+  formal_audit_git_revision: c4c726a9401deef9960ca041dcc59477a18d697f
+  formal_audit_report_sha256: d7c3155d8cf4a003c0e7673ad9515ec9d00d61964dab8a1ec3cf513f439c77a2
+  formal_audit_file_sha256: 2c3e4eaeb4aba48124495b37d34162adfd5ece8472fd926db5a7524ed49d70c2
   real_data_materialized: false
   g1_passed: false
 

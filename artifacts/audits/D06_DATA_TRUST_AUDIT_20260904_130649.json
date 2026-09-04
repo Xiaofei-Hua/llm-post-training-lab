@@ -1,0 +1,196 @@
+{
+  "clean_report_sha256": "c701b66ac5abf9a9a5e1820d14b51ebc0f0ef24561e3127f27f1f3fb36add09e",
+  "clean_training_record_count": 9,
+  "contamination_policy_sha256": "675338221f7b274af54592a6e5552d47355fa4219853820150a971915eb53fa7",
+  "dirty_match_counts": {
+    "exact": 1,
+    "fuzzy": 2,
+    "review": 0
+  },
+  "dirty_report_sha256": "8cd86ee5012783bdec2b4d7866faf872fcf7e8afe6c5f480b1e5f6e24b5bb7d4",
+  "evaluation_record_count": 4,
+  "failures": [],
+  "input_files_sha256": {
+    "tests/fixtures/data_trust/candidate_records.jsonl": "e2608fa3376f046b80078efce4ff7aa49ec6fb8f196edf9c08cda6118529ba56",
+    "tests/fixtures/data_trust/evaluation_records.jsonl": "894f74b204d900c78ae74b1e4065b4ce34d90ddeb1a6bacc5b1206d0ee81e9ea",
+    "tests/fixtures/data_trust/expectation.json": "54cd6bad371c98eb89a4e4bead63fe512a0fe5cff3b3235172d86321387de5e6",
+    "tests/fixtures/data_trust/source_registry.json": "09371dda8f1ff5f7e5955d2ad727553aa72bf3be5776ccc7ac4c9b9b327f2e88",
+    "tests/fixtures/data_trust/split_policy.json": "5af6a88203a5f66236293bb7881f2c05d2b6ed4cd30fff3c2c76737ead2dc9e6",
+    "tests/fixtures/data_trust/transform_registry.json": "0d915b74ff716f60a26d9648dbec56f3cd74ca8f3e7c14923d748ae311cbaf06"
+  },
+  "manifest_record_set_sha256": "a6370acff1459d707faade76b1f27d5851eea631220fa1024e13e4449a9553f1",
+  "manifest_sha256": "ae6b70c2f7667b0ee66d33ce59cd7fbb558ba4d5ba4934e69304bfd3f5abc364",
+  "manifest_split_counts": {
+    "D_anchor": 2,
+    "D_core": 2,
+    "D_dev": 3,
+    "D_select": 1,
+    "D_teacher_gate": 1,
+    "E": 4
+  },
+  "observed_match_details": [
+    {
+      "character_containment_ppm": 1000000,
+      "character_jaccard_ppm": 1000000,
+      "eval_field": "problem",
+      "eval_normalized_sha256": "0010f5a086af54ae20cd48de86d3334b743529f131a34c89ddc919ac2e27542f",
+      "eval_record_id": "eval:000",
+      "eval_source_id": "synthetic/eval",
+      "kind": "exact",
+      "match_id": "f0e74d850eae8be59c2d04895db04eff9d15ff01cc267c0127a063d299018bab",
+      "token_containment_ppm": 1000000,
+      "token_jaccard_ppm": 1000000,
+      "train_field": "problem",
+      "train_normalized_sha256": "0010f5a086af54ae20cd48de86d3334b743529f131a34c89ddc919ac2e27542f",
+      "train_record_id": "train:000",
+      "train_source_id": "synthetic/train-a"
+    },
+    {
+      "character_containment_ppm": 939394,
+      "character_jaccard_ppm": 873239,
+      "eval_field": "problem",
+      "eval_normalized_sha256": "25a3d6390ab83b1cbcce9752f56845df3ade870ac6da98d1ff7d1ca6b28ae558",
+      "eval_record_id": "eval:001",
+      "eval_source_id": "synthetic/eval",
+      "kind": "fuzzy",
+      "match_id": "c50b4112019ecbef3ccfac2be6389a1eccd484f39be3ad274e73b6b65d262355",
+      "token_containment_ppm": 812500,
+      "token_jaccard_ppm": 684211,
+      "train_field": "problem",
+      "train_normalized_sha256": "5524d9492f9c202f79dd104c6ff9f3d1f2dc791eba18b1950d2ded29eed6a41d",
+      "train_record_id": "train:002",
+      "train_source_id": "synthetic/train-a"
+    },
+    {
+      "character_containment_ppm": 1000000,
+      "character_jaccard_ppm": 641026,
+      "eval_field": "problem",
+      "eval_normalized_sha256": "094b225cf75f257adfe318329e6a2f2ef7a09fb42058237bf188d6f28f9fea41",
+      "eval_record_id": "eval:002",
+      "eval_source_id": "synthetic/eval",
+      "kind": "fuzzy",
+      "match_id": "93a4bb36091f117bd19bccb3a209b4474d518695dbf4a7c66962d73e9978441c",
+      "token_containment_ppm": 1000000,
+      "token_jaccard_ppm": 666667,
+      "train_field": "response",
+      "train_normalized_sha256": "d5b07a461b5ebd364e6f26c428e6d2108a73c2f523b7bfde340a366baa2cda37",
+      "train_record_id": "train:005",
+      "train_source_id": "synthetic/train-b"
+    }
+  ],
+  "observed_matches": [
+    {
+      "eval_field": "problem",
+      "eval_record_id": "eval:000",
+      "kind": "exact",
+      "train_field": "problem",
+      "train_record_id": "train:000"
+    },
+    {
+      "eval_field": "problem",
+      "eval_record_id": "eval:001",
+      "kind": "fuzzy",
+      "train_field": "problem",
+      "train_record_id": "train:002"
+    },
+    {
+      "eval_field": "problem",
+      "eval_record_id": "eval:002",
+      "kind": "fuzzy",
+      "train_field": "response",
+      "train_record_id": "train:005"
+    }
+  ],
+  "parent_ledger_sha256": "7d0b208bf140bf80d38bdb458324439eab114bf6188b465560d7b8e160865c73",
+  "passed": true,
+  "provenance": {
+    "dependency_lock_path": "uv.lock",
+    "dependency_lock_sha256": "689d616cbfbc26df0818da448a0098197cb716782089256a9694666c574817f4",
+    "git_revision": "c4c726a9401deef9960ca041dcc59477a18d697f",
+    "implementation_source_sha256": "69a8d0a73f153053d1ed3025b5c0a839fc740aac8854c21c907589e5e1a3fb15",
+    "source_files_sha256": {
+      "scripts/audit_data_trust.py": "c75744504e821367a8c995ab0e752efa290a73634561ec9ee220d74986c1b995",
+      "src/posttrain_lab/__init__.py": "17860256d526441e9c428d15a50e605299f94ca7e2ecb59a712bc3517acdd44f",
+      "src/posttrain_lab/data/__init__.py": "aa329cb5f041f65eb39f6e48e51baf50d6a76366b8de86177a68dbd58016c796",
+      "src/posttrain_lab/data/audit.py": "5f8f4c89e4afa80723a9b21d13ffb9ea9c245b7946e096f7015a46725b454c3d",
+      "src/posttrain_lab/data/contamination.py": "f3960f79adbbde05f6ca878dabc717c373b5e99fa3566430783a3842c32c1c46",
+      "src/posttrain_lab/data/registry.py": "6eb68df2ca2a2311db8942e8f4f2b9244d6416143e02726207d88b0e9313148e"
+    },
+    "tracked_files_sha256": {
+      "scripts/audit_data_trust.py": "c75744504e821367a8c995ab0e752efa290a73634561ec9ee220d74986c1b995",
+      "src/posttrain_lab/__init__.py": "17860256d526441e9c428d15a50e605299f94ca7e2ecb59a712bc3517acdd44f",
+      "src/posttrain_lab/data/__init__.py": "aa329cb5f041f65eb39f6e48e51baf50d6a76366b8de86177a68dbd58016c796",
+      "src/posttrain_lab/data/audit.py": "5f8f4c89e4afa80723a9b21d13ffb9ea9c245b7946e096f7015a46725b454c3d",
+      "src/posttrain_lab/data/contamination.py": "f3960f79adbbde05f6ca878dabc717c373b5e99fa3566430783a3842c32c1c46",
+      "src/posttrain_lab/data/registry.py": "6eb68df2ca2a2311db8942e8f4f2b9244d6416143e02726207d88b0e9313148e",
+      "tests/fixtures/data_trust/candidate_records.jsonl": "e2608fa3376f046b80078efce4ff7aa49ec6fb8f196edf9c08cda6118529ba56",
+      "tests/fixtures/data_trust/evaluation_records.jsonl": "894f74b204d900c78ae74b1e4065b4ce34d90ddeb1a6bacc5b1206d0ee81e9ea",
+      "tests/fixtures/data_trust/expectation.json": "54cd6bad371c98eb89a4e4bead63fe512a0fe5cff3b3235172d86321387de5e6",
+      "tests/fixtures/data_trust/ingest_transform.py": "ffb1851efb22f120dcbcc6dc749fa97cf083f11c44aa9e0e0f936f2098005bde",
+      "tests/fixtures/data_trust/ingest_transform_config.json": "97e01ae6298d719871b6f20656cd0fd343ddaab6698110be9162e18d2757aca4",
+      "tests/fixtures/data_trust/source_registry.json": "09371dda8f1ff5f7e5955d2ad727553aa72bf3be5776ccc7ac4c9b9b327f2e88",
+      "tests/fixtures/data_trust/split_policy.json": "5af6a88203a5f66236293bb7881f2c05d2b6ed4cd30fff3c2c76737ead2dc9e6",
+      "tests/fixtures/data_trust/transform_registry.json": "0d915b74ff716f60a26d9648dbec56f3cd74ca8f3e7c14923d748ae311cbaf06",
+      "uv.lock": "689d616cbfbc26df0818da448a0098197cb716782089256a9694666c574817f4"
+    },
+    "tracked_input_paths": [
+      "src/posttrain_lab/__init__.py",
+      "src/posttrain_lab/data/__init__.py",
+      "src/posttrain_lab/data/registry.py",
+      "src/posttrain_lab/data/contamination.py",
+      "src/posttrain_lab/data/audit.py",
+      "scripts/audit_data_trust.py",
+      "uv.lock",
+      "tests/fixtures/data_trust/source_registry.json",
+      "tests/fixtures/data_trust/transform_registry.json",
+      "tests/fixtures/data_trust/candidate_records.jsonl",
+      "tests/fixtures/data_trust/evaluation_records.jsonl",
+      "tests/fixtures/data_trust/split_policy.json",
+      "tests/fixtures/data_trust/expectation.json",
+      "tests/fixtures/data_trust/ingest_transform.py",
+      "tests/fixtures/data_trust/ingest_transform_config.json"
+    ],
+    "tracked_inputs_match_git": true
+  },
+  "quarantined_record_ids": [
+    "train:000",
+    "train:001",
+    "train:002",
+    "train:003",
+    "train:004",
+    "train:005"
+  ],
+  "schema_version": "d06-data-trust-audit-v1",
+  "source_registry_sha256": "5ee29d34ac4cd242a6f36859293ccd38dcc2cc7ddd341434a94352a6d1849f43",
+  "split_assignment": {
+    "assignment_sha256": "7c7fb8f678c7b2dbb2ea5e311208f4eabcffcbdb0d3c1135f990b3dda777a93c",
+    "assignments": {
+      "train:000": "D_dev",
+      "train:001": "D_dev",
+      "train:002": "D_select",
+      "train:003": "D_select",
+      "train:004": "D_select",
+      "train:005": "D_anchor",
+      "train:006": "D_select",
+      "train:007": "D_dev",
+      "train:008": "D_dev",
+      "train:009": "D_anchor",
+      "train:010": "D_core",
+      "train:011": "D_anchor",
+      "train:012": "D_teacher_gate",
+      "train:013": "D_dev",
+      "train:014": "D_core"
+    },
+    "component_count": 12,
+    "policy_sha256": "e877fd58abb2a903ae31f6acc88d046b2abc0f703fd0e18a8869abe53a153959",
+    "split_counts": {
+      "D_anchor": 3,
+      "D_core": 2,
+      "D_dev": 5,
+      "D_select": 4,
+      "D_teacher_gate": 1
+    }
+  },
+  "split_policy_sha256": "e877fd58abb2a903ae31f6acc88d046b2abc0f703fd0e18a8869abe53a153959",
+  "transform_registry_sha256": "8b4a8f1eee0e1355cf2d004e86043eaf73f2c730c73e28f1a23eef6c9d8ff758"
+}
