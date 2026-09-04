@@ -158,7 +158,7 @@ pass@k = 1 - C(n-c, k) / C(n, k)
 
 冻结 synthetic oracle 是：greedy 3/6，sampling 21/48，sampling pass@8 5/6；两个模式各有一个 `length` finish，用于把非零 truncation 路径纳入 Git-bound oracle。它们只证明实现能重现人为构造的 match/mismatch/no-extraction/truncation 情况。fixture 的 output token IDs 是有界、确定性的 synthetic stand-ins；真实 backend 必须写入真实 tokenizer token IDs，并在 D14/D15 验证。
 
-正式 audit 输出只含 hashes、版本、计数与 metrics，不含 prompt、prediction 或 reference 原文。实现提交后生成 `artifacts/audits/D07_EVALUATOR_AUDIT.json`，以确保报告内 revision 真正指向已跟踪代码，而不是未提交工作区。
+正式 audit 输出只含 hashes、版本、计数与 metrics，不含 prompt、prediction 或 reference 原文。`artifacts/audits/D07_EVALUATOR_AUDIT.json` 已在 implementation commit `c948fe2eae50289b78513a3a9513e188bff54a98` 上生成：`passed=true`、0 failures、tracked inputs 与 Git 一致；canonical report SHA-256 为 `a6c1bed7e74fcc9bf3448fa095535237c27f183cd67938799d9d96bc40b8abf4`，pretty JSON file SHA-256 为 `4868cbf3b9572a141659f7141b3bf17fc6b9fc0b3f6bd03952e9f90d9fec8654`。
 
 ## 最小 API
 

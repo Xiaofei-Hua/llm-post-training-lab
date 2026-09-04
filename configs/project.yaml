@@ -131,7 +131,11 @@ sealed_evaluator_contract:
   synthetic_sampling_correct: 21
   synthetic_sampling_pass_at_8_ppm: 833333
   formal_audit_requires_clean_git_inputs: true
-  formal_audit_passed: false
+  formal_audit_passed: true
+  formal_audit_git_revision: c948fe2eae50289b78513a3a9513e188bff54a98
+  formal_audit_implementation_source_sha256: e737ca0ce742b7896fbd77702a2be0115ff881b5cc723ee75df7997e82dde7ea
+  formal_audit_report_sha256: a6c1bed7e74fcc9bf3448fa095535237c27f183cd67938799d9d96bc40b8abf4
+  formal_audit_file_sha256: 4868cbf3b9572a141659f7141b3bf17fc6b9fc0b3f6bd03952e9f90d9fec8654
   real_benchmark_materialized: false
   official_benchmark_adapters_complete: false
   blinded_human_audit_complete: false

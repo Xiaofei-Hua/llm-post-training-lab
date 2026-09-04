@@ -48,7 +48,7 @@
 | Run ID | Action | Inputs | Pass criterion | Dependency | Status |
 |---|---|---|---|---|---|
 | D06-TRUST-FIXTURE | Data trust contract audit | frozen synthetic adversarial registry/records/policy/expectation | 96/96 tests；dirty→family quarantine→clean rescan；manifest/Git provenance hashes close | none | COMPLETE_CPU |
-| D07-EVALUATOR-FIXTURE | Sealed evaluator contract audit | 6-item synthetic public/sealed snapshot、greedy/sampling protocols、frozen predictions/expectation | 70/70 implementation tests；完整 item×sample grid；3/6 greedy、21/48 sampling、5/6 pass@8 oracle；formal Git-bound audit pending | EVAL-001,D06 contract | IN_PROGRESS_CPU |
+| D07-EVALUATOR-FIXTURE | Sealed evaluator contract audit | 6-item synthetic public/sealed snapshot、greedy/sampling protocols、frozen predictions/expectation | 70/70 tests；完整 item×sample grid；greedy/sampling 各 1 个 truncation；3/6、21/48、5/6 pass@8 oracle；evaluator/Git hashes close | EVAL-001,D06 contract | COMPLETE_CPU |
 | DATA-001 | Build registry/splits | public source revisions | counts、licenses、hashes、family-disjoint | none | NOT_STARTED |
 | DATA-002 | Contamination audit | all train/eval text + traces | frozen threshold；reviewed borderline pairs | DATA-001 | NOT_STARTED |
 | EVAL-001 | Verifier attack suite | frozen 257-case corpus | 257/257；corpus/policy/backend/source/lock/Git hashes recorded | none | COMPLETE_CPU |

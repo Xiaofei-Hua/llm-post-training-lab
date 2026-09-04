@@ -4,4 +4,4 @@
 
 必须显式记录：model/data revision、chat template hash、LoRA targets、objective contract、Student loss-token budget、seed/RNG streams、generation config、evaluator commit 和硬件拓扑。
 
-D07 已定义 generation protocol 的 JSON contract：greedy 禁止含糊的 sampling 字段，sampling 必须显式给出 n/temperature/top-p/top-k/base-seed/namespace；system prompt、chat-template SHA、max tokens、EOS/stop 全部参与 protocol hash。`configs/project.yaml` 中的 D07 hashes 来自 synthetic fixture，不可直接作为真实 benchmark run config；D15/D20 必须重新冻结正式配置。
+D07 已定义 generation protocol 的 JSON contract：greedy 禁止含糊的 sampling 字段，sampling 必须显式给出 n/temperature/top-p/top-k/base-seed/namespace；system prompt、chat-template SHA、max tokens、EOS/stop 全部参与 protocol hash。`configs/project.yaml` 记录了绑定 `c948fe2e…` 的 formal synthetic audit revision、implementation、canonical report 与 pretty-file hashes；这些不可直接作为真实 benchmark run config，D15/D20 必须重新冻结正式配置。

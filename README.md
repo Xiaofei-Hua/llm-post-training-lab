@@ -79,6 +79,8 @@ Base
 
 D07 在 D05/D06 之上冻结 public-prompt/sealed-answer capability boundary、greedy/sampling 协议、checkpoint-independent paired generation seeds、完整 item×sample generation grid、持久化 finish semantics、accuracy/pass@k/extraction/parse/length/truncation 指标、无原文 item-level report，以及绑定 evaluator policy/backend/source/fixture 的 Git audit。当前 506 个 CPU tests、1,375 个 Hypothesis 生成案例及 257 个冻结 adversarial verifier cases 全部通过；D07 自身的 70 个 tests 与 3/6、21/48 合成 oracle 不是模型或真实 benchmark 结果。
 
+D07 formal synthetic audit 已通过并绑定 implementation commit `c948fe2eae50289b78513a3a9513e188bff54a98`；canonical report SHA-256 为 `a6c1bed7e74fcc9bf3448fa095535237c27f183cd67938799d9d96bc40b8abf4`。该证据只闭合 CPU evaluator contract，不改变真实 benchmark materialization 与 G1 的未完成状态。
+
 开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0、NumPy 2.5.2、Math-Verify 0.9.0 与 ANTLR runtime 4.13.2。尚未下载模型或真实训练数据、未启动 MPS/CUDA，也未把 G1/G3 等真实执行 gate 标为完成。D01–D07 是可接入后续 runtime 的 production contracts，但不得误报为 Gemma 4 trainer、完整 GRPO rollout、完整 OPD pipeline、真实数据已去污染、真实 benchmark 已 materialize/评测或 G1 已通过；下一模块为 D08 paired statistics core。
 
 ```bash

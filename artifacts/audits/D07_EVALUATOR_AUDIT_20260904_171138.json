@@ -1,0 +1,149 @@
+{
+  "benchmark_descriptor_sha256": "1d3af73c5351bde3d3287a5fd16596312382ba8d42b9998dc763369a9299a1ae",
+  "expectation_sha256": "549962e2e7a7d07d4b1b0e53031c6aa58e1a3c506bf18b99fbb35c219df3b8c1",
+  "failures": [],
+  "fixture_predictions_sha256": "8cf02157016156946412507fe29d147c83cb415150738e9d161f8e1ffafaed20",
+  "passed": true,
+  "provenance": {
+    "git_revision": "c948fe2eae50289b78513a3a9513e188bff54a98",
+    "implementation_source_paths": [
+      "src/posttrain_lab/__init__.py",
+      "src/posttrain_lab/data/__init__.py",
+      "src/posttrain_lab/data/audit.py",
+      "src/posttrain_lab/data/contamination.py",
+      "src/posttrain_lab/data/registry.py",
+      "src/posttrain_lab/rewards/__init__.py",
+      "src/posttrain_lab/rewards/audit.py",
+      "src/posttrain_lab/rewards/verifier.py",
+      "src/posttrain_lab/evaluation/__init__.py",
+      "src/posttrain_lab/evaluation/contracts.py",
+      "src/posttrain_lab/evaluation/metrics.py",
+      "src/posttrain_lab/evaluation/runner.py",
+      "src/posttrain_lab/evaluation/audit.py",
+      "scripts/audit_evaluator.py",
+      ".python-version",
+      "pyproject.toml",
+      "uv.lock"
+    ],
+    "implementation_source_sha256": "e737ca0ce742b7896fbd77702a2be0115ff881b5cc723ee75df7997e82dde7ea",
+    "runtime_versions": {
+      "python": "3.12.13",
+      "python_implementation": "CPython",
+      "unicode_database": "15.0.0"
+    },
+    "tracked_files_sha256": {
+      ".python-version": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d",
+      "pyproject.toml": "b7098e457f874cf7406f73b177509135acfc5e8a72f24b4c839540ae170a24cf",
+      "scripts/audit_evaluator.py": "02ef88517bb420eae44e3bf9fc1156dc0419cf465167bf6b6c8350befa09e167",
+      "src/posttrain_lab/__init__.py": "17860256d526441e9c428d15a50e605299f94ca7e2ecb59a712bc3517acdd44f",
+      "src/posttrain_lab/data/__init__.py": "aa329cb5f041f65eb39f6e48e51baf50d6a76366b8de86177a68dbd58016c796",
+      "src/posttrain_lab/data/audit.py": "5f8f4c89e4afa80723a9b21d13ffb9ea9c245b7946e096f7015a46725b454c3d",
+      "src/posttrain_lab/data/contamination.py": "f3960f79adbbde05f6ca878dabc717c373b5e99fa3566430783a3842c32c1c46",
+      "src/posttrain_lab/data/registry.py": "6eb68df2ca2a2311db8942e8f4f2b9244d6416143e02726207d88b0e9313148e",
+      "src/posttrain_lab/evaluation/__init__.py": "9926e0a36d05775c76225a661e7e56071e430aff81fd6773eecde72d64c2e82c",
+      "src/posttrain_lab/evaluation/audit.py": "d021e590fc5791cd4dc08bbd97d52cc7f66e89adb995b10ae8132be063353b0b",
+      "src/posttrain_lab/evaluation/contracts.py": "02d3265bb8595cce09a790198f481eb6e5d6417f6ab5cae2536fc1d61d26b50b",
+      "src/posttrain_lab/evaluation/metrics.py": "aedfd5dde5bb1689ec99246aa8798054bb3730b8ac56e6b6914d25d0882aa3b2",
+      "src/posttrain_lab/evaluation/runner.py": "e816da9917f5d7732cce195a7838098019e2ceffe1292a89553d8a8657ee7ce0",
+      "src/posttrain_lab/rewards/__init__.py": "321393c5a7cdc33280980a506bea319bbd1913173e8a24c4a0db676fe1081c65",
+      "src/posttrain_lab/rewards/audit.py": "8249e8dfb1af92ed9a37130902c186c412eb9e1c8cc490ce35ca888e3e51a77a",
+      "src/posttrain_lab/rewards/verifier.py": "63b87853a03757a43d95f1923b03db08de5766781f519dbe22ee3923d64f1bb0",
+      "tests/fixtures/evaluation_contract/benchmark_descriptor.json": "4d0d874505c5037252d85ff0b26bf64f0731d8adb1cbe22302737a15c5557594",
+      "tests/fixtures/evaluation_contract/expectation.json": "549962e2e7a7d07d4b1b0e53031c6aa58e1a3c506bf18b99fbb35c219df3b8c1",
+      "tests/fixtures/evaluation_contract/fixture_predictions.json": "8cf02157016156946412507fe29d147c83cb415150738e9d161f8e1ffafaed20",
+      "tests/fixtures/evaluation_contract/greedy_protocol.json": "5eed27a175fe8a03d022f6117ab7f35749f1e1025d1ac5f1fdc0eb90b0fa7ce5",
+      "tests/fixtures/evaluation_contract/public_items.jsonl": "a16a9641b5c1112081e4f410d3f5d12a3fd70c9efdce651f9585868bb1da90c3",
+      "tests/fixtures/evaluation_contract/sampling_protocol.json": "ca213d3bbf38ed9ba8726e02e73707b0dfe5a63878e51b33e17c44a165ff2ce7",
+      "tests/fixtures/evaluation_contract/sealed_references.jsonl": "e069ec5de154550f92fe2653e2662f975035c1222fbedad6524df3052c5bfd37",
+      "uv.lock": "689d616cbfbc26df0818da448a0098197cb716782089256a9694666c574817f4"
+    },
+    "tracked_input_paths": [
+      "src/posttrain_lab/__init__.py",
+      "src/posttrain_lab/data/__init__.py",
+      "src/posttrain_lab/data/audit.py",
+      "src/posttrain_lab/data/contamination.py",
+      "src/posttrain_lab/data/registry.py",
+      "src/posttrain_lab/rewards/__init__.py",
+      "src/posttrain_lab/rewards/audit.py",
+      "src/posttrain_lab/rewards/verifier.py",
+      "src/posttrain_lab/evaluation/__init__.py",
+      "src/posttrain_lab/evaluation/contracts.py",
+      "src/posttrain_lab/evaluation/metrics.py",
+      "src/posttrain_lab/evaluation/runner.py",
+      "src/posttrain_lab/evaluation/audit.py",
+      "scripts/audit_evaluator.py",
+      ".python-version",
+      "pyproject.toml",
+      "uv.lock",
+      "tests/fixtures/evaluation_contract/benchmark_descriptor.json",
+      "tests/fixtures/evaluation_contract/public_items.jsonl",
+      "tests/fixtures/evaluation_contract/sealed_references.jsonl",
+      "tests/fixtures/evaluation_contract/greedy_protocol.json",
+      "tests/fixtures/evaluation_contract/sampling_protocol.json",
+      "tests/fixtures/evaluation_contract/fixture_predictions.json",
+      "tests/fixtures/evaluation_contract/expectation.json"
+    ],
+    "tracked_inputs_match_git": true
+  },
+  "public_items_sha256": "a16a9641b5c1112081e4f410d3f5d12a3fd70c9efdce651f9585868bb1da90c3",
+  "runs": {
+    "greedy": {
+      "answer_accuracy_ppm": 500000,
+      "completion_token_count_total": 151,
+      "correct_sample_count": 3,
+      "evaluator_contract_sha256": "14ebabece105ca19f7082977a5ff7fe4354f27c0241804c8b03a9ba04370b0df",
+      "evaluator_version_sha256": "539093f50d88f4f28f6aaca8fd990b58747e83c482debaf407f5cb384bcb0d5d",
+      "extraction_rate_ppm": 833333,
+      "finish_reason_counts": {
+        "eos": 5,
+        "length": 1
+      },
+      "generation_record_set_sha256": "8ea5e5b50205bfafa28d8b8754d87c1e1da22c4b1ad39d4e8c30b3e5271fe56e",
+      "parse_rate_ppm": 833333,
+      "pass_at_k_ppm": {
+        "1": 500000
+      },
+      "protocol_sha256": "cfa8cf0f5513e713d29b9fecc285b5ead22f490c920a65105fcaa002bc6f88c5",
+      "report_sha256": "f327291a17bb92af0aa287b3735f0442351a6de8632d4e7bbd04cfaabcba3bab",
+      "sample_count": 6,
+      "truncation_count": 1,
+      "truncation_rate_ppm": 166667,
+      "verification_status_counts": {
+        "match": 3,
+        "mismatch": 2,
+        "prediction_not_extracted": 1
+      }
+    },
+    "sampling": {
+      "answer_accuracy_ppm": 437500,
+      "completion_token_count_total": 597,
+      "correct_sample_count": 21,
+      "evaluator_contract_sha256": "e8fda69d36c421b316118d8ef29018db0cf8d49b4014c41cdd9861df4cf50f2f",
+      "evaluator_version_sha256": "14e3342a7c71be19a11c217050823edaa3cdc12e83c5f4d103d501bd22218b0c",
+      "extraction_rate_ppm": 958333,
+      "finish_reason_counts": {
+        "eos": 47,
+        "length": 1
+      },
+      "generation_record_set_sha256": "8644b9a3ba953b5bf6cbc44f70b2cf9c18cd02b379760fdbf575c4ac91cda03b",
+      "parse_rate_ppm": 958333,
+      "pass_at_k_ppm": {
+        "1": 437500,
+        "8": 833333
+      },
+      "protocol_sha256": "e07e5d433f91dc39edbe657b1af893124f03b17847eadc25429d6be3cc0e80a4",
+      "report_sha256": "4c59f3318f43cfbdec474f7daee48f68fbd87e0e886ba2d7b5ca55a908d4e6b0",
+      "sample_count": 48,
+      "truncation_count": 1,
+      "truncation_rate_ppm": 20833,
+      "verification_status_counts": {
+        "match": 21,
+        "mismatch": 25,
+        "prediction_not_extracted": 2
+      }
+    }
+  },
+  "schema_version": "d07-evaluator-audit-report-v1",
+  "sealed_references_sha256": "e069ec5de154550f92fe2653e2662f975035c1222fbedad6524df3052c5bfd37",
+  "verifier_policy_sha256": "a6331e8c2c2a6a57fcbdd08a7c385404b62013fe30e1fbfaab5d701853138d13"
+}

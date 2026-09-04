@@ -47,4 +47,5 @@
 - 只保存 aggregate accuracy 会丢失 D08 所需的配对单位。D07 同时冻结逐 sample generation hash/status、逐 item correctness vector 与精确组合式 pass@k。
 - generation failure、invalid gold 和 verifier backend failure 都是基础设施错误，不能静默计 0；prediction mismatch/unparseable 才是模型错误。
 - self-hash 仍不是来源证明。正式 D07 audit 将实际 `__main__`/module source origin、每个 loader 消费的 raw bytes、implementation/env/fixtures 与单一 Git revision 绑定，重跑 greedy/sampling oracle，并拒绝 foreign checkout、restore-after-read input TOCTOU 与 HEAD race。
+- D07 formal synthetic audit 已在 implementation `c948fe2eae50289b78513a3a9513e188bff54a98` 上闭合：`passed=true`、0 failures、tracked inputs 与 Git 一致；它只证明 evaluator 机制和 provenance，不提供真实模型或 benchmark 结论。
 - 6-item fixture 的 3/6 greedy、21/48 sampling 与 5/6 pass@8 只是 regression oracle；真实 benchmark materialization、官方 adapter、盲审和 G1 仍属于 D15。

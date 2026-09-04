@@ -218,3 +218,11 @@
 | 2026-09-04 16:39 | /experiment-bridge | findings.md | documentation | D07 capability isolation、paired seed、item records 与 failure semantics 结论 |
 | 2026-09-04 17:09 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_170942.md | verification | fresh reviewer 多轮审查历史版本；70 directed/506 full tests，implementation APPROVE、formal audit pending |
 | 2026-09-04 17:09 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | verification | D07 runtime-origin、consumed-byte TOCTOU、path alias/symlink 与 strict numeric schema 审查 latest copy |
+| 2026-09-04 17:13 | /experiment-bridge | artifacts/audits/D07_EVALUATOR_AUDIT_20260904_171138.json | evidence | 绑定 `c948fe2e` implementation revision 的 D07 formal evaluator audit 历史版本；passed、0 failures、无 raw text |
+| 2026-09-04 17:13 | /experiment-bridge | artifacts/audits/D07_EVALUATOR_AUDIT.json | evidence | D07 audit latest copy；runtime/source/input/evaluator/record/report hashes 与两个非零 truncation oracle 闭合 |
+| 2026-09-04 17:13 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_171258.md | evidence | implementation commit 与正式 audit artifact 闭合后的 fresh-review APPROVE 历史版本 |
+| 2026-09-04 17:13 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | evidence | D07 70/506 tests、修复项、formal hashes 与 non-blocking D15 边界 latest copy |
+| 2026-09-04 17:13 | /experiment-bridge | configs/project.yaml | evidence | 记录 D07 formal audit revision、implementation、canonical report、file hashes；G1=false |
+| 2026-09-04 17:13 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER.md, refine-logs/EXPERIMENT_TRACKER_20260904_163941.md | status | D07-EVALUATOR-FIXTURE 转为 COMPLETE_CPU；D08 NEXT，真实 runs/G1 仍未启动 |
+| 2026-09-04 17:13 | /experiment-bridge | README.md, docs/evaluation/SEALED_EVALUATOR.md, artifacts/README.md, configs/README.md | documentation | 公开 D07 synthetic audit revision/hash 与 anti-claim 边界 |
+| 2026-09-04 17:13 | /experiment-bridge | findings.md | evidence | 记录 D07 formal audit 闭合与 synthetic-only 结论边界 |
