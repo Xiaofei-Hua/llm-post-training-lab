@@ -6,7 +6,7 @@ D07 完成 CPU 上的 benchmark/generation/evaluation production contracts。它
 
 - 已实现：public prompt 与 sealed answer 分权、冻结 greedy/sampling 协议、paired generation seed、逐 sample generation record、逐 sample/item score、accuracy/pass@k/extraction/parse 指标、evaluator version hash、Git-bound synthetic audit。
 - 未实现：MATH-500/GSM8K/AIME/IFEval/MMLU-Pro 的真实 materialization 与官方 adapter、人审、Base baseline；这些属于 D15/G1。
-- 未实现：paired bootstrap、randomization/sign-flip、Holm 与 TOST；这些只属于下一模块 D08。
+- 下游已实现：paired bootstrap、randomization/sign-flip、Holm 与 TOST 位于独立 D08 模块；D07 evaluator 本身仍不包含统计推断。
 - 未执行：模型下载、真实生成、MPS/CUDA/GPU 训练或推理。
 
 因此，D07 的合成 accuracy/pass@k 只是一组冻结 oracle，用来发现 evaluator 回归；它不是 Gemma 4 的实验结果，也不能通过 G1。
@@ -207,11 +207,11 @@ report = evaluate_generation_batch(
 
 D07 定向 70 个 CPU tests 覆盖 strict schema、answer capability boundary、paired seeds、乱序/缺失/重复 backend、finish/length/truncation semantics、bundle 路径别名与 leaf-symlink/report tamper、pass@k properties、gold/infra failure、strict numeric schema、strict label、完整 runtime import closure、foreign-checkout rejection、Git dirty/untracked/root/HEAD-race/restore-after-read TOCTOU 与 raw-text exclusion。全仓 506 tests 通过；新增两个 Hypothesis properties 各执行 100 个生成案例。
 
-D07 完成后只有代码模块进度变为 `7/24`。以下状态保持不变：
+D07 交付本身只把当时的代码模块进度推进到 `7/24`。以下状态保持不变：
 
 - `DATA-001/DATA-002/EVAL-002/EV-* = NOT_STARTED`；
 - `real_data_materialized=false`；
 - `G1=false`；
 - `accelerator_execution_authorized=false`。
 
-下一模块 D08 只能联合消费 D07 report 的 item-level correctness，以及由 report 内 benchmark/public-item hashes 精确绑定的 `LoadedPublicBenchmark` snapshot 中的 strata；不得重新解析生成原文、读取 sealed answer、改变 evaluator contract，或把 statistical inference 塞回 evaluator。
+D08 只联合消费 D07 report 的 item-level correctness，以及由 report 内 benchmark/public-item hashes 精确绑定的 `LoadedPublicBenchmark` snapshot 中的 strata；不会重新解析生成原文、读取 sealed answer、改变 evaluator contract，或把 statistical inference 塞回 evaluator。实现与审计见 `docs/evaluation/PAIRED_STATISTICS.md`。

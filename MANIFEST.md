@@ -232,3 +232,14 @@
 | 2026-09-04 19:16 | /experiment-bridge | docs/evaluation/PAIRED_STATISTICS.md, docs/evaluation/BENCHMARK_PLAN.md | documentation | 冻结 estimand、one-sided C1、outcome-independent RNG、Holm 与 sequential TOST 边界 |
 | 2026-09-04 19:16 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_191550.md | verification | fresh reviewer 初审、三项 blocker 修复及 APPROVE 历史版本 |
 | 2026-09-04 19:16 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | verification | D08 implementation APPROVED、formal audit pending latest copy |
+| 2026-09-04 19:23 | /experiment-bridge | artifacts/audits/D08_PAIRED_STATISTICS_AUDIT_20260904_191830.json | evidence | 绑定 `9a5cee94` implementation revision 的 D08 formal statistics audit 历史版本；passed、0 failures、无 raw text |
+| 2026-09-04 19:23 | /experiment-bridge | artifacts/audits/D08_PAIRED_STATISTICS_AUDIT.json | evidence | D08 audit latest copy；runtime/source/input/panel/protocol/design/analysis/report hashes 闭合，与 timestamp artifact byte-identical |
+| 2026-09-04 19:23 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_192300.md | evidence | implementation commit、fresh-review fixes 与 formal synthetic audit 闭合后的 APPROVE 历史版本 |
+| 2026-09-04 19:23 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | evidence | D08 33/539 tests、三项 blocker closure、formal hashes 与 synthetic-only 边界 latest copy |
+| 2026-09-04 19:23 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN_20260904_192300.md | status | D08 COMPLETE、D09–D12 PLANNED、真实 D23/G5/G6 未完成的历史版本 |
+| 2026-09-04 19:23 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN.md | status | D08 statistics evidence 与 D09 下一模块 latest copy |
+| 2026-09-04 19:23 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER_20260904_192300.md | status | 8/24、D08 synthetic statistics row 与全部真实 runs 未启动历史版本 |
+| 2026-09-04 19:23 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER.md | status | D08 COMPLETE_CPU、D09 NEXT、G1/G5/G6 保持未通过 latest copy |
+| 2026-09-04 19:23 | /experiment-bridge | README.md, AGENTS.md, configs/project.yaml, docs/planning/DEVELOPMENT_MODULES.md | status | 进度同步到 8/24、D08 COMPLETE、D09 NEXT；GPU/模型下载/真实分析仍未授权或未执行 |
+| 2026-09-04 19:23 | /experiment-bridge | artifacts/README.md, configs/README.md, docs/evaluation/SEALED_EVALUATOR.md, scripts/README.md, src/posttrain_lab/README.md, tests/README.md | documentation | D08 artifact/config/downstream/CLI/package/test 边界与 539/33 test counts |
+| 2026-09-04 19:23 | /experiment-bridge | findings.md | evidence | 记录 D08 paired estimand、outcome-independent RNG、strict recomputation、bounded-memory 与 synthetic anti-claim 结论 |

@@ -1,14 +1,14 @@
 project:
   name: llm-post-training-lab
   status: planning_ready_execution_conditional
-  development_status: d07_sealed_evaluator_complete_cpu_only
+  development_status: d08_paired_statistics_complete_cpu_only
   core_pipeline_modules_total: 24
-  core_pipeline_modules_complete: 7
+  core_pipeline_modules_complete: 8
   module_catalog_total_including_extensions: 32
   extension_modules_total: 8
   extension_modules_complete: 0
-  current_module: D07
-  next_module: D08
+  current_module: D08
+  next_module: D09
   completion_denominator: core_pipeline_modules_total
   language: zh
   target: post-training-algorithm-internship-portfolio
@@ -22,7 +22,7 @@ development_environment:
   accelerator_execution_authorized: false
 
 module_plan:
-  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 7}
+  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 8}
   real_model_gpu_readiness_and_pilots: {ids: D13-D20, total: 8, complete: 0}
   formal_training_evidence_and_delivery: {ids: D21-D24, total: 4, complete: 0}
   post_core_extensions: {ids: X01-X08, total: 8, complete: 0, counted_in_core: false}
@@ -140,6 +140,51 @@ sealed_evaluator_contract:
   official_benchmark_adapters_complete: false
   blinded_human_audit_complete: false
   g1_passed: false
+
+paired_statistics_contract:
+  statistics_protocol_schema: d08-statistics-protocol-v1
+  paired_panel_schema: d08-paired-panel-v1
+  analysis_report_schema: d08-confirmatory-analysis-v1
+  audit_schema: d08-statistics-audit-report-v1
+  input_surface: d07_greedy_item_correctness_plus_hash_bound_public_level
+  arms: [A0, A1, A2, A3, A4]
+  training_seeds: [101, 202, 303]
+  inference_population: fixed_three_training_seeds_item_population
+  bootstrap_unit: item_with_complete_three_seed_vector
+  bootstrap_stratification: level
+  bootstrap_repetitions: 10000
+  bootstrap_seed: 2026090408
+  superiority_confidence_ppm: 950000
+  quantile_method: linear_type7_exact
+  randomization_unit: item_complete_vector_sign_flip
+  randomization_repetitions: 100000
+  randomization_seed: 2026090409
+  randomization_correction: plus_one
+  c1_alternative: greater
+  c1_family_alpha_ppm: 50000
+  c1_adjustment: holm_step_down_exact
+  c1_practical_effect_ppm: 20000
+  c2_alternative: two_sided
+  c2_equivalence_confidence_ppm: 900000
+  c2_equivalence_margin_ppm: 20000
+  c2_decision_order: superiority_then_equivalence
+  rng_algorithm: numpy_pcg64_v1
+  rng_outcome_independent: true
+  result_validation: deterministic_full_recomputation
+  max_resampling_matrix_cells: 1000000
+  report_contains_raw_prompt_generation_or_reference: false
+  synthetic_fixture_items: 8
+  synthetic_fixture_strata: 2
+  formal_audit_requires_clean_git_inputs: true
+  formal_audit_passed: true
+  formal_audit_git_revision: 9a5cee946c617acca6d9e5a167fa725d67798eef
+  formal_audit_implementation_source_sha256: 2484549561c42707108f990f6cc3e1885e82e75f2c9934f6f6413929635be1cc
+  formal_analysis_report_sha256: f343e8acb2c891303832c7360fe81f21dc5b5ae4a84dc841190160878e36bd82
+  formal_audit_report_sha256: 099b4251e2056f990aa7175485334506d4c1a03a3c3b5d914928fe15f406c5d9
+  formal_audit_file_sha256: c2ae7263733f8a6ef647ed7c57ffbc812c97dc188e1c63a2682adb7506492830
+  real_endpoint_analysis_complete: false
+  g5_passed: false
+  g6_passed: false
 
 scope:
   primary_domain: verifiable_math_reasoning

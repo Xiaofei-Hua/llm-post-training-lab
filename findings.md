@@ -49,3 +49,13 @@
 - self-hash 仍不是来源证明。正式 D07 audit 将实际 `__main__`/module source origin、每个 loader 消费的 raw bytes、implementation/env/fixtures 与单一 Git revision 绑定，重跑 greedy/sampling oracle，并拒绝 foreign checkout、restore-after-read input TOCTOU 与 HEAD race。
 - D07 formal synthetic audit 已在 implementation `c948fe2eae50289b78513a3a9513e188bff54a98` 上闭合：`passed=true`、0 failures、tracked inputs 与 Git 一致；它只证明 evaluator 机制和 provenance，不提供真实模型或 benchmark 结论。
 - 6-item fixture 的 3/6 greedy、21/48 sampling 与 5/6 pass@8 只是 regression oracle；真实 benchmark materialization、官方 adapter、盲审和 G1 仍属于 D15。
+
+## 2026-09-04 — D08 paired statistics core
+
+- 确认性 estimand 必须先在每题内聚合三个固定 training seeds 的 paired difference，再对 item population 推断；bootstrap 重采样 item，sign-flip 则共同翻转同一 item 的完整三-seed vector，不能把 24 个 item-seed cell 当作独立样本。
+- C1 的两个方向性主假设使用 one-sided paired randomization，并以 exact-rational Holm 控制 family-wise error；统计显著还不够，95% CI 下界必须同时越过预注册的 +2pp practical gate。
+- C2 必须顺序判定：先检验 A3−A4 superiority；不成立时才以严格落在 ±2pp 内的 90% CI / dual-TOST 判 practical equivalence，避免把“未显著”误写成“等价”。
+- 随机流只能由预注册 seed、protocol、operation、hypothesis 与不含 correctness/checkpoint 的 resampling design 派生；完整 panel hash 另行绑定结果。这样既保持可复现，也避免 outcome-dependent RNG。
+- strict result loader 不能只验证 self-hash/count/decision；必须从 supplied panel 与 protocol 确定性重算完整 report，否则攻击者可以同步重写内容与 self-hash。
+- schema 上限与运行内存必须同时闭合；bootstrap/sign-flip 动态分块把临时索引矩阵限制在 1,000,000 cells，避免大 panel 下固定 batch 的多 GB 分配。
+- D08 formal synthetic audit 绑定 implementation `9a5cee946c617acca6d9e5a167fa725d67798eef`，结果为 `passed=true`、0 failures。8-item fixture 的 +100pp/0pp/equivalence 只是机制 oracle，不是 Gemma 4 或真实 benchmark 结果；真实 C1/C2 仍属于 D23，G5/G6 均未通过。

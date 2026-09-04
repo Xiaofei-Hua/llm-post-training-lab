@@ -1,8 +1,8 @@
 # Test suite
 
-## 已实现：D01–D07
+## 已实现：D01–D08
 
-`test_loss_budget.py` 与 `test_torch_loss_budget.py` 验证 tensor masks 与精确 Student loss-token 预算；`test_masked_ce.py` 验证 causal shift、masked token-mean CE 与 LM-head 分块；`test_grpo_surrogate.py` 验证 exact-reward advantage、PPO clipping 与 Dr.GRPO 固定分母；`test_opd_reverse_kl.py` 验证 full-vocabulary reverse KL、双 LM-head 分块、模型 logit transforms、Teacher 隔离与 global token mean；`test_math_verifier.py` 与 `test_verifier_audit.py` 验证 D05 terminal extraction、normalization/juxtaposition cross-check、符号等价、结构类型、失败语义、provenance 与 audit schema；`test_data_registry.py`、`test_contamination.py` 与 `test_data_audit.py` 的 96 个 tests 验证 D06 strict registries/records、payload lineage、family split、全上下文 exact/fuzzy scan、quarantine、manifest、Git provenance 与 HEAD-race fail-closed；`test_evaluation_contracts.py`、`test_evaluator_metrics.py` 与 `test_evaluator_audit.py` 的 70 个 tests 验证 D07 public/sealed capability、greedy/sampling/paired seeds、完整 generation grid、finish/length/truncation semantics、bundle path alias/leaf symlink、item-level accuracy/pass@k、gold/infra failure、strict numeric schema、report sanitization、完整 import closure、foreign-checkout rejection、tamper/restore-after-read TOCTOU/Git race 与 CLI。全量共 506 个 CPU tests、1,375 个 Hypothesis 生成案例，另执行 257 个冻结 adversarial verifier cases。运行方式：
+`test_loss_budget.py` 与 `test_torch_loss_budget.py` 验证 tensor masks 与精确 Student loss-token 预算；`test_masked_ce.py` 验证 causal shift、masked token-mean CE 与 LM-head 分块；`test_grpo_surrogate.py` 验证 exact-reward advantage、PPO clipping 与 Dr.GRPO 固定分母；`test_opd_reverse_kl.py` 验证 full-vocabulary reverse KL、双 LM-head 分块、模型 logit transforms、Teacher 隔离与 global token mean；`test_math_verifier.py` 与 `test_verifier_audit.py` 验证 D05 verifier；D06 的 96 个 tests 验证 data trust stack；D07 的 70 个 tests 验证 sealed generation/evaluation；`test_paired_statistics.py` 与 `test_statistics_audit.py` 的 33 个 tests 验证 D08 D07-report projection、whole-vector stratified bootstrap、known exact sign-flip oracle、outcome-independent streams、Holm、effect/null/seed-instability/sequential TOST、strict result recomputation、bounded resampling memory、Git/TOCTOU 与 raw-text exclusion。全量共 539 个 CPU tests、1,575 个 Hypothesis 生成案例，另执行 257 个冻结 adversarial verifier cases。运行方式：
 
 ```bash
 uv run pytest -q
@@ -20,5 +20,5 @@ uv run pytest -q
 4. 真实 MATH/GSM8K/AIME/IFEval/MMLU-Pro adapter 与 checkpoint-blinded answer audit；
 5. 真实数据规模的 family/contamination memory profile 与人工 borderline-pair audit；
 6. loss-token、prompt exposure、FLOPs 和成本账本守恒测试；
-7. paired bootstrap、sign-flip、Holm、TOST synthetic null/effect tests（D08；pass@k 已在 D07 完成）；
+7. 真实 endpoint reports 上的 paired statistics execution 与 claim audit（统计机制已由 D08 synthetic tests 完成）；
 8. 跨模块 run config/result/provenance ledger 与不可变 attempt tests。

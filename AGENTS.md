@@ -6,7 +6,7 @@
 - phase: cpu-framework-development
 - project_type: algorithm-first LLM post-training portfolio
 - execution_status: CPU-only algorithm/framework development; no GPU training authorized
-- core_modules: D01-D24 (7/24 complete); GPU/full-training begins at D13
+- core_modules: D01-D24 (8/24 complete); GPU/full-training begins at D13
 - extension_modules: X01-X08 (deferred until D24; excluded from core completion)
 
 ## Problem Anchor
@@ -45,6 +45,7 @@
 - 当前实现 D05：`docs/algorithms/EXACT_MATH_VERIFIER.md`
 - 当前实现 D06：`docs/data/DATA_REGISTRY_AND_CONTAMINATION.md`
 - 当前实现 D07：`docs/evaluation/SEALED_EVALUATOR.md`
+- 当前实现 D08：`docs/evaluation/PAIRED_STATISTICS.md`
 
 ## Stage Gates
 

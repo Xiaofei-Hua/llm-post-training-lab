@@ -1,0 +1,374 @@
+{
+  "analysis": {
+    "analysis_report_sha256": "f343e8acb2c891303832c7360fe81f21dc5b5ae4a84dc841190160878e36bd82",
+    "c1_results": [
+      {
+        "bootstrap_interval": {
+          "confidence_ppm": 950000,
+          "lower": {
+            "denominator": 1,
+            "numerator": 1,
+            "ppm": 1000000,
+            "schema_version": "d08-rational-value-v1"
+          },
+          "schema_version": "d08-confidence-interval-v1",
+          "upper": {
+            "denominator": 1,
+            "numerator": 1,
+            "ppm": 1000000,
+            "schema_version": "d08-rational-value-v1"
+          }
+        },
+        "bootstrap_stream_sha256": "81e3f4b2522aaf288a090e005b3c99798fc46b4802a7d53ed8dfcf768dbf70d0",
+        "control_arm": "A0",
+        "holm_adjusted_p_value": {
+          "denominator": 100001,
+          "numerator": 744,
+          "ppm": 7440,
+          "schema_version": "d08-rational-value-v1"
+        },
+        "hypothesis_id": "C1a",
+        "point_estimate": {
+          "denominator": 1,
+          "numerator": 1,
+          "ppm": 1000000,
+          "schema_version": "d08-rational-value-v1"
+        },
+        "practical_success": true,
+        "randomization": {
+          "alternative": "greater",
+          "correction": "plus-one",
+          "extreme_count": 371,
+          "p_value": {
+            "denominator": 100001,
+            "numerator": 372,
+            "ppm": 3720,
+            "schema_version": "d08-rational-value-v1"
+          },
+          "repetitions": 100000,
+          "schema_version": "d08-randomization-evidence-v1",
+          "stream_sha256": "0cb1dfd7b4b734e42471a8266725619a9967e19e4a13e584b3166236b740b9d1"
+        },
+        "schema_version": "d08-c1-result-v1",
+        "seed_effects": [
+          {
+            "effect": {
+              "denominator": 1,
+              "numerator": 1,
+              "ppm": 1000000,
+              "schema_version": "d08-rational-value-v1"
+            },
+            "schema_version": "d08-seed-effect-v1",
+            "training_seed": 101
+          },
+          {
+            "effect": {
+              "denominator": 1,
+              "numerator": 1,
+              "ppm": 1000000,
+              "schema_version": "d08-rational-value-v1"
+            },
+            "schema_version": "d08-seed-effect-v1",
+            "training_seed": 202
+          },
+          {
+            "effect": {
+              "denominator": 1,
+              "numerator": 1,
+              "ppm": 1000000,
+              "schema_version": "d08-rational-value-v1"
+            },
+            "schema_version": "d08-seed-effect-v1",
+            "training_seed": 303
+          }
+        ],
+        "seed_instability": false,
+        "statistical_superiority": true,
+        "treatment_arm": "A1"
+      },
+      {
+        "bootstrap_interval": {
+          "confidence_ppm": 950000,
+          "lower": {
+            "denominator": 1,
+            "numerator": 0,
+            "ppm": 0,
+            "schema_version": "d08-rational-value-v1"
+          },
+          "schema_version": "d08-confidence-interval-v1",
+          "upper": {
+            "denominator": 1,
+            "numerator": 0,
+            "ppm": 0,
+            "schema_version": "d08-rational-value-v1"
+          }
+        },
+        "bootstrap_stream_sha256": "986ad138fc9ebd70f36f8cd5618f55784aa31568f15fc5d8e668169c54c70b21",
+        "control_arm": "A0",
+        "holm_adjusted_p_value": {
+          "denominator": 1,
+          "numerator": 1,
+          "ppm": 1000000,
+          "schema_version": "d08-rational-value-v1"
+        },
+        "hypothesis_id": "C1b",
+        "point_estimate": {
+          "denominator": 1,
+          "numerator": 0,
+          "ppm": 0,
+          "schema_version": "d08-rational-value-v1"
+        },
+        "practical_success": false,
+        "randomization": {
+          "alternative": "greater",
+          "correction": "plus-one",
+          "extreme_count": 100000,
+          "p_value": {
+            "denominator": 1,
+            "numerator": 1,
+            "ppm": 1000000,
+            "schema_version": "d08-rational-value-v1"
+          },
+          "repetitions": 100000,
+          "schema_version": "d08-randomization-evidence-v1",
+          "stream_sha256": "9dc00b5c155e476ae561fceadf22f5dd9f3e7b370bfd9eaef6316637119bcf49"
+        },
+        "schema_version": "d08-c1-result-v1",
+        "seed_effects": [
+          {
+            "effect": {
+              "denominator": 1,
+              "numerator": 0,
+              "ppm": 0,
+              "schema_version": "d08-rational-value-v1"
+            },
+            "schema_version": "d08-seed-effect-v1",
+            "training_seed": 101
+          },
+          {
+            "effect": {
+              "denominator": 1,
+              "numerator": 0,
+              "ppm": 0,
+              "schema_version": "d08-rational-value-v1"
+            },
+            "schema_version": "d08-seed-effect-v1",
+            "training_seed": 202
+          },
+          {
+            "effect": {
+              "denominator": 1,
+              "numerator": 0,
+              "ppm": 0,
+              "schema_version": "d08-rational-value-v1"
+            },
+            "schema_version": "d08-seed-effect-v1",
+            "training_seed": 303
+          }
+        ],
+        "seed_instability": false,
+        "statistical_superiority": false,
+        "treatment_arm": "A2"
+      }
+    ],
+    "c2_result": {
+      "bootstrap_stream_sha256": "39d07727ace0615cab674c8ca37848e7c6f93c0831a0db836d8ea8e6b9cd2811",
+      "classification": "practical_equivalence",
+      "control_arm": "A4",
+      "equivalence_assessed": true,
+      "equivalence_interval": {
+        "confidence_ppm": 900000,
+        "lower": {
+          "denominator": 1,
+          "numerator": 0,
+          "ppm": 0,
+          "schema_version": "d08-rational-value-v1"
+        },
+        "schema_version": "d08-confidence-interval-v1",
+        "upper": {
+          "denominator": 1,
+          "numerator": 0,
+          "ppm": 0,
+          "schema_version": "d08-rational-value-v1"
+        }
+      },
+      "hypothesis_id": "C2",
+      "lower_margin_pass": true,
+      "point_estimate": {
+        "denominator": 1,
+        "numerator": 0,
+        "ppm": 0,
+        "schema_version": "d08-rational-value-v1"
+      },
+      "randomization": {
+        "alternative": "two-sided",
+        "correction": "plus-one",
+        "extreme_count": 100000,
+        "p_value": {
+          "denominator": 1,
+          "numerator": 1,
+          "ppm": 1000000,
+          "schema_version": "d08-rational-value-v1"
+        },
+        "repetitions": 100000,
+        "schema_version": "d08-randomization-evidence-v1",
+        "stream_sha256": "39c3fe4c077e021aba29ffa30f906532c918da88995ebf13f40ea18752a40ea1"
+      },
+      "schema_version": "d08-c2-result-v1",
+      "seed_effects": [
+        {
+          "effect": {
+            "denominator": 1,
+            "numerator": 0,
+            "ppm": 0,
+            "schema_version": "d08-rational-value-v1"
+          },
+          "schema_version": "d08-seed-effect-v1",
+          "training_seed": 101
+        },
+        {
+          "effect": {
+            "denominator": 1,
+            "numerator": 0,
+            "ppm": 0,
+            "schema_version": "d08-rational-value-v1"
+          },
+          "schema_version": "d08-seed-effect-v1",
+          "training_seed": 202
+        },
+        {
+          "effect": {
+            "denominator": 1,
+            "numerator": 0,
+            "ppm": 0,
+            "schema_version": "d08-rational-value-v1"
+          },
+          "schema_version": "d08-seed-effect-v1",
+          "training_seed": 303
+        }
+      ],
+      "seed_instability": false,
+      "superiority_interval": {
+        "confidence_ppm": 950000,
+        "lower": {
+          "denominator": 1,
+          "numerator": 0,
+          "ppm": 0,
+          "schema_version": "d08-rational-value-v1"
+        },
+        "schema_version": "d08-confidence-interval-v1",
+        "upper": {
+          "denominator": 1,
+          "numerator": 0,
+          "ppm": 0,
+          "schema_version": "d08-rational-value-v1"
+        }
+      },
+      "treatment_arm": "A3",
+      "upper_margin_pass": true
+    },
+    "inference_population": "fixed-three-training-seeds_item-population",
+    "item_count": 8,
+    "panel_sha256": "3f89fb2cadeeba0137b2fa4a2b4c14a8665758c6c146e7dd45641edc68bfe455",
+    "resampling_design_sha256": "16f86de6ab34b504b8a62a8bbc1cbf8c26cd34f37f859b97e16b364e7a042762",
+    "resampling_unit": "item-with-complete-three-seed-vector",
+    "schema_version": "d08-confirmatory-analysis-v1",
+    "statistics_protocol_sha256": "dc8789a4463691523867f1813d99cd3867b899673f69bfd359bf0307014f575f",
+    "strata_counts": {
+      "L1": 4,
+      "L2": 4
+    }
+  },
+  "expectation_file_sha256": "35e280499ab8a92f35e5e72b81a4f535293c35ff61662a49f7f4e18edcb79178",
+  "failures": [],
+  "panel_file_sha256": "f0d2bfe100fb17d56ddee83821c24dfd6b17f6f4740f340cd462c34f7cb56598",
+  "passed": true,
+  "protocol_file_sha256": "7a55e1c02aed2af7fc949ea0efb7f5ab52175e5636190d7b5fcb1ea538d99016",
+  "provenance": {
+    "git_revision": "9a5cee946c617acca6d9e5a167fa725d67798eef",
+    "implementation_source_paths": [
+      ".python-version",
+      "pyproject.toml",
+      "scripts/audit_paired_statistics.py",
+      "src/posttrain_lab/__init__.py",
+      "src/posttrain_lab/data/__init__.py",
+      "src/posttrain_lab/data/audit.py",
+      "src/posttrain_lab/data/contamination.py",
+      "src/posttrain_lab/data/registry.py",
+      "src/posttrain_lab/evaluation/__init__.py",
+      "src/posttrain_lab/evaluation/audit.py",
+      "src/posttrain_lab/evaluation/contracts.py",
+      "src/posttrain_lab/evaluation/metrics.py",
+      "src/posttrain_lab/evaluation/runner.py",
+      "src/posttrain_lab/rewards/__init__.py",
+      "src/posttrain_lab/rewards/audit.py",
+      "src/posttrain_lab/rewards/verifier.py",
+      "src/posttrain_lab/statistics/__init__.py",
+      "src/posttrain_lab/statistics/audit.py",
+      "src/posttrain_lab/statistics/contracts.py",
+      "src/posttrain_lab/statistics/inference.py",
+      "uv.lock"
+    ],
+    "implementation_source_sha256": "2484549561c42707108f990f6cc3e1885e82e75f2c9934f6f6413929635be1cc",
+    "runtime_versions": {
+      "numpy": "2.5.2",
+      "python": "3.12.13",
+      "python_implementation": "CPython",
+      "unicode_database": "15.0.0"
+    },
+    "tracked_files_sha256": {
+      ".python-version": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d",
+      "pyproject.toml": "b7098e457f874cf7406f73b177509135acfc5e8a72f24b4c839540ae170a24cf",
+      "scripts/audit_paired_statistics.py": "1375de05317e0296eb518c0d774d44c1738b19ed257ca1cc0c6bbd99b21d8d3a",
+      "src/posttrain_lab/__init__.py": "17860256d526441e9c428d15a50e605299f94ca7e2ecb59a712bc3517acdd44f",
+      "src/posttrain_lab/data/__init__.py": "aa329cb5f041f65eb39f6e48e51baf50d6a76366b8de86177a68dbd58016c796",
+      "src/posttrain_lab/data/audit.py": "5f8f4c89e4afa80723a9b21d13ffb9ea9c245b7946e096f7015a46725b454c3d",
+      "src/posttrain_lab/data/contamination.py": "f3960f79adbbde05f6ca878dabc717c373b5e99fa3566430783a3842c32c1c46",
+      "src/posttrain_lab/data/registry.py": "6eb68df2ca2a2311db8942e8f4f2b9244d6416143e02726207d88b0e9313148e",
+      "src/posttrain_lab/evaluation/__init__.py": "9926e0a36d05775c76225a661e7e56071e430aff81fd6773eecde72d64c2e82c",
+      "src/posttrain_lab/evaluation/audit.py": "d021e590fc5791cd4dc08bbd97d52cc7f66e89adb995b10ae8132be063353b0b",
+      "src/posttrain_lab/evaluation/contracts.py": "02d3265bb8595cce09a790198f481eb6e5d6417f6ab5cae2536fc1d61d26b50b",
+      "src/posttrain_lab/evaluation/metrics.py": "aedfd5dde5bb1689ec99246aa8798054bb3730b8ac56e6b6914d25d0882aa3b2",
+      "src/posttrain_lab/evaluation/runner.py": "e816da9917f5d7732cce195a7838098019e2ceffe1292a89553d8a8657ee7ce0",
+      "src/posttrain_lab/rewards/__init__.py": "321393c5a7cdc33280980a506bea319bbd1913173e8a24c4a0db676fe1081c65",
+      "src/posttrain_lab/rewards/audit.py": "8249e8dfb1af92ed9a37130902c186c412eb9e1c8cc490ce35ca888e3e51a77a",
+      "src/posttrain_lab/rewards/verifier.py": "63b87853a03757a43d95f1923b03db08de5766781f519dbe22ee3923d64f1bb0",
+      "src/posttrain_lab/statistics/__init__.py": "911420f2a50863f0025bfa730ff914c1b1d78a5623434767ec7b133f8068df78",
+      "src/posttrain_lab/statistics/audit.py": "478fd51238cb721831b4b82433ae2384f3cf26eba43a42a6444b47b642154679",
+      "src/posttrain_lab/statistics/contracts.py": "28bbfdcc0d03f57d74a73e718e1b17d452e660ad9d6d3b3f73f14ca308bc68e9",
+      "src/posttrain_lab/statistics/inference.py": "99bad289b265edaa97c08bfcd73ac97baae2fb87088316505845986ea9ca1dac",
+      "tests/fixtures/paired_statistics/expectation.json": "35e280499ab8a92f35e5e72b81a4f535293c35ff61662a49f7f4e18edcb79178",
+      "tests/fixtures/paired_statistics/panel.json": "f0d2bfe100fb17d56ddee83821c24dfd6b17f6f4740f340cd462c34f7cb56598",
+      "tests/fixtures/paired_statistics/protocol.json": "7a55e1c02aed2af7fc949ea0efb7f5ab52175e5636190d7b5fcb1ea538d99016",
+      "uv.lock": "689d616cbfbc26df0818da448a0098197cb716782089256a9694666c574817f4"
+    },
+    "tracked_input_paths": [
+      "src/posttrain_lab/__init__.py",
+      "src/posttrain_lab/data/__init__.py",
+      "src/posttrain_lab/data/audit.py",
+      "src/posttrain_lab/data/contamination.py",
+      "src/posttrain_lab/data/registry.py",
+      "src/posttrain_lab/evaluation/__init__.py",
+      "src/posttrain_lab/evaluation/audit.py",
+      "src/posttrain_lab/evaluation/contracts.py",
+      "src/posttrain_lab/evaluation/metrics.py",
+      "src/posttrain_lab/evaluation/runner.py",
+      "src/posttrain_lab/rewards/__init__.py",
+      "src/posttrain_lab/rewards/audit.py",
+      "src/posttrain_lab/rewards/verifier.py",
+      "src/posttrain_lab/statistics/__init__.py",
+      "src/posttrain_lab/statistics/audit.py",
+      "src/posttrain_lab/statistics/contracts.py",
+      "src/posttrain_lab/statistics/inference.py",
+      "scripts/audit_paired_statistics.py",
+      ".python-version",
+      "pyproject.toml",
+      "uv.lock",
+      "tests/fixtures/paired_statistics/panel.json",
+      "tests/fixtures/paired_statistics/protocol.json",
+      "tests/fixtures/paired_statistics/expectation.json"
+    ],
+    "tracked_inputs_match_git": true
+  },
+  "schema_version": "d08-statistics-audit-report-v1"
+}
