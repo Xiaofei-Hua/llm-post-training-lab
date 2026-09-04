@@ -34,6 +34,20 @@ MathArena 06/2026 只有 49 题，不能独自承载主 claim；G0 先确认 E2B
 
 所有 checkpoint 共用完全相同的 generation config 和 evaluator commit。
 
+## D07 已冻结的执行合同
+
+D07 已实现 `docs/evaluation/SEALED_EVALUATOR.md` 中的 CPU production contracts：
+
+- public prompt 与 sealed reference 使用不同 schema/object；generator API 不接收 vault；
+- greedy 与 sampling 的 system prompt、chat-template hash、max tokens、EOS/stop、采样参数和 seed policy 全部进入 protocol digest；
+- sampling seed 由 protocol/benchmark/item/sample 派生且不依赖 checkpoint，保证跨 checkpoint pairing；
+- generation 必须形成完整 item×sample 网格，保存逐 sample 原始输出、token IDs、finish/error 状态和 self-hash；
+- evaluator 输出逐 sample/item correctness 与状态，但不复制 prompt、prediction、candidate 或 reference 原文；
+- accuracy、extraction/parse rate 与组合式 pass@k 使用精确有理数聚合后转整数 ppm；
+- evaluator version 同时绑定 D05 policy digest 与实际 backend versions；gold/backend/generation failure 阻断 batch，不能计为模型错误。
+
+D07 的 6-item synthetic fixture 只验证上述机制，没有下载 MATH-500 或执行模型。真实 source/data manifest、官方 benchmark adapter、Base baseline、≥100 输出盲审及 G1 仍属于 D15。paired bootstrap、sign-flip、Holm 与 TOST 属于 D08；D08 只消费已冻结 correctness，不得重新解析原始输出。
+
 ## 指标层次
 
 ### 主能力
@@ -111,7 +125,7 @@ MathArena 06/2026 只有 49 题，不能独自承载主 claim；G0 先确认 E2B
 - 随机抽查至少 100 个模型输出，并给 evaluator 误差矩阵。
 - 每次 benchmark 运行保存原始 generations，主报告只消费不可变结果文件。
 
-完整 D06 数据边界见 `docs/data/DATA_REGISTRY_AND_CONTAMINATION.md`；D07 将实现 sealed-answer access boundary 与 generation/result schema，但不会提前下载真实 benchmark。
+完整 D06 数据边界见 `docs/data/DATA_REGISTRY_AND_CONTAMINATION.md`；完整 D07 评测边界见 `docs/evaluation/SEALED_EVALUATOR.md`。两者目前都只有 synthetic CPU evidence，不代表真实 benchmark 已冻结或 G1 已通过。
 
 ## 主表草案
 

@@ -1,0 +1,13 @@
+{
+  "benchmark_id": "synthetic/math-eval",
+  "benchmark_revision": "4444444444444444444444444444444444444444",
+  "data_manifest_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "item_count": 6,
+  "public_items_sha256": "a16a9641b5c1112081e4f410d3f5d12a3fd70c9efdce651f9585868bb1da90c3",
+  "revision_kind": "git_commit",
+  "schema_version": "d07-benchmark-descriptor-v1",
+  "sealed_references_sha256": "e069ec5de154550f92fe2653e2662f975035c1222fbedad6524df3052c5bfd37",
+  "source_registry_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "split_name": "test",
+  "task": "exact_math"
+}

@@ -57,6 +57,7 @@ Base
 | D04 OPD full-vocabulary reverse-KL 实现 | `docs/algorithms/OPD_REVERSE_KL.md` |
 | D05 exact/symbolic verifier 与 reward audit | `docs/algorithms/EXACT_MATH_VERIFIER.md` |
 | D06 data registry、family split 与 contamination gate | `docs/data/DATA_REGISTRY_AND_CONTAMINATION.md` |
+| D07 sealed evaluator、generation/result 与 metric contracts | `docs/evaluation/SEALED_EVALUATOR.md` |
 | D01–D24 完整训练链路与 X01–X08 扩展总表 | `docs/planning/DEVELOPMENT_MODULES.md` |
 | 数据来源、质量、去污染 | `docs/data/DATA_PLAN.md` |
 | benchmark、统计与防泄漏 | `docs/evaluation/BENCHMARK_PLAN.md` |
@@ -74,11 +75,11 @@ Base
 
 ## 当前状态
 
-前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。核心端到端链路固定为 D01–D24：D01–D12 是 CPU 算法/框架，D13–D20 是真实模型、GPU correctness、anchors、pilots 与算力闭合，D21–D22 是五臂两阶段三 seed 正式训练，D23–D24 是冻结评测、统计、claim audit 与作品交付。当前完成 6/24：D01 精确 loss-token 预算、D02 masked causal CE、D03 exact-reward Dr.GRPO surrogate、D04 OPD full-vocabulary reverse-KL、D05 exact/symbolic math verifier，以及 D06 data registry/family split/contamination trust stack。另有 X01–X08 八个 post-core 扩展，不计入核心完成度。
+前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。核心端到端链路固定为 D01–D24：D01–D12 是 CPU 算法/框架，D13–D20 是真实模型、GPU correctness、anchors、pilots 与算力闭合，D21–D22 是五臂两阶段三 seed 正式训练，D23–D24 是冻结评测、统计、claim audit 与作品交付。当前完成 7/24：D01 精确 loss-token 预算、D02 masked causal CE、D03 exact-reward Dr.GRPO surrogate、D04 OPD full-vocabulary reverse-KL、D05 exact/symbolic math verifier、D06 data registry/family split/contamination trust stack，以及 D07 sealed benchmark evaluator/generation/result/metric contracts。另有 X01–X08 八个 post-core 扩展，不计入核心完成度。
 
-D06 冻结 closed-world source/transform registry、strict canonical JSONL、payload-addressed lineage、三维传递 family split、全上下文 exact/fuzzy contamination、family quarantine、raw-text-free immutable manifest，以及绑定单一 Git revision 的正式 audit。当前 436 个 CPU tests、1,175 个 Hypothesis 生成案例及 257 个冻结 adversarial verifier cases 全部通过；D06 自身的 96 个 tests 使用合成 adversarial fixture，不是生产数据结果。
+D07 在 D05/D06 之上冻结 public-prompt/sealed-answer capability boundary、greedy/sampling 协议、checkpoint-independent paired generation seeds、完整 item×sample generation grid、持久化 finish semantics、accuracy/pass@k/extraction/parse/length/truncation 指标、无原文 item-level report，以及绑定 evaluator policy/backend/source/fixture 的 Git audit。当前 506 个 CPU tests、1,375 个 Hypothesis 生成案例及 257 个冻结 adversarial verifier cases 全部通过；D07 自身的 70 个 tests 与 3/6、21/48 合成 oracle 不是模型或真实 benchmark 结果。
 
-开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0、NumPy 2.5.2、Math-Verify 0.9.0 与 ANTLR runtime 4.13.2。尚未下载模型或真实训练数据、未启动 MPS/CUDA，也未把 G1/G3 等真实执行 gate 标为完成。D01–D06 是可接入后续 runtime 的 production contracts，但不得误报为 Gemma 4 trainer、完整 GRPO rollout、完整 OPD pipeline、真实数据已去污染或正式 benchmark evaluator 已完成；下一模块为 D07 sealed benchmark evaluator。
+开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0、NumPy 2.5.2、Math-Verify 0.9.0 与 ANTLR runtime 4.13.2。尚未下载模型或真实训练数据、未启动 MPS/CUDA，也未把 G1/G3 等真实执行 gate 标为完成。D01–D07 是可接入后续 runtime 的 production contracts，但不得误报为 Gemma 4 trainer、完整 GRPO rollout、完整 OPD pipeline、真实数据已去污染、真实 benchmark 已 materialize/评测或 G1 已通过；下一模块为 D08 paired statistics core。
 
 ```bash
 uv sync --frozen --all-groups

@@ -39,3 +39,12 @@
 - lineage 只有绑定 parent 的完整 payload 才能检测 split、families、source/revision 和上游 lineage 漂移；transform code/config 与外部 parent 因而分别进入 Git-bound registry 与 payload ledger。
 - manifest self-hash 是 tamper evidence，不等于来源真实性证明。正式证据路径必须在捕获的单一 Git revision 上重算 split、污染与 manifest；HEAD 中途移动也必须失败。
 - D06 的 96 个 tests 和 audit fixture 只验证 CPU 机制。真实 license/card bytes、family 标签、全量 scale profile、人工 pair review、sealed benchmark 和 G1 仍属于 D07/D15/EVAL-002。
+
+## 2026-09-04 — D07 sealed evaluator
+
+- test-answer 隔离必须表现为不同 capability 和进程输入，而不是同一 row 上“约定不读”的字段；generator request 因而完全不含 reference，vault 只进入 evaluator。
+- sampling pairing 必须由 benchmark/item/sample 和冻结 protocol 派生，不能依赖 checkpoint 或遍历顺序；request ID 则必须包含 checkpoint，防止跨模型输出误合并。
+- 只保存 aggregate accuracy 会丢失 D08 所需的配对单位。D07 同时冻结逐 sample generation hash/status、逐 item correctness vector 与精确组合式 pass@k。
+- generation failure、invalid gold 和 verifier backend failure 都是基础设施错误，不能静默计 0；prediction mismatch/unparseable 才是模型错误。
+- self-hash 仍不是来源证明。正式 D07 audit 将实际 `__main__`/module source origin、每个 loader 消费的 raw bytes、implementation/env/fixtures 与单一 Git revision 绑定，重跑 greedy/sampling oracle，并拒绝 foreign checkout、restore-after-read input TOCTOU 与 HEAD race。
+- 6-item fixture 的 3/6 greedy、21/48 sampling 与 5/6 pass@8 只是 regression oracle；真实 benchmark materialization、官方 adapter、盲审和 G1 仍属于 D15。

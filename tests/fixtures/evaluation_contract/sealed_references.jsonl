@@ -1,0 +1,6 @@
+{"benchmark_id":"synthetic/math-eval","benchmark_revision":"4444444444444444444444444444444444444444","item_id":"math:000","reference":"42","schema_version":"d07-sealed-reference-v1"}
+{"benchmark_id":"synthetic/math-eval","benchmark_revision":"4444444444444444444444444444444444444444","item_id":"math:001","reference":"1/2","schema_version":"d07-sealed-reference-v1"}
+{"benchmark_id":"synthetic/math-eval","benchmark_revision":"4444444444444444444444444444444444444444","item_id":"math:002","reference":"\\{-2,2\\}","schema_version":"d07-sealed-reference-v1"}
+{"benchmark_id":"synthetic/math-eval","benchmark_revision":"4444444444444444444444444444444444444444","item_id":"math:003","reference":"7","schema_version":"d07-sealed-reference-v1"}
+{"benchmark_id":"synthetic/math-eval","benchmark_revision":"4444444444444444444444444444444444444444","item_id":"math:004","reference":"15","schema_version":"d07-sealed-reference-v1"}
+{"benchmark_id":"synthetic/math-eval","benchmark_revision":"4444444444444444444444444444444444444444","item_id":"math:005","reference":"3/4","schema_version":"d07-sealed-reference-v1"}

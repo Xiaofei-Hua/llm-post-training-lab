@@ -1,0 +1,65 @@
+{
+  "benchmark_descriptor_sha256": "1d3af73c5351bde3d3287a5fd16596312382ba8d42b9998dc763369a9299a1ae",
+  "fixture_predictions_sha256": "8cf02157016156946412507fe29d147c83cb415150738e9d161f8e1ffafaed20",
+  "public_items_sha256": "a16a9641b5c1112081e4f410d3f5d12a3fd70c9efdce651f9585868bb1da90c3",
+  "runs": {
+    "greedy": {
+      "answer_accuracy_ppm": 500000,
+      "completion_token_count_total": 151,
+      "correct_sample_count": 3,
+      "evaluator_contract_sha256": "14ebabece105ca19f7082977a5ff7fe4354f27c0241804c8b03a9ba04370b0df",
+      "evaluator_version_sha256": "539093f50d88f4f28f6aaca8fd990b58747e83c482debaf407f5cb384bcb0d5d",
+      "extraction_rate_ppm": 833333,
+      "finish_reason_counts": {
+        "eos": 5,
+        "length": 1
+      },
+      "generation_record_set_sha256": "8ea5e5b50205bfafa28d8b8754d87c1e1da22c4b1ad39d4e8c30b3e5271fe56e",
+      "parse_rate_ppm": 833333,
+      "pass_at_k_ppm": {
+        "1": 500000
+      },
+      "protocol_sha256": "cfa8cf0f5513e713d29b9fecc285b5ead22f490c920a65105fcaa002bc6f88c5",
+      "report_sha256": "f327291a17bb92af0aa287b3735f0442351a6de8632d4e7bbd04cfaabcba3bab",
+      "sample_count": 6,
+      "truncation_count": 1,
+      "truncation_rate_ppm": 166667,
+      "verification_status_counts": {
+        "match": 3,
+        "mismatch": 2,
+        "prediction_not_extracted": 1
+      }
+    },
+    "sampling": {
+      "answer_accuracy_ppm": 437500,
+      "completion_token_count_total": 597,
+      "correct_sample_count": 21,
+      "evaluator_contract_sha256": "e8fda69d36c421b316118d8ef29018db0cf8d49b4014c41cdd9861df4cf50f2f",
+      "evaluator_version_sha256": "14e3342a7c71be19a11c217050823edaa3cdc12e83c5f4d103d501bd22218b0c",
+      "extraction_rate_ppm": 958333,
+      "finish_reason_counts": {
+        "eos": 47,
+        "length": 1
+      },
+      "generation_record_set_sha256": "8644b9a3ba953b5bf6cbc44f70b2cf9c18cd02b379760fdbf575c4ac91cda03b",
+      "parse_rate_ppm": 958333,
+      "pass_at_k_ppm": {
+        "1": 437500,
+        "8": 833333
+      },
+      "protocol_sha256": "e07e5d433f91dc39edbe657b1af893124f03b17847eadc25429d6be3cc0e80a4",
+      "report_sha256": "4c59f3318f43cfbdec474f7daee48f68fbd87e0e886ba2d7b5ca55a908d4e6b0",
+      "sample_count": 48,
+      "truncation_count": 1,
+      "truncation_rate_ppm": 20833,
+      "verification_status_counts": {
+        "match": 21,
+        "mismatch": 25,
+        "prediction_not_extracted": 2
+      }
+    }
+  },
+  "schema_version": "d07-evaluator-audit-expectation-v1",
+  "sealed_references_sha256": "e069ec5de154550f92fe2653e2662f975035c1222fbedad6524df3052c5bfd37",
+  "verifier_policy_sha256": "a6331e8c2c2a6a57fcbdd08a7c385404b62013fe30e1fbfaab5d701853138d13"
+}

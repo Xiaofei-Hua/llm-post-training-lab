@@ -1,0 +1,20 @@
+{
+  "base_seed": null,
+  "chat_template_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "eos_token_id": 2,
+  "max_new_tokens": 64,
+  "mode": "greedy",
+  "samples_per_item": 1,
+  "schema_version": "d07-generation-protocol-v1",
+  "seed_namespace": null,
+  "stop_sequences": [
+    "<end>"
+  ],
+  "stop_token_ids": [
+    2
+  ],
+  "system_prompt": "Solve the problem and state one final answer.",
+  "temperature_ppm": null,
+  "top_k": null,
+  "top_p_ppm": null
+}

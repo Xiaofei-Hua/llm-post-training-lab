@@ -1,14 +1,14 @@
 project:
   name: llm-post-training-lab
   status: planning_ready_execution_conditional
-  development_status: d06_data_trust_stack_complete_cpu_only
+  development_status: d07_sealed_evaluator_complete_cpu_only
   core_pipeline_modules_total: 24
-  core_pipeline_modules_complete: 6
+  core_pipeline_modules_complete: 7
   module_catalog_total_including_extensions: 32
   extension_modules_total: 8
   extension_modules_complete: 0
-  current_module: D06
-  next_module: D07
+  current_module: D07
+  next_module: D08
   completion_denominator: core_pipeline_modules_total
   language: zh
   target: post-training-algorithm-internship-portfolio
@@ -22,7 +22,7 @@ development_environment:
   accelerator_execution_authorized: false
 
 module_plan:
-  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 6}
+  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 7}
   real_model_gpu_readiness_and_pilots: {ids: D13-D20, total: 8, complete: 0}
   formal_training_evidence_and_delivery: {ids: D21-D24, total: 4, complete: 0}
   post_core_extensions: {ids: X01-X08, total: 8, complete: 0, counted_in_core: false}
@@ -94,6 +94,47 @@ data_trust_contract:
   formal_audit_report_sha256: d7c3155d8cf4a003c0e7673ad9515ec9d00d61964dab8a1ec3cf513f439c77a2
   formal_audit_file_sha256: 2c3e4eaeb4aba48124495b37d34162adfd5ece8472fd926db5a7524ed49d70c2
   real_data_materialized: false
+  g1_passed: false
+
+sealed_evaluator_contract:
+  benchmark_descriptor_schema: d07-benchmark-descriptor-v1
+  public_item_schema: d07-public-benchmark-item-v1
+  sealed_reference_schema: d07-sealed-reference-v1
+  generation_protocol_schema: d07-generation-protocol-v1
+  generation_record_schema: d07-generation-record-v1
+  generation_manifest_schema: d07-generation-manifest-v1
+  evaluator_contract_schema: d07-evaluator-contract-v1
+  evaluation_report_schema: d07-evaluation-report-v1
+  audit_schema: d07-evaluator-audit-report-v1
+  answer_boundary: public_generation_process_separate_from_sealed_evaluator_process
+  vault_is_python_security_sandbox: false
+  generation_grid: complete_item_by_sample
+  backend_response_order_trusted: false
+  paired_seed_checkpoint_independent: true
+  greedy_protocol_sha256: cfa8cf0f5513e713d29b9fecc285b5ead22f490c920a65105fcaa002bc6f88c5
+  sampling_protocol_sha256: e07e5d433f91dc39edbe657b1af893124f03b17847eadc25429d6be3cc0e80a4
+  sampling_n: 8
+  sampling_temperature_ppm: 700000
+  sampling_top_p_ppm: 950000
+  sampling_top_k: 0
+  score_scale_ppm: 1000000
+  pass_at_k: exact_combinatorial_then_item_mean
+  completion_length: per_sample_token_count_and_exact_total
+  truncation: finish_reason_length_rate_ppm
+  failed_generation_policy: infrastructure_failure_not_model_error
+  invalid_reference_policy: infrastructure_failure_not_model_error
+  report_contains_raw_prompt_prediction_or_reference: false
+  verifier_policy_sha256: a6331e8c2c2a6a57fcbdd08a7c385404b62013fe30e1fbfaab5d701853138d13
+  synthetic_fixture_items: 6
+  synthetic_greedy_correct: 3
+  synthetic_sampling_samples: 48
+  synthetic_sampling_correct: 21
+  synthetic_sampling_pass_at_8_ppm: 833333
+  formal_audit_requires_clean_git_inputs: true
+  formal_audit_passed: false
+  real_benchmark_materialized: false
+  official_benchmark_adapters_complete: false
+  blinded_human_audit_complete: false
   g1_passed: false
 
 scope:

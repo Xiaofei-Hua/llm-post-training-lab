@@ -44,3 +44,9 @@
 ## D05 role
 
 D05 冻结训练 reward 与独立数学 evaluator 共用的 canonical answer semantics：reference 不可解析属于数据/基础设施错误，prediction 错误或不可解析得 0，只有可审计的 exact/symbolic equivalence 得 1。任何训练后放宽 parser 的行为都违反本 contract。
+
+## D06/D07 trust roles
+
+D06 冻结 source/revision/license/lineage、family-disjoint split 与 contamination/manifest 合同；D07 冻结 public-prompt/sealed-answer capability、generation protocol/records、item-level correctness/pass@k 与 evaluator version 合同。两者当前的 formal artifacts 都只使用 synthetic fixtures；真实数据、真实 benchmark、官方 adapters、Base 输出与盲审仍须在 D15/G1 完成。
+
+D08 统计层只能联合消费 D07 report 中冻结的 item×sample correctness，以及由 report 内 benchmark/public-item hashes 精确绑定的 public snapshot 中的 strata；不得重解析生成文本、读取 sealed answer 或改变 evaluator policy。D07 accuracy/pass@k oracle 不能作为任何 C1/C2 模型证据。

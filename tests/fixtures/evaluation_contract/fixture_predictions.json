@@ -1,0 +1,101 @@
+{
+  "items": [
+    {
+      "greedy": "Final answer: 42",
+      "item_id": "math:000",
+      "sampling": [
+        "Final answer: 42",
+        "\\boxed{42}",
+        "42",
+        "Answer = 42",
+        "Final answer: 42",
+        "\\boxed{42}",
+        "42",
+        "Answer = 42"
+      ]
+    },
+    {
+      "greedy": "Final answer: 2/3",
+      "item_id": "math:001",
+      "sampling": [
+        "Final answer: 1/2",
+        "\\boxed{1/2}",
+        "1/2",
+        "Answer = 1/2",
+        "Final answer: 2/3",
+        "2/3",
+        "Final answer: 3/4",
+        "1"
+      ]
+    },
+    {
+      "greedy": "\\boxed{\\{-2,2\\}}",
+      "item_id": "math:002",
+      "sampling": [
+        "\\boxed{\\{-2,2\\}}",
+        "Final answer: 2",
+        "Final answer: -2",
+        "0",
+        "4",
+        "Final answer: 2; then \\boxed{0}",
+        "I cannot solve this problem.",
+        "Final answer: 1"
+      ]
+    },
+    {
+      "greedy": "I cannot solve this problem.",
+      "item_id": "math:003",
+      "sampling": [
+        "Final answer: 6",
+        "6",
+        "8",
+        "Final answer: 5",
+        "I cannot solve this problem.",
+        "Final answer: 9",
+        "10",
+        "0"
+      ]
+    },
+    {
+      "greedy": "Final answer: 15",
+      "item_id": "math:004",
+      "sampling": [
+        "Final answer: 15",
+        "\\boxed{15}",
+        "14",
+        "Final answer: 10",
+        "16",
+        "0",
+        "5",
+        "Final answer: 20"
+      ]
+    },
+    {
+      "greedy": "Final answer: 1/4",
+      "item_id": "math:005",
+      "sampling": [
+        "Final answer: 3/4",
+        "\\boxed{3/4}",
+        "3/4",
+        "Answer = 3/4",
+        "Final answer: 0.75",
+        "\\frac{3}{4}",
+        "Final answer: 1/4",
+        "1"
+      ]
+    }
+  ],
+  "schema_version": "d07-evaluator-fixture-predictions-v2",
+  "truncations": [
+    {
+      "item_id": "math:003",
+      "mode": "greedy",
+      "sample_index": 0
+    },
+    {
+      "item_id": "math:003",
+      "mode": "sampling",
+      "sample_index": 4
+    }
+  ]
+}

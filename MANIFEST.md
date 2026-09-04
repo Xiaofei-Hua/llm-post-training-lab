@@ -201,3 +201,20 @@
 | 2026-09-04 13:08 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_130705.md | evidence | implementation commit 与正式 audit artifact 闭合后的 APPROVE 历史版本 |
 | 2026-09-04 13:08 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | evidence | fresh-agent D06 APPROVE 与 non-blocking scale/provenance 边界 latest copy |
 | 2026-09-04 13:08 | /experiment-bridge | configs/project.yaml | evidence | 记录 D06 formal audit revision、canonical report hash、file hash 与 G1=false |
+| 2026-09-04 16:39 | /experiment-bridge | src/posttrain_lab/evaluation/{contracts,metrics,runner,audit}.py | implementation | D07 public/sealed capability、冻结生成、逐题指标与 Git-bound evaluator audit |
+| 2026-09-04 16:39 | /experiment-bridge | src/posttrain_lab/evaluation/__init__.py | implementation | D07 canonical public API；移除废弃 `.gitkeep` |
+| 2026-09-04 16:39 | /experiment-bridge | scripts/audit_evaluator.py | implementation | deterministic greedy/sampling evaluator audit 薄 CLI |
+| 2026-09-04 16:39 | /experiment-bridge | tests/fixtures/evaluation_contract/* | implementation | 6-item synthetic public/sealed snapshot、冻结 protocols/predictions/expectation |
+| 2026-09-04 16:39 | /experiment-bridge | tests/test_{evaluation_contracts,evaluator_metrics,evaluator_audit}.py | verification | D07 70 个 CPU tests、200 个 Hypothesis 生成案例、answer boundary/pass@k/length/path/runtime-origin/TOCTOU regressions |
+| 2026-09-04 16:39 | /experiment-bridge | docs/evaluation/SEALED_EVALUATOR.md | documentation | D07 deletion test、schema、权限、生成、指标、失败、audit 与 D15/D08 边界 |
+| 2026-09-04 16:39 | /experiment-bridge | docs/evaluation/BENCHMARK_PLAN.md | documentation | 注册 D07 frozen evaluator contract 与 D08/D15 责任边界 |
+| 2026-09-04 16:39 | /experiment-bridge | idea-stage/docs/research_contract.md | documentation | 冻结 D06/D07 trust roles 和 D08 correctness-only 输入边界 |
+| 2026-09-04 16:39 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN_20260904_163941.md | status | D07 COMPLETE、真实 D15/G1 保持未完成的历史版本 |
+| 2026-09-04 16:39 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN.md | status | D07 evaluator evidence 与 D08–D12 下一阶段 latest copy |
+| 2026-09-04 16:39 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER_20260904_163941.md | status | 7/24、D07 synthetic evaluator row 与真实 runs 未启动历史版本 |
+| 2026-09-04 16:39 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER.md | status | D08 NEXT、G1/EV-* 保持 NOT_STARTED latest copy |
+| 2026-09-04 16:39 | /experiment-bridge | README.md, AGENTS.md, configs/project.yaml, docs/planning/DEVELOPMENT_MODULES.md | status | 进度同步到 7/24、D07 COMPLETE、D08 NEXT；GPU/真实 benchmark 未授权 |
+| 2026-09-04 16:39 | /experiment-bridge | artifacts/README.md, scripts/README.md, src/posttrain_lab/README.md, tests/README.md | documentation | D07 artifact/CLI/package/test 边界与 506/70 test counts |
+| 2026-09-04 16:39 | /experiment-bridge | findings.md | documentation | D07 capability isolation、paired seed、item records 与 failure semantics 结论 |
+| 2026-09-04 17:09 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_170942.md | verification | fresh reviewer 多轮审查历史版本；70 directed/506 full tests，implementation APPROVE、formal audit pending |
+| 2026-09-04 17:09 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | verification | D07 runtime-origin、consumed-byte TOCTOU、path alias/symlink 与 strict numeric schema 审查 latest copy |

@@ -1,0 +1,20 @@
+{
+  "base_seed": 20260904,
+  "chat_template_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "eos_token_id": 2,
+  "max_new_tokens": 64,
+  "mode": "sampling",
+  "samples_per_item": 8,
+  "schema_version": "d07-generation-protocol-v1",
+  "seed_namespace": "d07-synthetic-paired",
+  "stop_sequences": [
+    "<end>"
+  ],
+  "stop_token_ids": [
+    2
+  ],
+  "system_prompt": "Solve the problem and state one final answer.",
+  "temperature_ppm": 700000,
+  "top_k": 0,
+  "top_p_ppm": 950000
+}

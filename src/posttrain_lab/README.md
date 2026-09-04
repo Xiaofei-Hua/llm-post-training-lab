@@ -22,5 +22,9 @@
 - `data/registry.py`：D06 的 source/transform registry、strict canonical records、payload-addressed parent ledger、三维 family split 与 immutable manifest schema。
 - `data/contamination.py`：D06 的全上下文字段/聚合 normalization、complete inverted n-gram candidate retrieval、exact/fuzzy/review 判定、传递 family quarantine 与内部 clean rescan。
 - `data/audit.py`：D06 的 frozen expectation、单一 Git revision provenance、split/contamination/manifest 重算与 raw-text-free audit report。
+- `evaluation/contracts.py`：D07 的 public/sealed snapshot、frozen greedy/sampling、paired seeds、完整 generation records 与 immutable bundle/manifest。
+- `evaluation/metrics.py`：D07 的逐 sample/item score、精确 accuracy/pass@k/extraction/parse/completion-length/truncation 聚合与 evaluator/report hashes。
+- `evaluation/runner.py`：D07 的 generator/evaluator capability 分离、乱序 response canonicalization、D05 exact-math 与最小 strict-label adapter。
+- `evaluation/audit.py`：D07 的 frozen synthetic oracle、实际 runtime source origin、loader-consumed bytes/fixture/Git provenance、TOCTOU/HEAD-race 防护与 raw-text-free audit report。
 
-当前没有保留旧标量 API、旧 CE/GRPO/KD/reward/data 路径或占位 trainer。D01–D06 是后续 runtime 可调用的 production contract；rollout/old-policy/Teacher 生命周期、optimizer/AMP orchestration、distributed collectives、真实模型 forward、LoRA 集成与 sealed evaluator 仍由后续模块负责。D05 只冻结数学 reward 语义；D06 只证明 synthetic data trust mechanism，不冒充真实数据已去污染或 G1 已通过。
+当前没有保留旧标量 API、旧 CE/GRPO/KD/reward/data/evaluator 路径或占位 trainer。D01–D07 是后续 runtime 可调用的 production contracts；rollout/old-policy/Teacher 生命周期、optimizer/AMP orchestration、distributed collectives、真实模型 forward、LoRA 集成、真实 benchmark adapters 与 paired statistics 仍由后续模块负责。D05 只冻结数学 reward 语义；D06/D07 只证明 synthetic trust/evaluation mechanisms，不冒充真实数据已去污染、真实模型已评测或 G1 已通过。
