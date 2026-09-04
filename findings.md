@@ -31,3 +31,11 @@
 - 第一轮对抗审计发现上游可将 finite set 与 tuple/interval 跨结构判为等价；初始 guard 令 corpus 从 122/128 提升到 128/128。随后独立攻防继续发现 malformed/escaped command precedence、trailing-math/numeric-gap/nested-container hijack、任意 text-unit 消隐、constant juxtaposition 语义漂移、Markdown fence 误闭合，以及 scalar/伪等式/Boolean-relation/assignment-RHS-family false positive。最终用完整 candidate validation、原式/显式乘法双解析和 structural guard 将冻结 corpus 扩为 257/257。这里记录的是 verifier correctness 修复，不是模型效果。
 - prediction 不可提取、不可解析或 comparison timeout 可以安全计 0；reference 不可解析、backend exception 与非进程主线程调用必须让 logical batch fail fast，避免把基础设施或 gold 错误训练成模型负样本。
 - D05 只完成 CPU reward/evaluator 共用语义及 adversarial audit；真实模型输出的至少 100 条盲审、数据 revision 校验、GRPO lifecycle 接入和所有 GPU 运行仍分别留给后续 gates/modules。
+
+## 2026-09-04 — D06 data trust stack
+
+- 单题随机切分不足以防止泄漏：source/problem/template family 必须构成传递 component，再用冻结 policy 确定性分配；命中污染后也必须整 component quarantine。
+- 污染扫描不能只看 user prompt。system/tool、reference、response/assistant trace，以及跨 message 的 prompt/solution/full-record aggregate 都是可泄漏面；exact、fuzzy 和 review band 均采用 fail-closed。
+- lineage 只有绑定 parent 的完整 payload 才能检测 split、families、source/revision 和上游 lineage 漂移；transform code/config 与外部 parent 因而分别进入 Git-bound registry 与 payload ledger。
+- manifest self-hash 是 tamper evidence，不等于来源真实性证明。正式证据路径必须在捕获的单一 Git revision 上重算 split、污染与 manifest；HEAD 中途移动也必须失败。
+- D06 的 96 个 tests 和 audit fixture 只验证 CPU 机制。真实 license/card bytes、family 标签、全量 scale profile、人工 pair review、sealed benchmark 和 G1 仍属于 D07/D15/EVAL-002。

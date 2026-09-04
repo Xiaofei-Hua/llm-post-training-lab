@@ -1,0 +1,53 @@
+{
+  "assignment_sha256": "7c7fb8f678c7b2dbb2ea5e311208f4eabcffcbdb0d3c1135f990b3dda777a93c",
+  "clean_report_sha256": "c701b66ac5abf9a9a5e1820d14b51ebc0f0ef24561e3127f27f1f3fb36add09e",
+  "clean_training_record_count": 9,
+  "evaluation_record_count": 4,
+  "expected_matches": [
+    {
+      "eval_field": "problem",
+      "eval_record_id": "eval:000",
+      "kind": "exact",
+      "train_field": "problem",
+      "train_record_id": "train:000"
+    },
+    {
+      "eval_field": "problem",
+      "eval_record_id": "eval:001",
+      "kind": "fuzzy",
+      "train_field": "problem",
+      "train_record_id": "train:002"
+    },
+    {
+      "eval_field": "problem",
+      "eval_record_id": "eval:002",
+      "kind": "fuzzy",
+      "train_field": "response",
+      "train_record_id": "train:005"
+    }
+  ],
+  "contamination_policy_sha256": "675338221f7b274af54592a6e5552d47355fa4219853820150a971915eb53fa7",
+  "dirty_report_sha256": "8cd86ee5012783bdec2b4d7866faf872fcf7e8afe6c5f480b1e5f6e24b5bb7d4",
+  "manifest_record_set_sha256": "a6370acff1459d707faade76b1f27d5851eea631220fa1024e13e4449a9553f1",
+  "manifest_sha256": "ae6b70c2f7667b0ee66d33ce59cd7fbb558ba4d5ba4934e69304bfd3f5abc364",
+  "parent_ledger_sha256": "7d0b208bf140bf80d38bdb458324439eab114bf6188b465560d7b8e160865c73",
+  "quarantined_record_ids": [
+    "train:000",
+    "train:001",
+    "train:002",
+    "train:003",
+    "train:004",
+    "train:005"
+  ],
+  "schema_version": "d06-data-trust-expectation-v1",
+  "source_registry_sha256": "5ee29d34ac4cd242a6f36859293ccd38dcc2cc7ddd341434a94352a6d1849f43",
+  "split_counts": {
+    "D_anchor": 3,
+    "D_core": 2,
+    "D_dev": 5,
+    "D_select": 4,
+    "D_teacher_gate": 1
+  },
+  "split_policy_sha256": "e877fd58abb2a903ae31f6acc88d046b2abc0f703fd0e18a8869abe53a153959",
+  "transform_registry_sha256": "8b4a8f1eee0e1355cf2d004e86043eaf73f2c730c73e28f1a23eef6c9d8ff758"
+}

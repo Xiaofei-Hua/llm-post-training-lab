@@ -1,0 +1,13 @@
+{
+  "artifacts": [
+    {
+      "code_path": "tests/fixtures/data_trust/ingest_transform.py",
+      "code_sha256": "ffb1851efb22f120dcbcc6dc749fa97cf083f11c44aa9e0e0f936f2098005bde",
+      "config_path": "tests/fixtures/data_trust/ingest_transform_config.json",
+      "config_sha256": "97e01ae6298d719871b6f20656cd0fd343ddaab6698110be9162e18d2757aca4",
+      "transform_name": "ingest",
+      "transform_version": "1.0.0"
+    }
+  ],
+  "schema_version": "d06-transform-registry-v1"
+}

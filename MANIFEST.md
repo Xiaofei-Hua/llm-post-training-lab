@@ -179,3 +179,20 @@
 | 2026-09-03 20:56 | /experiment-bridge | artifacts/audits/D05_VERIFIER_AUDIT.json | implementation | 绑定实现 revision 的 257-case verifier audit latest copy |
 | 2026-09-03 20:56 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260903_205630.md | implementation | stale evidence blocker 关闭后的 APPROVE 历史版本 |
 | 2026-09-03 20:56 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | implementation | fresh-agent D05 APPROVE latest copy |
+| 2026-09-04 13:04 | /experiment-bridge | src/posttrain_lab/data/{registry,contamination,audit}.py | implementation | D06 strict registries/records、payload lineage、family split、complete contamination retrieval、quarantine、manifest 与 Git-bound audit |
+| 2026-09-04 13:04 | /experiment-bridge | src/posttrain_lab/data/__init__.py | implementation | D06 canonical public API；移除废弃 `.gitkeep` |
+| 2026-09-04 13:04 | /experiment-bridge | scripts/audit_data_trust.py | implementation | source/transform/records/policy/expectation/可选 parent-ledger 的正式 CPU audit CLI |
+| 2026-09-04 13:04 | /experiment-bridge | tests/fixtures/data_trust/* | implementation | synthetic source/transform/record/split/golden expectation 与 Git-bound transform artifacts |
+| 2026-09-04 13:04 | /experiment-bridge | tests/test_{data_registry,contamination,data_audit}.py | verification | D06 96 个 CPU tests、300 个 Hypothesis 生成案例、HEAD-race/TOCTOU/fail-closed regressions |
+| 2026-09-04 13:04 | /experiment-bridge | docs/data/DATA_REGISTRY_AND_CONTAMINATION.md | documentation | D06 deletion test、schema/hash、split、contamination、manifest、provenance 与真实数据边界 |
+| 2026-09-04 13:04 | /experiment-bridge | docs/data/DATA_PLAN.md | documentation | 将旧 inline-license/parent-id 示例替换为 D06 source/transform registry 与 payload lineage schema |
+| 2026-09-04 13:04 | /experiment-bridge | docs/evaluation/BENCHMARK_PLAN.md | documentation | 注册全上下文污染、传递 quarantine、formal attestation 与 D07/D15 边界 |
+| 2026-09-04 13:04 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW_20260904_130318.md | verification | fresh-agent 多轮 D06 审查历史版本；最终 implementation verdict APPROVE |
+| 2026-09-04 13:04 | /experiment-bridge | refine-logs/EXPERIMENT_CODE_REVIEW.md | verification | D06 审查 latest copy 与 post-commit evidence sequencing |
+| 2026-09-04 13:04 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN_20260904_125924.md | status | D06 COMPLETE、D07–D12 PLANNED 历史版本 |
+| 2026-09-04 13:04 | /experiment-bridge | refine-logs/EXPERIMENT_PLAN.md | status | D06 COMPLETE 与真实 D15/G1 边界 latest copy |
+| 2026-09-04 13:04 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER_20260904_125924.md | status | 6/24、D06 synthetic evidence 与 real runs 未启动历史版本 |
+| 2026-09-04 13:04 | /experiment-bridge | refine-logs/EXPERIMENT_TRACKER.md | status | D07 NEXT、DATA-001/002 与 G1 保持 NOT_STARTED latest copy |
+| 2026-09-04 13:04 | /experiment-bridge | README.md, AGENTS.md, configs/project.yaml, docs/planning/DEVELOPMENT_MODULES.md | status | 进度同步到 6/24、D06 COMPLETE、D07 NEXT；GPU 与真实数据仍未授权 |
+| 2026-09-04 13:04 | /experiment-bridge | artifacts/README.md, scripts/README.md, src/posttrain_lab/README.md, tests/README.md | documentation | D06 artifact/CLI/package/test 边界与 436/96 test counts |
+| 2026-09-04 13:04 | /experiment-bridge | findings.md | documentation | D06 family leakage、全上下文污染、payload lineage 与 attestation 结论 |

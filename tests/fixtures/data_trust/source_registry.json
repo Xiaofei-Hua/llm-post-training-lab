@@ -1,0 +1,47 @@
+{
+  "allowed_license_expressions": [
+    "Apache-2.0",
+    "MIT"
+  ],
+  "schema_version": "d06-source-registry-v1",
+  "sources": [
+    {
+      "allowed_uses": [
+        "evaluate"
+      ],
+      "license_evidence_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "license_expression": "MIT",
+      "license_url": "https://example.invalid/licenses/synthetic-eval",
+      "revision": "3333333333333333333333333333333333333333",
+      "revision_kind": "git_commit",
+      "source_id": "synthetic/eval",
+      "uri": "https://example.invalid/datasets/synthetic-eval"
+    },
+    {
+      "allowed_uses": [
+        "redistribute",
+        "train"
+      ],
+      "license_evidence_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "license_expression": "Apache-2.0",
+      "license_url": "https://example.invalid/licenses/synthetic-train-a",
+      "revision": "1111111111111111111111111111111111111111",
+      "revision_kind": "git_commit",
+      "source_id": "synthetic/train-a",
+      "uri": "https://example.invalid/datasets/synthetic-train-a"
+    },
+    {
+      "allowed_uses": [
+        "redistribute",
+        "train"
+      ],
+      "license_evidence_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "license_expression": "Apache-2.0",
+      "license_url": "https://example.invalid/licenses/synthetic-train-b",
+      "revision": "2222222222222222222222222222222222222222",
+      "revision_kind": "git_commit",
+      "source_id": "synthetic/train-b",
+      "uri": "https://example.invalid/datasets/synthetic-train-b"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "normalization": "identity-on-canonical-fixture",
+  "schema_version": "d06-synthetic-ingest-config-v1"
+}

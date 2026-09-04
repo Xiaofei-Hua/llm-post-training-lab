@@ -6,7 +6,7 @@
 - phase: cpu-framework-development
 - project_type: algorithm-first LLM post-training portfolio
 - execution_status: CPU-only algorithm/framework development; no GPU training authorized
-- core_modules: D01-D24 (5/24 complete); GPU/full-training begins at D13
+- core_modules: D01-D24 (6/24 complete); GPU/full-training begins at D13
 - extension_modules: X01-X08 (deferred until D24; excluded from core completion)
 
 ## Problem Anchor
@@ -43,6 +43,7 @@
 - 当前实现 D03：`docs/algorithms/GRPO_SURROGATE.md`
 - 当前实现 D04：`docs/algorithms/OPD_REVERSE_KL.md`
 - 当前实现 D05：`docs/algorithms/EXACT_MATH_VERIFIER.md`
+- 当前实现 D06：`docs/data/DATA_REGISTRY_AND_CONTAMINATION.md`
 
 ## Stage Gates
 

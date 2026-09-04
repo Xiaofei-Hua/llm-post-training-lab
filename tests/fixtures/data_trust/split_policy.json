@@ -1,0 +1,31 @@
+{
+  "allocations": [
+    {
+      "split": "D_anchor",
+      "weight": 1
+    },
+    {
+      "split": "D_core",
+      "weight": 1
+    },
+    {
+      "split": "D_dev",
+      "weight": 1
+    },
+    {
+      "split": "D_select",
+      "weight": 1
+    },
+    {
+      "split": "D_teacher_gate",
+      "weight": 1
+    }
+  ],
+  "family_dimensions": [
+    "source",
+    "problem",
+    "template"
+  ],
+  "namespace": "d06-synthetic-audit-v1",
+  "schema_version": "d06-family-split-policy-v1"
+}

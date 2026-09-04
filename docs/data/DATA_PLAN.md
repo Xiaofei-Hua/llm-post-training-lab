@@ -1,5 +1,7 @@
 # 数据规划
 
+> 当前状态：D06 已完成可复用的数据 trust-stack 合同和 synthetic adversarial evidence；尚未下载或冻结任何真实训练/benchmark 数据，`DATA-001`、`DATA-002` 与 G1 均保持 `NOT_STARTED`，生产 materialization 属于 D15。
+
 ## 数据分层
 
 | 层 | 用途 | 首选候选 | 是否含答案/轨迹 |
@@ -32,26 +34,45 @@
 
 - 只作 instruction-following retention；数学强化不应以破坏基本指令遵循为代价。
 
-## Canonical Schema
+## Canonical registries 与 record schema
 
-所有训练样本先规范化为 JSONL：
+许可不重复写入每条样本，而由 closed-world `SourceRegistry` 统一冻结。每个 source 必须记录 portable `source_id`、公开 URI、40/64-hex Git commit 或 SHA-256 snapshot revision、SPDX-like license expression、license/card URL 与 evidence hash，以及 `train`/`evaluate`/`redistribute` 用途 allowlist。记录只引用 `source_id` 与完全一致的 revision；用途不允许、未知或 mutable 的来源直接失败。
+
+每个处理步骤还必须出现在 `TransformRegistry`，其中 `(transform_name, transform_version, code_sha256, config_sha256)` 指向 repository-relative、Git-tracked 的代码和配置。正式 audit 会逐字节校验声明 hash。
+
+所有样本使用严格的 `d06-data-record-v1` JSONL：
 
 ```json
 {
-  "sample_id": "source:revision:split:index",
-  "source": "open-r1/OpenR1-Math-220k",
-  "source_revision": "<immutable commit>",
-  "license": "Apache-2.0",
+  "schema_version": "d06-data-record-v1",
+  "sample_id": "source-local:stable-id",
+  "source_id": "open-r1/OpenR1-Math-220k",
+  "source_revision": "<full immutable commit>",
+  "split": "UNASSIGNED",
+  "families": {
+    "source": "<source-local family>",
+    "problem": "<problem family>",
+    "template": "<template family>"
+  },
   "problem": "...",
   "messages": [{"role": "user", "content": "..."}],
   "reference_answer": "...",
   "response": "...",
   "quality": {"answer_verified": true, "format_valid": true},
-  "lineage": {"transform_version": "...", "parent_id": "..."}
+  "strata": {"answer_type": "integer", "difficulty": "..."},
+  "lineage": {
+    "transform_name": "normalize-v1",
+    "transform_version": "1.0.0",
+    "code_sha256": "<64 hex>",
+    "config_sha256": "<64 hex>",
+    "parents": [{"sample_id": "...", "payload_sha256": "<64 hex>"}]
+  }
 }
 ```
 
-Preference 数据额外增加 `chosen`、`rejected`、`pair_reason` 和两侧长度；prompt-only 数据移除训练不可用的 rationale。
+内部 parent 必须解析到同 split 的完整 `payload_sha256`；外部 parent 必须由冻结的 `ParentPayloadLedger` 解析。loader 拒绝未知/缺失字段、duplicate keys、NaN/Infinity、BOM/CRLF/blank lines、非 NFC 文本、重复 ID、lineage cycle 与越界输入。未来 preference 数据必须定义独立 versioned schema；不能向该 closed schema 临时追加 `chosen`/`rejected` 字段。
+
+完整实现合同见 `DATA_REGISTRY_AND_CONTAMINATION.md`。
 
 ## 数据质量漏斗
 

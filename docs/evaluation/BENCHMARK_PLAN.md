@@ -100,6 +100,9 @@ MathArena 06/2026 只有 49 题，不能独自承载主 claim；G0 先确认 E2B
 - test 文本哈希只能由 data audit 读取，训练器不能读取 reference solution。
 - SFT、GRPO、OPD 共用唯一 canonical prompt registry，并按来源/题型/template family 分组切分。
 - 题目、参考解答和 reasoning trace 都做规范化近重复检查，不只查 prompt exact match。
+- D06 已冻结 `d06-contamination-policy-v1`：默认扫描 system/tool context、problem、user prompt、reference/response/assistant solution，并额外扫描跨 message 的 prompt、solution trace 与 full-record aggregate；只有 exact normalized hash allowlist 才能豁免公共 context。
+- exact、fuzzy 与 review-band 命中都 fail closed；命中记录按 source/problem/template 传递 family 整体 quarantine，并须用同一 policy 零命中重扫后才能生成 raw-text-free manifest。
+- manifest self-hash 只证明所绑定内容未被篡改；正式 G1 evidence 必须由 Git-bound data audit 重算 split assignment、污染报告和全部输入/transform hashes。D06 目前只有 synthetic evidence，真实 benchmark revision、license/card bytes、人工 pair review 与 sealed manifest 属于 D15。
 - 只能声称“本项目后训练数据未包含测试集”；无法证明 Gemma 4 预训练或 Teacher 从未见过公开题目。
 - answer parser 已在 D05 的 257 个合成 adversarial cases 上冻结；模型训练后不得放宽规则。完整合同见 `docs/algorithms/EXACT_MATH_VERIFIER.md`。
 - 多个 `boxed`/answer marker 采用最后 surface 生效；最后 surface malformed 时不回退；unanchored prose、code fence、控制字符与异常表达式不能从中捞取正确数字。
@@ -107,6 +110,8 @@ MathArena 06/2026 只有 49 题，不能独自承载主 claim；G0 先确认 E2B
 - finite set、interval、tuple、relation 与 matrix 先做 structural-family guard，防止 symbolic backend 的跨类型 false positive。
 - 随机抽查至少 100 个模型输出，并给 evaluator 误差矩阵。
 - 每次 benchmark 运行保存原始 generations，主报告只消费不可变结果文件。
+
+完整 D06 数据边界见 `docs/data/DATA_REGISTRY_AND_CONTAMINATION.md`；D07 将实现 sealed-answer access boundary 与 generation/result schema，但不会提前下载真实 benchmark。
 
 ## 主表草案
 
