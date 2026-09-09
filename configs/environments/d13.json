@@ -10,5 +10,5 @@
   "witness": "python scripts/validate_accelerator.py --witness-only",
   "witness_expect": "D13_CUDA_WITNESS",
   "validation": "python scripts/validate_accelerator.py --output artifacts/gpu/d13_runtime.json",
-  "package_index": "https://pypi.tuna.tsinghua.edu.cn/simple"
+  "package_index": "https://mirrors.aliyun.com/pypi/simple"
 }

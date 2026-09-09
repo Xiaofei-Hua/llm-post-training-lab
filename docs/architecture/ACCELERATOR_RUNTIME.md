@@ -4,7 +4,7 @@
 
 ## 实现与正确性
 
-`Trainer` / `TrainerConfig` 在现有 D10 路径上支持显式 `cpu` 或单个 `cuda:N`，默认 CPU；没有保留第二套 CPU trainer。模型与 LoRA 在 CPU 上按 seed 初始化、选定可训练参数，然后迁移设备并创建 optimizer；采样 generator、tokens 和 mask 跟随模型设备。CPU 默认路径不初始化 CUDA。
+`Trainer` / `TrainerConfig` 在现有 D10 路径上支持显式 `cpu` 或单个 `cuda:N`，默认 CPU；没有保留第二套 CPU trainer。模型与 LoRA 在 CPU 上按 seed 初始化、选定可训练参数，然后迁移设备并创建 optimizer；采样 generator、tokens 和 mask 跟随模型设备。CPU 默认路径不初始化 CUDA。锁定的 PyTorch 2.14 在 AdamW 健康检查中会查询可用 accelerator/current stream；训练器对全 CPU 参数跳过该检查，CUDA 参数仍保留上游检查，优化公式与 state 不变。该平台问题由远端 CUDA wheel 下的 CPU regression 捕获。
 
 - BF16 使用 autocast，参数与 AdamW moments 保持 FP32，概率归一化与 CE/KL 使用 FP32；CPU 数值对照仍可用 FP64。BF16 不使用 loss scaling；CUDA 原生 BF16 支持与真实数值误差待 GPU 验收。
 - 在完整逻辑 batch 上计算 reward、GRPO advantage 与 D01 预算，然后按 completion 行拆 microbatch。SFT/OPD 的每个局部 loss 除以完整 batch 选中的 token 数；Dr.GRPO 保持截断前 active completions × 固定 cap 分母。局部 backward 直接求和，最后统一 clip、AdamW update、预算提交和 scheduler step，不再除以 microbatch 数。
@@ -21,7 +21,7 @@ uv run --frozen pytest -q tests/test_training_runtime.py
 uv run --frozen python scripts/validate_accelerator.py --dry-run
 ```
 
-23 项 CPU regression 覆盖 SFT/GRPO/OPD × text/LoRA、不同 completion 长度、部分末批、完全未选中的 microbatch、重计算开关、完整 batch 与累积梯度/更新等价；同时覆盖随机 rollout 的精确续训、moments/LR/预算恢复、阶段切换、后续 microbatch NaN、零方差 skip 后恢复、完成阶段 checkpoint 与 LoRA scaling 不匹配。以上只证明 CPU 路径；GPU 验证脚本当前为待执行交付物。
+23 项 CPU regression 覆盖 SFT/GRPO/OPD × text/LoRA、不同 completion 长度、部分末批、完全未选中的 microbatch、重计算开关、完整 batch 与累积梯度/更新等价；同时覆盖随机 rollout 的精确续训、moments/LR/预算恢复、阶段切换、后续 microbatch NaN、零方差 skip 后恢复、完成阶段 checkpoint 与 LoRA scaling 不匹配。本地全量 600 项测试通过；远端使用 `CUDA_VISIBLE_DEVICES=` 屏蔽 GPU，在 Python 3.12.3 / torch 2.14.0+cu130 / numpy 2.5.2 下复测 61 项模型与运行时集成测试通过，CPU 隔离测试单独冷启动也通过。以上只证明 CPU 路径；GPU 验证脚本当前为待执行交付物。
 
 ## 镜像环境安装
 
@@ -31,12 +31,12 @@ uv run --frozen python scripts/validate_accelerator.py --dry-run
 # 在项目目录执行；远端解释器路径由本机环境决定。
 UV_BIN=uv POSTTRAIN_BOOTSTRAP_PYTHON=python3.12 \
 UV_PROJECT_ENVIRONMENT=.venv \
-POSTTRAIN_PYPI_INDEX=https://pypi.tuna.tsinghua.edu.cn/simple \
+POSTTRAIN_PYPI_INDEX=https://mirrors.aliyun.com/pypi/simple \
 bash scripts/sync_environment_mirror.sh
 .venv/bin/python scripts/validate_accelerator.py --dry-run
 ```
 
-环境规格见 `configs/environments/d13.json`；具体 SSH、环境路径和下载诊断只保存在忽略的 `notes/private/compute/`。镜像安装/CPU import 成功与 GPU kernel 可运行是两件事，后者暂未验证。
+环境规格见 `configs/environments/d13.json`；具体 SSH、环境路径和下载诊断只保存在忽略的 `notes/private/compute/`。已通过阿里云镜像安装 50 个锁定依赖及本地项目，`uv pip check` 验证 51 个包兼容；CPU import 确认 CUDA 未初始化。独立按文档执行 CPU dry-run 成功。镜像安装/CPU import 成功与 GPU kernel 可运行是两件事，后者暂未验证。
 
 ## GPU 恢复后待执行的验收
 

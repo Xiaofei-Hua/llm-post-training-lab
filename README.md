@@ -109,11 +109,10 @@ D13–D20 规划真实模型接入、GPU 性能和训练 pilots；D21–D22 为�
 开发环境通过 `uv.lock` 复现。四轮历史方法评审见 `refine-logs/REVIEW_SUMMARY.md`，不作为本次修订或未运行实验的验收结论。
 
 ```bash
-uv sync --frozen --all-groups
 # 镜像下载（版本和 hashes 仍取自 uv.lock）
 bash scripts/sync_environment_mirror.sh
-uv run ruff check .
-uv run pytest -q
+.venv/bin/python -m ruff check .
+.venv/bin/python -m pytest -q
 # CPU 合成学习与图表
-uv run --frozen python scripts/train_cpu_example.py
+.venv/bin/python scripts/train_cpu_example.py
 ```

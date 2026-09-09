@@ -12,7 +12,7 @@
 
 ## 已实现
 
-- `sync_environment_mirror.sh`：将 frozen `uv.lock` 导出为含 hashes 的 requirements，经清华镜像安装到独立环境；可用 `POSTTRAIN_PYPI_INDEX` 指定镜像，不改锁定版本。
+- `sync_environment_mirror.sh`：将 frozen `uv.lock` 导出为含 hashes 的 requirements，经阿里云镜像安装到独立环境；可用 `POSTTRAIN_PYPI_INDEX` 指定镜像，不改锁定版本。
 - `validate_accelerator.py`：D13 单 GPU tiny 模型验收，支持 `--dry-run`（CPU）、`--witness-only` 与完整数值/续训/profile。GPU 当前被其他任务占用，本次只运行 dry-run，未生成 GPU 结果。
 
 - `train_cpu_example.py`：D12 合成五臂两阶段三 seed 学习入口，支持 `--dry-run`、`--output`、`--plot-only`；输出逐步指标、held-out context 评测与错误 Teacher 诊断图。

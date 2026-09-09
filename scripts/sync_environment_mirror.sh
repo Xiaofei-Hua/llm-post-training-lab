@@ -5,7 +5,7 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 posttrain_uv="${UV_BIN:-uv}"
 posttrain_python="${POSTTRAIN_BOOTSTRAP_PYTHON:-python3.12}"
 posttrain_environment="${UV_PROJECT_ENVIRONMENT:-.venv}"
-posttrain_index="${POSTTRAIN_PYPI_INDEX:-https://pypi.tuna.tsinghua.edu.cn/simple}"
+posttrain_index="${POSTTRAIN_PYPI_INDEX:-https://mirrors.aliyun.com/pypi/simple}"
 posttrain_requirements="$(mktemp)"
 trap 'rm -f -- "$posttrain_requirements"' EXIT
 "$posttrain_uv" venv --allow-existing --python "$posttrain_python" "$posttrain_environment"

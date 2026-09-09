@@ -174,11 +174,29 @@ def test_resume_rejects_changed_runtime_before_overwriting_student(tmp_path):
 
 
 def test_cpu_default_does_not_touch_cuda(monkeypatch):
-    def forbidden(*args, **kwargs):
-        raise AssertionError("CPU execution must not initialize CUDA")
+    def forbidden(name):
+        # Dynamo registers functions by identity on the first optimizer import;
+        # distinct sentinels keep this check independent of test execution order.
+        def fail(*args, **kwargs):
+            raise AssertionError(f"CPU execution must not call CUDA {name}")
 
-    for name in ("is_available", "synchronize", "get_rng_state", "reset_peak_memory_stats"):
-        monkeypatch.setattr(torch.cuda, name, forbidden)
+        return fail
+
+    for name in (
+        "_lazy_init",
+        "synchronize",
+        "get_rng_state",
+        "reset_peak_memory_stats",
+    ):
+        monkeypatch.setattr(torch.cuda, name, forbidden(name))
+    monkeypatch.setattr(torch.accelerator, "current_stream", forbidden("current_stream"))
+    # CPU checkpointing may read the compiled accelerator type/availability.
+    # The optimizer must not run the upstream check that can open its stream.
+    monkeypatch.setattr(
+        torch.optim.AdamW,
+        "_accelerator_graph_capture_health_check",
+        forbidden("optimizer accelerator graph check"),
+    )
     trainer = make_trainer("sft", microbatch=2, checkpoint=True)
     assert trainer.step(examples())["status"] == "updated"
     with pytest.raises(ValueError, match="CUDA only"):

@@ -37,7 +37,7 @@ development_environment:
   accelerator_execution_authorized: false
   accelerator_authorization_scope: d13_tiny_model_only
   accelerator_pause_reason: user_reports_gpu_in_use_by_another_task
-  package_mirror: https://pypi.tuna.tsinghua.edu.cn/simple
+  package_mirror: https://mirrors.aliyun.com/pypi/simple
 
 module_plan:
   cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 12}

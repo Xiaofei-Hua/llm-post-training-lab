@@ -72,6 +72,16 @@ class StageBudgetIncomplete(RuntimeError):
     """A bounded stage exhausted its attempt limit, possibly from zero reward variance."""
 
 
+class _DeviceAdamW(torch.optim.AdamW):
+    def _accelerator_graph_capture_health_check(self) -> None:
+        # Locked torch 2.14 probes the available accelerator/current stream even
+        # for a CPU optimizer. Keep CPU execution independent of installed CUDA
+        # hardware; retain the upstream capture checks for accelerator parameters.
+        if all(p.device.type == "cpu" for group in self.param_groups for p in group["params"]):
+            return
+        super()._accelerator_graph_capture_health_check()
+
+
 class Trainer:
     def __init__(
         self,
@@ -148,7 +158,7 @@ class Trainer:
         self.generator = torch.Generator(device=self.device).manual_seed(seed)
         self.student.zero_grad(set_to_none=True)
         lr = self.config.learning_rates[("sft", "grpo", "opd").index(objective)]
-        self.optimizer = torch.optim.AdamW(self.parameters, lr=lr, weight_decay=0.0)
+        self.optimizer = _DeviceAdamW(self.parameters, lr=lr, weight_decay=0.0)
         # Only successful backward tokens age the schedule; new stages reset moments/LR.
         self.scheduler = torch.optim.lr_scheduler.LambdaLR(
             self.optimizer,
