@@ -1,0 +1,14 @@
+{
+  "python": "3.12",
+  "dependency_source": "uv.lock, exported frozen with package hashes and installed through the mirror",
+  "install": "bash scripts/sync_environment_mirror.sh",
+  "torch": "2.14.0",
+  "accelerator": "one CUDA GPU with native BF16 support",
+  "threads": 4,
+  "model_source": "locally initialized tiny causal LM only",
+  "real_models_and_datasets": false,
+  "witness": "python scripts/validate_accelerator.py --witness-only",
+  "witness_expect": "D13_CUDA_WITNESS",
+  "validation": "python scripts/validate_accelerator.py --output artifacts/gpu/d13_runtime.json",
+  "package_index": "https://pypi.tuna.tsinghua.edu.cn/simple"
+}

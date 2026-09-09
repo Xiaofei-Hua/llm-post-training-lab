@@ -1,19 +1,20 @@
 # 技术开发与训练路线
 
-> 2026-09-09 修订。当前 D01–D08 已完成，下一模块 D09；只有 CPU 开发授权。先完成下列近期技术交付，真实模型/GPU 阶段的周数从取得资源后起算，不构成当前训练承诺。
+> 2026-09-09 更新。当前 D01–D12 已完成，D13 实现及 CPU 验证就绪；GPU 被另一任务使用，实测暂停。真实模型/GPU 阶段的周数从取得资源后起算，不构成当前训练承诺。
 
 ## 近期：CPU 算法、框架与性能
 
 | 顺序 | 主要目标 | 实际工作 | 可展示交付 |
 |---|---|---|---|
-| D09 | 模型适配与参数更新 | 本地 tiny causal LM；hidden states/LM head 接 CE/KL；LoRA/text 参数选择；forward/backward/update | 模型/参数图、梯度对照、参数量与内存估算 |
-| D10 | 统一训练循环 | 当前策略采样→reward/Teacher→objective→backward→optimizer；SFT/GRPO/OPD 切换及 stage reset | 可运行循环、策略生命周期图、loss/reward/KL/entropy/clip 日志 |
-| D11 | 性能剖析与优化 | 按 PERFORMANCE_PLAN 测 CE/KL/完整 step baseline；实施一个瓶颈驱动的优化尝试 | 时间/内存对照、分块与重计算取舍、负优化解释 |
-| D12 | CPU 学习实验 | 合成可验证任务跑通五臂两阶段，观察实际学习和策略变化 | 一条命令的示例、学习曲线、失败诊断与成本分解 |
+| D09（已完成） | 模型适配与参数更新 | 本地 tiny causal LM；hidden states/LM head 接 CE/KL；LoRA/text 参数选择；forward/backward/update | 四组 CPU 更新、dense reference 梯度对照、参数量与内存估算；见 `docs/architecture/MODEL_ADAPTER.md` |
+| D10（已完成） | 统一训练循环 | 当前策略采样→reward/Teacher→objective→backward→optimizer；SFT/GRPO/OPD 切换及 stage reset | 见 `docs/architecture/CPU_TRAINING_LOOP.md` |
+| D11（已完成） | 性能剖析与优化 | CE/KL/完整 step baseline；rollout last-position head 优化与复测 | 时间/RSS、重计算负结果；见 `docs/performance/CPU_BENCHMARK.md` |
+| D12（已完成） | CPU 学习实验 | 合成任务五臂两阶段三 seed、学习动态与错误 Teacher 对照 | 见 `docs/experiments/CPU_LEARNING_EXPERIMENT.md` |
+| D13（进行中） | 单 GPU runtime | 共享 Trainer、BF16、累积/重计算、续训已实现；CPU 测试通过，GPU 实测暂停 | 见 `docs/architecture/ACCELERATOR_RUNTIME.md` |
 
 每轮围绕一个主要技术目标推进，可以修改必要依赖。开发 smoke 和 microbenchmark 不要求新建确认性 claim；完成有用测量后进入下一目标。D05–D08 按需修复，不再为扩充 schema、hash 或审计报告安排独立开发周期。
 
-CPU tiny 模型用于验证训练算法和框架，不承担真实 Gemma 的选参、性能预测或 C1/C2 结论。当前不下载模型/真实数据、不调用 MPS/CUDA。
+CPU tiny 模型用于验证训练算法和框架，不承担真实 Gemma 的选参、性能预测或 C1/C2 结论。真实模型/数据未下载，当前暂停 MPS/CUDA；D13 剩余 GPU 验收见 `docs/architecture/ACCELERATOR_RUNTIME.md`。
 
 ## 后续：资源就绪后的约 12 周参考安排
 

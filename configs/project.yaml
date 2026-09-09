@@ -2,14 +2,14 @@ project:
   name: llm-post-training-lab
   status: technical_focus_plan_execution_conditional
   planning_revision: "2026-09-09-technical-focus"
-  development_status: d08_paired_statistics_complete_cpu_only
+  development_status: d13_cpu_validated_gpu_paused_in_use_by_another_task
   core_pipeline_modules_total: 24
-  core_pipeline_modules_complete: 8
+  core_pipeline_modules_complete: 12
   module_catalog_total_including_extensions: 32
   extension_modules_total: 8
   extension_modules_complete: 0
-  current_module: D08
-  next_module: D09
+  current_module: D13
+  next_module: D14
   completion_denominator: core_pipeline_modules_total
   language: zh
   target: post-training-algorithm-internship-portfolio
@@ -23,10 +23,9 @@ development_focus:
   confirmatory_experiments: preregistered_c1_c2_five_arms_three_seeds
   cpu_validation: locally_initialized_tiny_models_and_synthetic_tasks
   next_deliverables:
-    D09: model_adapter_and_trainable_parameter_integration
-    D10: unified_sft_grpo_opd_training_loop
-    D11: cpu_performance_profiling_and_optimization
-    D12: cpu_end_to_end_learning_experiments
+    D13: runtime_implemented_cpu_validated_gpu_execution_paused
+    D14: real_gemma_model_adapter_requires_authorization
+    D15: real_data_and_base_evaluation_requires_authorization
   performance_plan: docs/planning/PERFORMANCE_PLAN.md
 
 development_environment:
@@ -36,9 +35,12 @@ development_environment:
   torch: "2.14.0"
   numpy: "2.5.2"
   accelerator_execution_authorized: false
+  accelerator_authorization_scope: d13_tiny_model_only
+  accelerator_pause_reason: user_reports_gpu_in_use_by_another_task
+  package_mirror: https://pypi.tuna.tsinghua.edu.cn/simple
 
 module_plan:
-  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 8}
+  cpu_algorithm_framework: {ids: D01-D12, total: 12, complete: 12}
   real_model_gpu_readiness_and_pilots: {ids: D13-D20, total: 8, complete: 0}
   formal_training_evidence_and_delivery: {ids: D21-D24, total: 4, complete: 0}
   post_core_extensions: {ids: X01-X08, total: 8, complete: 0, counted_in_core: false}

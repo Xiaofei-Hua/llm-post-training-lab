@@ -7,9 +7,9 @@
 | 方向 | 需要讲清的技术内容 | 交付 | 当前证据范围 |
 |---|---|---|---|
 | 算法 | CE/GRPO/reverse-KL 梯度、normalization、mask、on-policy 与顺序作用 | 公式与实现、解析/reference 对照、失败案例 | D01–D04 CPU 实现已完成，真实模型效果待测 |
-| 框架 | 模型/LoRA 接入、rollout–score–update、Teacher/old-policy、stage reset | 训练循环、时序图、可运行 CPU 示例及后续 Gemma 路径 | D09–D12 计划中 |
-| 性能 | LM-head/KL 中间张量、分块/重计算、rollout 与通信瓶颈 | baseline/profile/优化对照、吞吐与内存图、取舍分析 | D11、D18–D20 待测，暂无加速数字 |
-| 指标 | accuracy/pass@k、entropy/KL/clip/有效组率、retention、成本和错误迁移 | 主表、行为曲线、顺序图、accuracy–cost 图 | D05–D08 CPU 支持已完成，模型结果待测 |
+| 框架 | 模型/LoRA 接入、rollout–score–update、Teacher/old-policy、stage reset | 训练循环、时序图、可运行 CPU 示例及后续 Gemma 路径 | D09–D12 CPU 已完成，Gemma 路径待做 |
+| 性能 | LM-head/KL 中间张量、分块/重计算、rollout 与通信瓶颈 | baseline/profile/优化对照、吞吐与内存图、取舍分析 | D11 CPU 已实测，包含重计算负结果；无稳定完整 step 加速结论，D18–D20 待测 |
+| 指标 | accuracy/pass@k、entropy/KL/clip/有效组率、retention、成本和错误迁移 | 主表、行为曲线、顺序图、accuracy–cost 图 | D05–D08 支持和 D12 合成模型曲线已完成；真实模型结果待测 |
 
 ## 代码与演示
 
@@ -31,7 +31,7 @@ DPO 推导与 shadow 实现作为学习附录；不要求为了作品完整而�
 
 ## 简历写法与阶段边界
 
-可以在研究尚未完成时描述已交付的实现。例如当前可写“实现 masked causal CE、Dr.GRPO surrogate 与 full-vocab reverse-KL，完成 CPU 数值/梯度验证”；不能写“完成 Gemma 后训练框架”或填入尚未测量的加速/准确率。
+可以在研究尚未完成时描述已交付的实现。例如当前可写“实现 masked CE、Dr.GRPO 与 full-vocab reverse-KL，打通 tiny causal LM/LoRA 与同步 CPU 训练循环，以合成五臂两阶段验证精确 token 预算、学习动态及 Teacher 错误迁移；完成分块/重计算与 rollout head 的性能对照”。证据见 D09–D12 报告。不能写“完成 Gemma 后训练框架”或把 CPU 数字当作 GPU 加速/真实模型准确率。
 
 后续量化表述采用以下结构，方括号是待实测字段，不是当前成果：
 
@@ -40,3 +40,5 @@ DPO 推导与 shadow 实现作为学习附录；不要求为了作品完整而�
 - 算法：“在 Gemma E2B、[数据/Student budget] 和三个 paired seeds 下比较五臂，观察到 [准确率差及区间/等效或不确定结果]，由 [行为/错误分析] 解释。”
 
 每个量化字段附测量结果与配置入口即可。核函数、端到端吞吐、模型效果分别限定范围；不使用内部资产或他人成果，不把预期写成实测。G6 复核已有材料的准确性，不新建审计平台。
+
+D13 可补充“实现 token 归一化梯度累积、activation checkpointing 与精确随机续训，并通过 CPU 对照测试”。CUDA/BF16 路径目前尚未实测，不能写 GPU 训练完成、显存节省或 GPU 加速数字。

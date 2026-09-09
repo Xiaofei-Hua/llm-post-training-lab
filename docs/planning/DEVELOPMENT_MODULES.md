@@ -1,6 +1,6 @@
 # 算法、框架、性能与指标开发模块
 
-> 2026-09-09 修订：保留 D01–D08 的完成事实与模块编号，重新定义未完成模块的技术交付。D09–D12 优先打通模型和训练循环、测量性能、展示学习行为；现有校验设施按需维护。
+> 2026-09-09 更新：D01–D12 已完成 CPU 算法、模型/循环、性能测量与合成学习验收。D13 运行时代码及 CPU 验证已实现，GPU 被其他任务占用而暂停实测；现有校验设施按需维护。
 
 ## 唯一计数口径
 
@@ -15,11 +15,11 @@
 
 因此：
 
-- 核心项目完成分母：`24`；当前 `8/24`；
-- 包含延后研究线的完整目录：`32`；当前 `8/32`；
+- 核心项目完成分母：`24`；当前 `12/24`；
+- 包含延后研究线的完整目录：`32`；当前 `12/32`；
 - `LEARNING_CURRICULUM.md` 的 12 个知识章节只是学习索引，不是另一组执行模块，不进入上述分母。
 
-当前 D01–D08 已在 CPU 完成并验证；下一模块是 D09。D13 之后的 accelerator 动作全部只是计划，当前未获 MPS/CUDA/GPU 执行授权。
+当前 D01–D12 已在 CPU 完成并验证；正在开发 D13。D13 的累积、重计算与 save/resume 已通过 CPU 测试；GPU 验证按用户要求暂停。实现与剩余验收见 `docs/architecture/ACCELERATOR_RUNTIME.md`。D14 之后的真实模型/数据执行尚未授权。
 
 ## Layer 1：CPU 算法与框架（D01–D12）
 
@@ -33,10 +33,10 @@
 | D06 | data registry、license/revision lineage、family split 与 contamination | immutable manifests/checksums；split determinism；exact/fuzzy contamination fixtures；泄漏失败闭锁 | COMPLETE（CPU） |
 | D07 | sealed benchmark evaluator、generation/result schema 与 metric contracts | test-answer access boundary；greedy/sampling reproducibility；item-level raw records；evaluator version hash | COMPLETE（CPU；synthetic evidence） |
 | D08 | paired statistics core | item bootstrap、paired randomization/sign-flip、Holm、TOST 与 synthetic null/effect coverage 通过；只消费 D07 correctness | COMPLETE（CPU；synthetic evidence） |
-| D09 | 模型适配与可训练参数接入 | 本地初始化 tiny causal LM；接 D02/D04 的 hidden-state/LM-head 路径；text/LoRA 参数选择；真实 forward/backward/update 与 dense reference 对照；参数量/内存估算 | PLANNED（CPU） |
-| D10 | SFT/GRPO/OPD 统一训练循环 | 三 objective 共用 sample/score/loss/backward/update 主循环；当前 Student 采样、old-policy/Teacher detach、有效 token 更新、stage reset；输出 loss/reward/entropy/KL/clip/有效组率 | PLANNED（CPU） |
-| D11 | 性能剖析与优化 | 固定 workload 下比较 dense reference、有效位置分块与重计算；测 forward/backward、端到端 step、有效 tokens/s、CPU 峰值内存；定位瓶颈并实施至少一项有依据的优化尝试，报告收益或负结果 | PLANNED（CPU） |
-| D12 | CPU 端到端学习实验 | 用 D09–D11 实际训练路径在合成可验证任务跑通五臂两阶段；展示 loss/正确动作概率或准确率/entropy/KL/长度/成本曲线，解释一个失败或退化案例 | PLANNED（CPU；算法示例） |
+| D09 | 模型适配与可训练参数接入 | 本地初始化 tiny causal LM；接 D02/D04 的 hidden-state/LM-head 路径；text/LoRA 参数选择；真实 forward/backward/update 与 dense reference 对照；参数量/内存估算 | COMPLETE（CPU；synthetic model evidence） |
+| D10 | SFT/GRPO/OPD 统一训练循环 | 三 objective 共用 sample/score/loss/backward/update 主循环；当前 Student 采样、old-policy/Teacher detach、有效 token 更新、stage reset；输出 loss/reward/entropy/KL/clip/有效组率 | COMPLETE（CPU） |
+| D11 | 性能剖析与优化 | 固定 workload 下比较 dense reference、有效位置分块与重计算；测 forward/backward、端到端 step、有效 tokens/s、CPU 峰值内存；定位瓶颈并实施至少一项有依据的优化尝试，报告收益或负结果 | COMPLETE（CPU；含负结果） |
+| D12 | CPU 端到端学习实验 | 用 D09–D11 实际训练路径在合成可验证任务跑通五臂两阶段；展示 loss/正确动作概率或准确率/entropy/KL/长度/成本曲线，解释一个失败或退化案例 | COMPLETE（CPU；合成五臂三 seed） |
 
 D01–D08 保留既有实现与验证记录，不追加围绕 hash/schema 的专项开发。D09–D12 用本地 tiny 模型验证算法和框架，不下载 checkpoint；CPU 测量只解释对应 workload，不预测 Gemma 的准确率或 GPU 加速。详细性能实验见 `PERFORMANCE_PLAN.md`。
 
@@ -51,7 +51,7 @@ D01–D08 保留既有实现与验证记录，不追加围绕 hash/schema 的专
 
 | ID | 交付物 | 实际工作与 exit criteria | Gate | 状态 |
 |---|---|---|---|---|
-| D13 | accelerator 与分布式训练运行时 | 接入 BF16、gradient accumulation/checkpointing 与实际需要的 FSDP/ZeRO；测 update latency、显存和通信占比，完成必要 save/resume；确认硬件与资源授权 | G0 | PLANNED；GPU 未授权 |
+| D13 | accelerator 与分布式训练运行时 | 接入 BF16、gradient accumulation/checkpointing 与实际需要的 FSDP/ZeRO；测 update latency、显存和通信占比，完成必要 save/resume；确认硬件与资源授权 | G0 | IN_PROGRESS；代码/CPU 验证完成，GPU 实测暂停 |
 | D14 | Gemma 4 E2B/E4B 模型接入 | 真实 text forward/backward、LoRA 参数更新、模型 logit transform 与 tokenizer/token 对齐；测参数/激活内存，验证冻结参数无更新 | C0 | PLANNED；GPU 未授权 |
 | D15 | 真实数据、任务分布与 Base 指标 | 复用 D06/D07 materialize 各 split 和 benchmark；完成必要去污染/人工抽查；产出难度、长度、可解析率与 Base accuracy 分布 | G1 | PLANNED |
 | D16 | Student/Teacher SFT feasibility | E2B/E4B 各做 64-example overfit；2k×最多两档 LR sanity；只用 D_select 选 recipe；packing parity/禁用决策留证 | C1 | PLANNED；GPU 未授权 |

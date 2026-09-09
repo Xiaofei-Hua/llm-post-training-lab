@@ -71,6 +71,11 @@ Base
 | D06 data registry、family split 与 contamination gate | `docs/data/DATA_REGISTRY_AND_CONTAMINATION.md` |
 | D07 sealed evaluator、generation/result 与 metric contracts | `docs/evaluation/SEALED_EVALUATOR.md` |
 | D08 paired bootstrap、randomization、Holm 与 TOST | `docs/evaluation/PAIRED_STATISTICS.md` |
+| D09 CPU tiny causal LM、LoRA、CE/KL 模型接入 | `docs/architecture/MODEL_ADAPTER.md` |
+| D10 SFT/GRPO/OPD 统一 CPU 训练循环 | `docs/architecture/CPU_TRAINING_LOOP.md` |
+| D11 CPU 性能实测、rollout head 优化与负结果 | `docs/performance/CPU_BENCHMARK.md` |
+| D12 CPU 五臂两阶段三 seed 学习与错误 Teacher 对照 | `docs/experiments/CPU_LEARNING_EXPERIMENT.md` |
+| D13 单卡运行时、累积/重计算与续训（GPU 待验证） | `docs/architecture/ACCELERATOR_RUNTIME.md` |
 | D01–D24 完整训练链路与 X01–X08 扩展总表 | `docs/planning/DEVELOPMENT_MODULES.md` |
 | 数据来源、质量、去污染 | `docs/data/DATA_PLAN.md` |
 | benchmark、统计与防泄漏 | `docs/evaluation/BENCHMARK_PLAN.md` |
@@ -89,16 +94,26 @@ Base
 
 ## 当前状态
 
-2026-09-09 起，研发计划按算法、框架、性能、指标重新聚焦。核心进度仍为 **8/24**：D01–D04 已完成 loss-token 预算、masked CE、Dr.GRPO surrogate 与 full-vocab reverse-KL 的 CPU 实现和数值/梯度验证；D05–D08 已提供 verifier、数据隔离、评测指标和配对统计。已有实现继续复用，详细验证记录放在对应模块文档中。
+2026-09-09，核心进度为 **12/24**：D01–D04 已完成 loss-token 预算、masked CE、Dr.GRPO surrogate 与 full-vocab reverse-KL；D05–D08 已提供 verifier、数据隔离、评测与配对统计；D09–D12 已打通 CPU tiny causal LM/LoRA、统一 SFT/GRPO/OPD 循环、性能测量与合成学习实验。
 
-接下来依次完成 **D09 模型适配与可训练参数接入 → D10 统一训练循环 → D11 性能剖析与优化 → D12 CPU 端到端学习实验**。验收将关注实际 forward/backward/update、学习曲线、瓶颈定位和测量结果。
+D09 的四组合成固定 prefix 示例均完成 12 次 CPU 更新；可复跑命令、损失变化和参数内存估算见 [模型接入说明](docs/architecture/MODEL_ADAPTER.md)，原始数值见 [CPU 示例记录](artifacts/cpu/d09_model_adapter.json)。这些结果验证模型和 loss 的连接，不代表真实模型能力或 on-policy 训练完成。
 
-D13–D20 规划真实模型接入、GPU 性能和训练 pilots；D21–D22 为五臂两阶段三 seed 训练；D23–D24 为指标分析、技术报告与求职交付。X01–X08 扩展仍延后。当前尚未下载模型或真实训练数据、未执行 MPS/CUDA/GPU，尚无模型准确率或训练加速结果；本地 tiny 模型的 CPU 验证也不能代替 Gemma 实验。
+D10 的当前策略采样、old-policy 概率、冻结 Teacher、有效 token 更新与 stage reset 已验证。D11 完成两档 CE/KL 及完整 OPD step 对照，优化 rollout 的最后位置投影；实测波动不支持稳定端到端加速，重计算在部分 CPU workload 上更慢，详见 [性能报告](docs/performance/CPU_BENCHMARK.md)。
+
+D12 已完成 **5 臂 × 2 阶段 × 3 个 CPU paired seeds**，30 个阶段均精确完成 128 backward loss tokens，并复现错误 Teacher 导致 Student 退化的案例。学习曲线、成本和范围见 [CPU 学习报告](docs/experiments/CPU_LEARNING_EXPERIMENT.md)。
+
+正在推进 **D13：accelerator 与分布式训练运行时**。统一 CPU/CUDA Trainer、BF16、梯度累积、activation checkpointing、save/resume 和 GPU 验收脚本已实现，新增 23 项 CPU 测试通过。用户通知 GPU 正被另一任务使用，故暂停 GPU 实测；D13 尚未完成，核心进度仍为 12/24。实现、镜像安装及恢复后的验收步骤见 [D13 说明](docs/architecture/ACCELERATOR_RUNTIME.md)。
+
+D13–D20 规划真实模型接入、GPU 性能和训练 pilots；D21–D22 为真实五臂两阶段三 seed 训练；D23–D24 为指标分析、技术报告与求职交付。X01–X08 扩展仍延后。当前尚未下载模型或真实训练数据、未执行 MPS/CUDA/GPU，尚无真实 Gemma 准确率或 GPU 加速结果；本地 tiny 模型的 CPU 验证不能代替这些实验。
 
 开发环境通过 `uv.lock` 复现。四轮历史方法评审见 `refine-logs/REVIEW_SUMMARY.md`，不作为本次修订或未运行实验的验收结论。
 
 ```bash
 uv sync --frozen --all-groups
+# 镜像下载（版本和 hashes 仍取自 uv.lock）
+bash scripts/sync_environment_mirror.sh
 uv run ruff check .
 uv run pytest -q
+# CPU 合成学习与图表
+uv run --frozen python scripts/train_cpu_example.py
 ```
