@@ -17,7 +17,7 @@ SFT 在教师给定的轨迹上最小化交叉熵：
 L_SFT = - Σ_t log π_θ(y_t | x, y_<t)
 ```
 
-它擅长建立行为支持集与格式先验，但训练 prefix 来自数据而非 Student 自己，存在 exposure bias。首期消融：原始数据、格式清洗数据、质量筛选数据，以及 2k/10k 数据规模曲线。
+它擅长建立行为支持集与格式先验，但训练 prefix 来自数据而非 Student 自己，存在 exposure bias。核心先完成 masked CE、参数更新与 64-example/2k/10k SFT 学习诊断；数据过滤消融仅在有明确失败问题时安排，不扩大五臂主矩阵。
 
 ## DPO：offline shadow baseline
 
@@ -61,7 +61,7 @@ L_OPD = Σ_t D(π_θ(.|x,y_<t), π_T(.|x,y_<t))
 
 - forward KL `KL(π_T || π_θ)`：覆盖 Teacher 分布，较 mode-covering；
 - reverse KL `KL(π_θ || π_T)`：惩罚 Student 放在 Teacher 低概率区域的质量，较 mode-seeking；
-- generalized JSD：在两者之间插值，优先用稳定实现进行主实验。
+- generalized JSD：用于理解不同散度的取舍；实现与实验列入 X05，主实验固定 exact reverse-KL。
 
 核心对照：SFT continuation vs OPD，以及 `OPD→GRPO` vs `GRPO→OPD`。off-policy KD、其他 KL/JSD 方向与多个 Teacher 尺寸均为 nice-to-have。
 
@@ -100,4 +100,11 @@ D05 已将该合同实现为 `posttrain_lab.rewards.ExactMathVerifier`：最后�
 6. OPD/GKD 与 distribution mismatch；
 7. GSPO/TIS、PRM 与多步 credit assignment（扩展）。
 
-每一项都必须产出：一页公式推导、一个最小实现、一个 gradient/数值单测、一个失败案例。
+核心 CE/GRPO/OPD 的学习产出为公式、实现、梯度/数值验证与失败解释，并接入 D10 的完整学习循环。DPO/GSPO/PRM 等延后内容先完成必要推导和阅读，不为凑课程交付提前扩展实现。
+
+## 算法到性能的连接
+
+- CE：causal shift 与有效位置选择决定实际监督；比较 dense logits 与 selected-position chunking 的中间张量和运行时间。
+- GRPO：组内 reward 分布决定有效更新比例；同时观察 entropy/clip、rollout tokens 与每个有效 loss token 的端到端成本。
+- OPD：大词表反向 KL 的 LM-head 投影、分块与重计算决定内存/时间取舍；Teacher 质量和 Student prefix 决定训练信号。
+- 顺序：在相同阶段预算下分析切换后的 KL/entropy、错误类型与 retention；性能实现先固定，避免混入方法比较。

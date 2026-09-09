@@ -1,6 +1,6 @@
 # 后训练算法学习课程与验收
 
-项目执行和知识学习并行。每个模块必须同时完成“能推导、能实现、能实验、能表达”四层验收。
+项目执行和知识学习并行，围绕“能推导、能实现、能测量、能解释”积累技术成果。以下 12 个知识章节不是开发模块，不新增工时/审计门槛；核心 CE/GRPO/OPD、训练框架与性能优先，DPO 等扩展按需学习、实现延后。
 
 ## Module 1：Transformer 与 Gemma 4 架构
 
@@ -32,8 +32,8 @@
 
 - 手写 masked CE 与官方实现数值对齐；
 - 64 样本 overfit；
-- raw/clean/quality-filter 三臂小实验；
-- 数据卡、拒绝原因图和 20 条人工审计。
+- loss/NLL、有效 token 与长度/难度分布的联合诊断；
+- 数据质量消融仅在诊断暴露问题后开展，复用 D06 数据支持。
 
 ## Module 3：Preference Learning 与 Reward Modeling
 
@@ -47,9 +47,7 @@
 ### 验收产物
 
 - 从 KL-RL 目标推导 DPO；
-- 手写 DPO loss/gradient sanity test；
-- 同 prompt、长度受控的 frozen pair bank；
-- DPO 单 seed shadow result，不挤占主五臂。
+- DPO loss/gradient 实现、同 prompt pair bank 与单 seed shadow result 在 X01 再做，不挤占主五臂。
 
 ## Module 4：Policy Gradient、PPO 与 GRPO
 
@@ -82,8 +80,8 @@
 
 - 100–300 条 adversarial verifier tests；
 - trainer reward 与独立 evaluator 分离；
-- 一次过宽 parser/format reward 的受控负例；
-- reward card：输入、输出、失败域、版本与审计统计。
+- 从真实输出或合成行为中解释一个 reward/目标错位案例，额外训练负例最多一个；
+- 解释已有 verifier 的失败域与 false positive 对策略梯度的影响。
 
 ## Module 6：Knowledge Distillation 与 OPD
 
@@ -133,21 +131,24 @@
 - ratio/ESS/clip fraction 监控说明；
 - 读完 TIS-GSPO 后写一页“何时值得从 GRPO 升级”。
 
-## Module 9：数据治理与 Contamination
+## Module 9：后训练框架与 Runtime
 
 ### 必须掌握
 
-- provenance、license、immutable revision、lineage；
-- exact/fuzzy/semantic dedup；
-- family-level split、benchmark leakage、Teacher contamination；
-- 只能证明本项目数据去污染，不能证明预训练无污染。
+- 模型适配、hidden states/LM head、LoRA 参数选择与 autograd 边界；
+- rollout→reward/Teacher→loss→backward→optimizer 的共享循环；
+- old-policy snapshot、Student 采样刷新、Teacher freeze 与 stop-gradient；
+- gradient accumulation、有效 token normalization、stage reset；
+- 真实 GPU 阶段的 mixed precision、checkpointing、分片与权重同步。
 
 ### 验收产物
 
-- canonical prompt registry；
-- contamination report 和 removed-pair provenance；
-- dataset card 与 checksum manifest；
-- 30 个 borderline duplicate 人工复核。
+- D09 模型/参数图与实际参数更新；
+- D10 统一训练循环与时序图；
+- D12 合成任务上的学习曲线、失败解释和可运行命令；
+- 回答：“为什么单个 loss 的梯度正确仍不足以说明 on-policy trainer 正确？”
+
+数据来源与 train/test 隔离作为基本知识复用 D06，不再单列治理开发作业。
 
 ## Module 10：Benchmark 与统计
 
@@ -160,25 +161,29 @@
 
 ### 验收产物
 
-- evaluator 99% 人工一致率；
-- paired bootstrap 实现和 synthetic unit test；
-- 预注册 metric/threshold；
-- MATH/GSM8K/MathArena/AIME/IFEval/MMLU-Pro result schema。
+- 复用 D07/D08 的指标和 paired inference；
+- 预注册主指标/阈值，解释统计不确定性与 practical equivalence；
+- MATH/GSM8K/MathArena/AIME/IFEval/MMLU-Pro 的能力和 retention 分析；
+- reward、entropy/KL、有效组率、长度与独立 accuracy 的联合曲线。
 
-## Module 11：Scaling、效率与实验归因
+## Module 11：性能剖析、优化与效率
 
 ### 必须掌握
 
 - 参数、token、FLOPs 与 wall-clock 的不同含义；
 - rollout、Teacher/reference forward、Student backward 的成本分解；
+- 大词表 LM-head/CE/KL 的中间张量、selected-position chunking 与重计算；
+- microbatch、padding/packing、gradient checkpointing 的时间/内存取舍；
+- CPU/GPU 计时、异步同步边界、warm-up、峰值内存与测量波动；
 - LoRA/QLoRA/full FT 的优化空间差异；
 - 唯一 E1 denominator（Student backward loss tokens）、E2 practical efficiency 与 `C_anchor/C_teacher/C_arm` 三类成本。
 
 ### 验收产物
 
-- 100-step profile；
+- D11 CPU baseline→profile→优化→复测，D20 GPU 100-step profile；
+- kernel 和端到端 tokens/s、step p50/p95、内存对照与瓶颈解释；
 - accuracy/retention–compute Pareto；
-- 每个结果的 config/data/model/git hash；
+- 至少一个局部优化无法转化为端到端收益或内存/时间权衡的解释；
 - 回答：“为什么只可匹配 Student loss tokens，而 prompt exposure、FLOPs 与端到端成本必须另报？”
 
 ## Module 12：研究表达与面试
@@ -204,11 +209,11 @@
 | SFT/Data | TODO | D02 | D02 CPU oracle | TODO |
 | Preference | TODO | TODO | TODO | TODO |
 | GRPO | TODO | D03 | D03 CPU oracle | TODO |
-| Reward | TODO | TODO | TODO | TODO |
+| Reward | TODO | D05 | D05 CPU verifier | TODO |
 | OPD | TODO | D04 | D04 CPU oracle | TODO |
 | Order | TODO | TODO | TODO | TODO |
 | Off-policy | TODO | TODO | TODO | TODO |
-| Data governance | TODO | TODO | TODO | TODO |
-| Evaluation | TODO | TODO | TODO | TODO |
-| Compute | TODO | TODO | TODO | TODO |
+| Training runtime | TODO | D09–D12 planned | TODO | TODO |
+| Evaluation | TODO | D07–D08 | CPU synthetic evidence | TODO |
+| Performance | TODO | D11/D20 planned | TODO | TODO |
 | Communication | TODO | TODO | TODO | TODO |

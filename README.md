@@ -1,6 +1,17 @@
 # LLM Post-Training Lab
 
-一个以算法归因为中心的个人后训练研究仓库，目标是为基模/后训练算法实习准备一套真实、可复现、能解释失败的作品，而不是再搭一个训练工程脚手架。
+一个面向基模/后训练算法实习的技术作品：实现 SFT、GRPO 与 on-policy distillation，打通训练框架，分析学习动态和计算瓶颈，用能力、稳定性与效率指标解释方法的收益和限制。
+
+## 技术主线与交付
+
+| 方向 | 核心技术问题 | 计划交付 |
+|---|---|---|
+| 算法机制 | 稀疏 reward 与稠密 Teacher 信号如何改变梯度、探索和顺序效应？ | 公式与梯度分析、CE/GRPO/OPD 实现、五臂对照、失败案例 |
+| 训练框架 | 如何组织当前策略采样、Teacher/old-policy、有效 token 更新与阶段切换？ | 可运行的统一训练循环、模型/LoRA 适配、CPU 学习示例及后续真实模型训练 |
+| 性能优化 | 瓶颈位于 rollout、LM head、KL、backward 还是通信？ | baseline/profile、分块与重计算实验、吞吐/内存对照、端到端成本分析 |
+| 指标分析 | 准确率、探索性、长度、能力保持和成本如何共同变化？ | accuracy/pass@k、entropy/KL/有效组率曲线、retention、accuracy–cost 图 |
+
+这些交付均按实际进度标注。数据隔离、环境复现和现有校验是基础支持；研发和成果展示优先围绕上表展开。性能提升可作为框架/系统成果单独呈现，准确率收益由受控算法实验回答。
 
 ## 一句话主线
 
@@ -21,9 +32,10 @@ Base
 项目不预设某个顺序一定最好，而是用受控实验回答：
 
 1. SFT、GRPO、OPD 分别改变了什么？
-2. 改善来自算法，还是更多训练 token、数据泄漏或解码差异？
+2. 相同 Student 更新预算下，哪些方法更有效，端到端成本又是多少？
 3. reward 与离线 benchmark 一致时，模型是否仍出现长度投机、格式投机或能力遗忘？
 4. OPD 应位于 RL 前还是 RL 后，它与 Teacher 上限、Student 容量的关系是什么？
+5. 分块、重计算、batch 与 rollout 优化能减少多少内存或时间，代价是什么？
 
 ## 首期范围
 
@@ -38,9 +50,9 @@ Base
 ## 明确不做
 
 - 不从零预训练基模。
-- 不把 vLLM、FSDP、显存优化或吞吐提升包装成算法贡献。
+- 不建设通用实验治理、哈希审计平台或生产服务；框架工作直接服务于后训练算法和性能实验。
 - 不在首期同时比较多个模型架构；固定 Gemma 4 hybrid local/global attention 后研究后训练算法。
-- 不追求榜单 SOTA；追求实验归因、复现质量和技术表达。
+- 不追求榜单 SOTA；追求算法理解、可执行框架、实测优化和有解释力的结果。
 - 不使用或外传内部数据与未公开实现。
 
 ## 项目地图
@@ -63,8 +75,9 @@ Base
 | 数据来源、质量、去污染 | `docs/data/DATA_PLAN.md` |
 | benchmark、统计与防泄漏 | `docs/evaluation/BENCHMARK_PLAN.md` |
 | 算力分档与成本 gate | `docs/planning/COMPUTE_BUDGET.md` |
+| 性能瓶颈、baseline 与优化测量 | `docs/planning/PERFORMANCE_PLAN.md` |
 | Gemma 4/TRL/vLLM 兼容性 | `docs/planning/COMPATIBILITY_GATES.md` |
-| 12 周路线图 | `docs/planning/ROADMAP.md` |
+| CPU 近期计划与后续训练路线 | `docs/planning/ROADMAP.md` |
 | 算法学习与验收课程 | `docs/planning/LEARNING_CURRICULUM.md` |
 | 完整实验计划 | `refine-logs/EXPERIMENT_PLAN.md` |
 | 待运行矩阵 | `refine-logs/EXPERIMENT_TRACKER.md` |
@@ -76,13 +89,13 @@ Base
 
 ## 当前状态
 
-前期规划已完成四轮独立审查，最终 9.06/10，**Planning/Method READY**。核心端到端链路固定为 D01–D24：D01–D12 是 CPU 算法/框架，D13–D20 是真实模型、GPU correctness、anchors、pilots 与算力闭合，D21–D22 是五臂两阶段三 seed 正式训练，D23–D24 是冻结评测、统计、claim audit 与作品交付。当前完成 8/24：D01 精确 loss-token 预算、D02 masked causal CE、D03 exact-reward Dr.GRPO surrogate、D04 OPD full-vocabulary reverse-KL、D05 exact/symbolic math verifier、D06 data registry/family split/contamination trust stack、D07 sealed benchmark evaluator/generation/result/metric contracts，以及 D08 paired statistics core。另有 X01–X08 八个 post-core 扩展，不计入核心完成度。
+2026-09-09 起，研发计划按算法、框架、性能、指标重新聚焦。核心进度仍为 **8/24**：D01–D04 已完成 loss-token 预算、masked CE、Dr.GRPO surrogate 与 full-vocab reverse-KL 的 CPU 实现和数值/梯度验证；D05–D08 已提供 verifier、数据隔离、评测指标和配对统计。已有实现继续复用，详细验证记录放在对应模块文档中。
 
-D08 将 A0–A4 × 三个固定 training seeds 的 D07 greedy correctness 投影为 text-free paired panel，在 MATH level 内进行完整 seed-vector item bootstrap，用 outcome-independent 随机流执行 paired sign-flip，并以精确有理数完成 Holm、C1 practical gate 与 C2 sequential superiority/TOST 判定。加载后的 analysis 必须从 panel/protocol 确定性全量重算，不能仅凭 self-hash 进入后续 claim audit。
+接下来依次完成 **D09 模型适配与可训练参数接入 → D10 统一训练循环 → D11 性能剖析与优化 → D12 CPU 端到端学习实验**。验收将关注实际 forward/backward/update、学习曲线、瓶颈定位和测量结果。
 
-D08 formal synthetic audit 已通过并绑定 implementation commit `9a5cee946c617acca6d9e5a167fa725d67798eef`；完整运行每个 contrast 的 10,000 次 bootstrap 与 100,000 次 randomization，canonical audit SHA-256 为 `099b4251e2056f990aa7175485334506d4c1a03a3c3b5d914928fe15f406c5d9`。当前 539 个 CPU tests、1,575 个 Hypothesis 生成案例与 257 个 verifier cases 全部通过；D08 的 8-item effect/null/equivalence 数值只是一组人工 oracle，不是模型或真实 benchmark 结果。
+D13–D20 规划真实模型接入、GPU 性能和训练 pilots；D21–D22 为五臂两阶段三 seed 训练；D23–D24 为指标分析、技术报告与求职交付。X01–X08 扩展仍延后。当前尚未下载模型或真实训练数据、未执行 MPS/CUDA/GPU，尚无模型准确率或训练加速结果；本地 tiny 模型的 CPU 验证也不能代替 Gemma 实验。
 
-开发环境由 `uv.lock` 固定为 Python 3.12、PyTorch 2.14.0、NumPy 2.5.2、Math-Verify 0.9.0 与 ANTLR runtime 4.13.2。尚未下载模型或真实训练数据、未启动 MPS/CUDA，也未把 G1/G3/G5/G6 等真实执行 gate 标为完成。D01–D08 是可接入后续 runtime 的 production contracts，但不得误报为 Gemma 4 trainer、完整 GRPO rollout、完整 OPD pipeline、真实数据已去污染、真实 benchmark 已 materialize/评测或真实 C1/C2 已完成；下一模块为 D09 model/tokenizer/parameter contracts。
+开发环境通过 `uv.lock` 复现。四轮历史方法评审见 `refine-logs/REVIEW_SUMMARY.md`，不作为本次修订或未运行实验的验收结论。
 
 ```bash
 uv sync --frozen --all-groups

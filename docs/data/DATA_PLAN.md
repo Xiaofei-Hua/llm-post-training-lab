@@ -1,6 +1,6 @@
 # 数据规划
 
-> 当前状态：D06 已完成可复用的数据 trust-stack 合同和 synthetic adversarial evidence；尚未下载或冻结任何真实训练/benchmark 数据，`DATA-001`、`DATA-002` 与 G1 均保持 `NOT_STARTED`，生产 materialization 属于 D15。
+> 当前状态：D06 数据支持已完成 CPU 合成验证；真实数据尚未下载，DATA-001/002 与 G1 为 NOT_STARTED，实际数据接入属于 D15。后续重点是任务分布、有效学习信号与质量诊断，复用已有数据处理流程。
 
 ## 数据分层
 
@@ -34,45 +34,23 @@
 
 - 只作 instruction-following retention；数学强化不应以破坏基本指令遵循为代价。
 
-## Canonical registries 与 record schema
+## 数据对学习信号的影响
 
-许可不重复写入每条样本，而由 closed-world `SourceRegistry` 统一冻结。每个 source 必须记录 portable `source_id`、公开 URI、40/64-hex Git commit 或 SHA-256 snapshot revision、SPDX-like license expression、license/card URL 与 evidence hash，以及 `train`/`evaluate`/`redistribute` 用途 allowlist。记录只引用 `source_id` 与完全一致的 revision；用途不允许、未知或 mutable 的来源直接失败。
+| 分析 | 需要观察的指标 | 算法用途 |
+|---|---|---|
+| 难度与答案类型 | 题型占比、Base/anchor accuracy、GRPO 有效组率 | 解释全对/全错组导致的无梯度与任务难度关系 |
+| 解答长度与截断 | prompt/response token 分布、p95、cap 命中率 | 解释监督 token 分配、rollout 成本和长度偏差 |
+| Teacher 支持 | Teacher 与 Student 的正误交叉、verified-solution NLL | 判断蒸馏信号是否覆盖 Student 的错误区域 |
+| 轨迹质量 | verifier 正确率、格式可解析率、不完整/重复推理 | 区分正确答案、有效推理监督与格式改进 |
+| 来源与泛化 | 来源/题型/family 的训练分布与评测 slice | 解释分布覆盖与收益适用边界 |
 
-每个处理步骤还必须出现在 `TransformRegistry`，其中 `(transform_name, transform_version, code_sha256, config_sha256)` 指向 repository-relative、Git-tracked 的代码和配置。正式 audit 会逐字节校验声明 hash。
+D15 输出这些分布的基础描述，模型相关部分在 D16–D19/D23 补齐。dev 上的诊断可指导已允许的 recipe 选择；正式训练后只做解释性 slice，不按结果筛选 D_core 或 test。数据过滤/curriculum 新实验需先有明确算法问题，不能顺带扩大矩阵。
 
-所有样本使用严格的 `d06-data-record-v1` JSONL：
+## 复用现有数据接口
 
-```json
-{
-  "schema_version": "d06-data-record-v1",
-  "sample_id": "source-local:stable-id",
-  "source_id": "open-r1/OpenR1-Math-220k",
-  "source_revision": "<full immutable commit>",
-  "split": "UNASSIGNED",
-  "families": {
-    "source": "<source-local family>",
-    "problem": "<problem family>",
-    "template": "<template family>"
-  },
-  "problem": "...",
-  "messages": [{"role": "user", "content": "..."}],
-  "reference_answer": "...",
-  "response": "...",
-  "quality": {"answer_verified": true, "format_valid": true},
-  "strata": {"answer_type": "integer", "difficulty": "..."},
-  "lineage": {
-    "transform_name": "normalize-v1",
-    "transform_version": "1.0.0",
-    "code_sha256": "<64 hex>",
-    "config_sha256": "<64 hex>",
-    "parents": [{"sample_id": "...", "payload_sha256": "<64 hex>"}]
-  }
-}
-```
+来源、license、revision、处理脚本与固定 splits 由 D06 registry/materializer 管理；已有 hashes 和 manifests 自动生成并引用。完整 schema、lineage 和 contamination 实现集中在 `DATA_REGISTRY_AND_CONTAMINATION.md`，本计划不再重复字段或增加新的校验层。
 
-内部 parent 必须解析到同 split 的完整 `payload_sha256`；外部 parent 必须由冻结的 `ParentPayloadLedger` 解析。loader 拒绝未知/缺失字段、duplicate keys、NaN/Infinity、BOM/CRLF/blank lines、非 NFC 文本、重复 ID、lineage cycle 与越界输入。未来 preference 数据必须定义独立 versioned schema；不能向该 closed schema 临时追加 `chosen`/`rejected` 字段。
-
-完整实现合同见 `DATA_REGISTRY_AND_CONTAMINATION.md`。
+D_anchor/D_core 等规模与监督访问边界沿用下述设计。当前 tiny 模型实验只使用本地合成数据，不把它们混入真实训练数据。
 
 ## 数据质量漏斗
 
@@ -88,7 +66,7 @@ license gate
 → immutable split and manifest
 ```
 
-每一步都必须输出输入数、保留数、拒绝原因分布和样本审计。
+复用处理脚本输出样本数量和拒绝原因；重点查看处理是否改变难度、长度与监督质量，不额外建设报告系统。
 
 ## 去污染协议
 

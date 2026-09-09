@@ -2,7 +2,9 @@
 
 ## 为什么先校准再报预算
 
-GRPO 和 OPD 的成本主要由 rollout 长度、group size、Teacher forward 和实现吞吐决定。规划阶段直接写一个精确 GPU-hour 数会产生虚假确定性，因此先给预算档位，并把 100-step 实测作为 G0。
+GRPO 和 OPD 的成本主要由 rollout 长度、group size、Teacher forward 和实现吞吐决定。以下是既有资源假设，不是已测预算；G0 确认 accelerator 授权与资源，D20/C5 用四类 100-step profile 校准正式成本。
+
+性能属于核心研发：先在 D11 做 CPU loss/step 的时间与内存对照，再在 D18–D20 定位真实训练瓶颈并优化。具体 baseline、测量范围与波动口径见 `PERFORMANCE_PLAN.md`。当前 GPU 未授权，也无 GPU 性能实测。
 
 ## 预算档位
 
@@ -39,18 +41,20 @@ OPD cost ≈ student rollout + student forward/backward + teacher forward
 
 `C_teacher` 在 campaign total 中只计一次；不能隐藏，也不能在 A2/A3/A4 中重复三次。
 
-## G0 校准任务
+## D20/C5 性能与预算校准
 
 固定 E2B Student 与 E4B Base/same-lineage Teacher，先跑：
 
-1. 20 step inference warm-up；
-2. 100 step SFT；
-3. 20 prompt × 4 generations 的 rollout；
-4. 100 step E4B LoRA SFT；
-5. 20 step E2B+E4B full-vocab chunked reverse-KL distillation；
-6. 记录 steady-state tokens/s、峰值显存、平均输出长度、weight-sync 开销与 checkpoint 大小。
+1. 充分 warm-up，分开记录初始化与 steady-state 时间；
+2. E2B LoRA forward/backward/update：100 个 steady-state steps；
+3. group-8 GRPO rollout：100 个 steady-state generation batches，记录真实长度和有效组率；
+4. E4B LoRA SFT：100 个 steady-state steps；
+5. E2B+E4B exact full-vocab chunked reverse-KL：100 个 steady-state steps；
+6. 比较 profile 指向的优化前后时间/显存，列出 update 与完整 step 吞吐、p50/p95、rollout/Teacher/sync 占比和波动。
 
 据此确认是否能执行五臂主矩阵，并把预算误差控制在 ±30%。若不闭合，所有臂按同一比例降低 `U` 或 completion cap 后重新 profile；不得量化 Teacher、改 top-k KL、换旧模型或删除关键对照来静默改变问题。
+
+成本表引用测量结果与配置即可；FLOPs 估算注明假设，不代替实测时间。局部 loss kernel 加速不能直接乘到整个 campaign，须用端到端分段耗时重算。
 
 ## 省算力原则
 

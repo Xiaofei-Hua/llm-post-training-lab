@@ -1,4 +1,8 @@
-# Config contract
+# 实验配置
+
+`project.yaml` 的 `development_focus` 记录 2026-09-09 的算法、框架、性能和指标优先级，以及 D09–D12 的下一步交付；这些是计划字段，不表示功能已实现或 GPU 已授权。
+
+开发期只增加运行算法、复跑测量所需的配置，性能实验显式记录 workload/设备/精度/baseline 与计时范围。现有 D05–D08 配置和校验设施直接复用，避免围绕配置再建立通用治理层。正式实验的最小记录如下。
 
 实现阶段按 `models/`、`data/`、`train/`、`eval/` 拆分 YAML。每次 run 只能引用不可变配置，启动时生成 resolved config 与 SHA-256；正式结果禁止在原 run 目录内覆盖配置。
 

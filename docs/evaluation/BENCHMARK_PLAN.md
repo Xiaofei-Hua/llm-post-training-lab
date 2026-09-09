@@ -2,7 +2,7 @@
 
 ## 评测目标
 
-评测需要同时回答三件事：能力是否提高、提高是否来自正确机制、是否产生了副作用。
+评测围绕能力、学习机制、副作用和效率四类问题。主报告优先展示指标、曲线和错误解释；现有 D05–D08 负责必要的解析、隔离与统计支持。新增 runtime/性能指标属于 D10–D12 和后续 GPU 模块，当前没有相应模型实测。
 
 ## Benchmark 分组
 
@@ -16,7 +16,7 @@
 | Retention | MMLU-Pro | accuracy；开发期 1,200 条分层子集，最终跑 full | 通用能力遗忘检查 |
 | Diagnostic | 自建 sealed 200 题 | accuracy + error taxonomy | reward 与 parser 诊断 |
 
-MathArena 06/2026 只有 49 题，不能独自承载主 claim；G0 先确认 E2B/E4B 不处于全零 floor，parser 无法判定的输出做对 checkpoint 身份盲化的人工复核。数据 revision/license 必须通过 G1。MMLU-Pro 的 1,200 条开发子集按 category/difficulty 分层并在任何结果出现前冻结；最终候选跑 full set。
+MathArena 06/2026 只有 49 题，不能独自承载主 claim；真实 baseline/评测时报告是否存在全零 floor，不能据此调参。parser 无法判定的输出做对 checkpoint 身份盲化的人工复核。数据 revision/license 必须通过 G1。MMLU-Pro 的 1,200 条分层评测子集在结果出现前固定，仅作描述性评测、不用于开发选参；最终候选跑 full set。
 
 ## 固定推理协议
 
@@ -34,41 +34,29 @@ MathArena 06/2026 只有 49 题，不能独自承载主 claim；G0 先确认 E2B
 
 所有 checkpoint 共用完全相同的 generation config 和 evaluator commit。
 
-## D07 已冻结的执行合同
+## 已有指标支持
 
-D07 已实现 `docs/evaluation/SEALED_EVALUATOR.md` 中的 CPU production contracts：
+D07 已实现 item-level accuracy、组合式 pass@k、提取/解析率、长度与截断统计，并区分模型答错和运行失败；D08 提供 paired bootstrap、sign-flip、Holm 与 TOST。复用这些实现，详细接口见 `SEALED_EVALUATOR.md`、`PAIRED_STATISTICS.md`。当前只有 synthetic CPU 验证，真实 benchmark adapter、Base baseline 与人工抽查属于 D15。
 
-- public prompt 与 sealed reference 使用不同 schema/object；generator API 不接收 vault；
-- greedy 与 sampling 的 system prompt、chat-template hash、max tokens、EOS/stop、采样参数和 seed policy 全部进入 protocol digest；
-- sampling seed 由 protocol/benchmark/item/sample 派生且不依赖 checkpoint，保证跨 checkpoint pairing；
-- generation 必须形成完整 item×sample 网格，保存逐 sample 原始输出、token IDs、finish/error 状态和 self-hash；
-- evaluator 输出逐 sample/item correctness 与状态，但不复制 prompt、prediction、candidate 或 reference 原文；
-- accuracy、extraction/parse rate 与组合式 pass@k 使用精确有理数聚合后转整数 ppm；
-- evaluator version 同时绑定 D05 policy digest 与实际 backend versions；gold/backend/generation failure 阻断 batch，不能计为模型错误。
+## 技术指标与诊断用途
 
-D07 的 6-item synthetic fixture 只验证上述机制，没有下载 MATH-500 或执行模型。真实 source/data manifest、官方 benchmark adapter、Base baseline、≥100 输出盲审及 G1 仍属于 D15。paired bootstrap、sign-flip、Holm 与 TOST 属于 D08；D08 只消费已冻结 correctness，不得重新解析原始输出。
+| 类别 | 指标与口径 | 用来判断什么 | 实施位置 |
+|---|---|---|---|
+| 主能力 | MATH-500 greedy accuracy、C1/C2 Δ 与 CI；三个 seed 单列 | 训练信号和顺序是否产生可重复效果 | D07/D08 → D23 |
+| 探索性 | 固定 n=8 的 sampling pass@1/pass@8，与 greedy accuracy 分列 | 采样是否覆盖正确解，能力与解码是否混淆 | D07 → D23 |
+| 稀疏反馈 | mean/std reward、有效组数/总组数、zero-variance 比例 | GRPO 的奖励是否提供足够梯度信号 | D10/D12 → D18/D21–D23 |
+| 策略更新 | token entropy、ratio/clip fraction、梯度范数、Student-anchor KL | 策略坍缩、过大更新或漂移 | D10/D12 → D18/D21–D23 |
+| 蒸馏 | 当前 prefix 上的 reverse-KL、Teacher verified-solution NLL、Teacher/Student 正误四象限 | Teacher 支持与错误迁移如何影响学习 | D10/D12 → D17/D19/D23 |
+| 长度与格式 | completion mean/p95、truncation rate、parse rate、重复/多答案错误分类 | reward 是否主要来自格式或长度变化 | D07/D12 → D23 |
+| 保持能力 | IFEval strict accuracy 相对 A0 的 Δ；MMLU-Pro Δ | 数学训练是否损害其他能力 | D23 |
+| 计算效率 | update 与端到端 effective tokens/s、rollout tokens/s、step p50/p95、峰值内存 | 优化影响局部计算还是完整训练 | D11 → D18–D20 |
+| 实用效率 | accuracy–GPU-hours、accuracy–生成长度；E1/E2 与三类成本 | 更好效果需要付出多少资源 | D20/D23 |
 
-## 指标层次
+训练曲线同时按已执行 Student loss tokens 与 wall time 作横轴，标出阶段切换；dev 诊断和最终 test 结果分开。CE、GRPO surrogate 和 KL 的原始 loss 数值不能直接跨算法比较。entropy/KL 记录计算的 prefix、mask、归一方式，以及 full-distribution 或 sampled estimator；不把不同估计器混为同一指标。额外诊断 forward 开销计入总成本。
 
-### 主能力
+Teacher NLL 在允许读取 reference 的诊断/evaluator 流程计算，不向 OPD 训练提供 gold trace。四象限、难度、题型、长度和来源 slices 用来解释结果，报告样本数，不把事后 slice 变成确认性发现。
 
-- answer accuracy；
-- pass@1 / pass@k；
-- 分难度、题型、来源的 slice accuracy。
-
-### 训练行为
-
-- mean/std reward；
-- non-zero-advantage group rate；
-- policy entropy、approx KL、clip fraction；
-- completion length、truncation rate、format validity。
-
-### 副作用
-
-- IFEval retention；
-- 相对 Base/SFT 的通用能力变化；
-- 重复、过长、多个最终答案、不可解析输出比例；
-- 训练 reward 与独立 evaluator accuracy 的相关性和偏差。
+性能对照固定 workload、设备和精度，报告测量波动；CPU RSS、GPU allocated/reserved 与理论内存估算分别呈现。完整测量方法见 `docs/planning/PERFORMANCE_PLAN.md`。
 
 ## 预注册统计协议
 
@@ -111,23 +99,16 @@ D07 的 6-item synthetic fixture 只验证上述机制，没有下载 MATH-500 �
 - 若 accuracy 无提升，但明显降低输出长度/成本，可作为 supporting result，不能替代主 claim。
 - trainer reward 上涨但独立 accuracy 不涨，判定为 reward alignment failure，停止扩大训练。
 
-## 防止 Benchmark 污染与评测投机
+## 最小评测边界
 
-- test 文本哈希只能由 data audit 读取，训练器不能读取 reference solution。
-- SFT、GRPO、OPD 共用唯一 canonical prompt registry，并按来源/题型/template family 分组切分。
-- 题目、参考解答和 reasoning trace 都做规范化近重复检查，不只查 prompt exact match。
-- D06 已冻结 `d06-contamination-policy-v1`：默认扫描 system/tool context、problem、user prompt、reference/response/assistant solution，并额外扫描跨 message 的 prompt、solution trace 与 full-record aggregate；只有 exact normalized hash allowlist 才能豁免公共 context。
-- exact、fuzzy 与 review-band 命中都 fail closed；命中记录按 source/problem/template 传递 family 整体 quarantine，并须用同一 policy 零命中重扫后才能生成 raw-text-free manifest。
-- manifest self-hash 只证明所绑定内容未被篡改；正式 G1 evidence 必须由 Git-bound data audit 重算 split assignment、污染报告和全部输入/transform hashes。D06 目前只有 synthetic evidence，真实 benchmark revision、license/card bytes、人工 pair review 与 sealed manifest 属于 D15。
-- 只能声称“本项目后训练数据未包含测试集”；无法证明 Gemma 4 预训练或 Teacher 从未见过公开题目。
-- answer parser 已在 D05 的 257 个合成 adversarial cases 上冻结；模型训练后不得放宽规则。完整合同见 `docs/algorithms/EXACT_MATH_VERIFIER.md`。
-- 多个 `boxed`/answer marker 采用最后 surface 生效；最后 surface malformed 时不回退；unanchored prose、code fence、控制字符与异常表达式不能从中捞取正确数字。
-- prediction 错误/不可解析计 0；reference 不可解析、依赖异常或错误线程上下文必须阻断 batch，不能污染模型负样本。
-- finite set、interval、tuple、relation 与 matrix 先做 structural-family guard，防止 symbolic backend 的跨类型 false positive。
-- 随机抽查至少 100 个模型输出，并给 evaluator 误差矩阵。
-- 每次 benchmark 运行保存原始 generations，主报告只消费不可变结果文件。
+- 正式 test 只评测；训练、配置选择与 Teacher qualification 按既有 split 隔离。
+- 复用 D06 对题目、解答和 trace 的 family split 与去污染，真实数据在 D15 检查，不新增治理系统。
+- 复用 D05 parser/verifier，不在看到模型结果后放宽答案规则；错误/不可解析 prediction 计 0，reference/backend 失败单独处理。
+- D15 至少盲审 100 个真实输出并报告 evaluator 误差矩阵，目标一致率 ≥99%。
+- 保存原始 generation、配置/版本和结果入口，现有工具自动生成的校验信息直接引用。
+- 只描述本项目后训练数据的污染检查范围，不声称 Base 预训练未见过公开题目。
 
-完整 D06 数据边界见 `docs/data/DATA_REGISTRY_AND_CONTAMINATION.md`；完整 D07 评测边界见 `docs/evaluation/SEALED_EVALUATOR.md`。两者目前都只有 synthetic CPU evidence，不代表真实 benchmark 已冻结或 G1 已通过。
+实现细节集中在 `docs/data/DATA_REGISTRY_AND_CONTAMINATION.md` 与 `docs/evaluation/SEALED_EVALUATOR.md`，主分析围绕上述能力、动态和效率指标。
 
 ## 主表草案
 

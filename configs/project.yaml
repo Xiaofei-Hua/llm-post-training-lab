@@ -1,6 +1,7 @@
 project:
   name: llm-post-training-lab
-  status: planning_ready_execution_conditional
+  status: technical_focus_plan_execution_conditional
+  planning_revision: "2026-09-09-technical-focus"
   development_status: d08_paired_statistics_complete_cpu_only
   core_pipeline_modules_total: 24
   core_pipeline_modules_complete: 8
@@ -12,6 +13,21 @@ project:
   completion_denominator: core_pipeline_modules_total
   language: zh
   target: post-training-algorithm-internship-portfolio
+
+# Development priorities only; these fields do not authorize training or claim results.
+development_focus:
+  priorities: [algorithms, executable_training_framework, performance, metrics_and_failure_analysis]
+  reference_effort_percent: {algorithms: 35, framework: 30, performance: 20, metrics: 15}
+  existing_integrity_infrastructure: reuse_and_fix_actual_blockers_only
+  development_experiments: technical_question_baseline_and_metrics
+  confirmatory_experiments: preregistered_c1_c2_five_arms_three_seeds
+  cpu_validation: locally_initialized_tiny_models_and_synthetic_tasks
+  next_deliverables:
+    D09: model_adapter_and_trainable_parameter_integration
+    D10: unified_sft_grpo_opd_training_loop
+    D11: cpu_performance_profiling_and_optimization
+    D12: cpu_end_to_end_learning_experiments
+  performance_plan: docs/planning/PERFORMANCE_PLAN.md
 
 development_environment:
   manager: uv
@@ -191,7 +207,8 @@ scope:
   core_methods: [sft_continuation, grpo, opd]
   shadow_methods: [dpo]
   deferred_methods: [orpo, gspo, tis, prm, agentic_rl]
-  non_goals: [pretraining_from_scratch, inference_optimization, production_serving, sota_chasing]
+  technical_deliverables: [algorithm_implementations, training_framework, measured_performance, metric_analysis]
+  non_goals: [pretraining_from_scratch, generic_governance_platform, production_serving, sota_chasing]
 
 model:
   smoke_student: google/gemma-4-E2B
@@ -306,10 +323,10 @@ invariants:
   qlora_requires_new_experiment_family: true
 
 gates:
-  G0: hardware_and_throughput_calibrated
-  G1: data_and_evaluator_audited
-  G2: base_and_sft_reproduced
-  G3: reward_audit_passed
-  G4: distillation_compatibility_passed
+  G0: accelerator_authorized_and_resources_confirmed
+  G1: real_data_isolated_and_evaluator_ready
+  G2: student_anchor_and_teacher_qualified
+  G3: grpo_reward_policy_refresh_and_updates_correct
+  G4: opd_token_alignment_exact_kl_and_gradients_correct
   G5: main_runs_repeated
-  G6: claims_audited
+  G6: technical_results_explained_and_portfolio_supported

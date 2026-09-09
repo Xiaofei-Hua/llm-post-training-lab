@@ -2,7 +2,19 @@
 
 ## 设计原则
 
-训练基础设施只承担“保持实验可比”的职责。算法层变量与系统层变量必须分开记录。本项目研究 Gemma 4 的 text path 后训练，不声称保持其完整图像/音频能力。
+训练框架是核心技术交付：将模型、当前策略 rollout、reward/Teacher、loss、backward 和 optimizer 组织成可运行、可分析的学习循环，并支持性能剖析与优化。算法变量和系统变量分别对照。本项目研究 Gemma 4 text path，不声称保持完整图像/音频能力。
+
+## CPU 到真实模型的实现路径
+
+| 层 | 主要职责 | 开发模块 |
+|---|---|---|
+| Model adapter | text forward、hidden states/LM head、token/mask 对齐、LoRA 与参数选择 | D09 CPU tiny model → D14 Gemma |
+| Objective | 复用 masked CE、GRPO surrogate、exact reverse-KL 与有效 token 预算 | D01–D04 已有实现 |
+| Training loop | sample→reward/Teacher→loss→backward→update；old-policy、Teacher freeze、阶段切换 | D10 CPU → D16–D19 真实训练 |
+| Performance | 分段 timer、有效 tokens/s、峰值内存；chunk/recompute、batch/rollout 优化 | D11 CPU → D18–D20 GPU |
+| Analysis | 学习动态、能力/retention、错误迁移、accuracy–cost | D12 合成学习 → D23 真实结果 |
+
+D05–D08 为这些路径提供现成的数据、reward、评测和统计支持。CPU 阶段使用本地初始化的小模型，验证实际参数更新与学习行为；真实模型下载与 GPU 执行在授权后开始。性能测量见 `docs/planning/PERFORMANCE_PLAN.md`。
 
 ## 聚焦后的数据流
 
@@ -34,7 +46,7 @@ DPO 使用同一 frozen rollout bank 做单 seed offline shadow baseline，不�
 - `google/gemma-4-E2B`（pretrained/base checkpoint）。
 - 2026 年发布；约 2.3B effective parameters、约 5.1B including embeddings。
 - 35 层 text stack，262,144 vocabulary；hybrid local/global attention，local window 512。
-- smoke 与 main 均使用 E2B：smoke 只减少样本、step 和 context，避免在小模型上选出不能迁移的超参。
+- 真实模型 smoke 与 main 均使用 E2B：只减少样本、step 和 context。D09–D12 的 CPU tiny 模型属于独立开发验证，不为正式 recipe 选参。
 
 ### Primary Teacher
 
@@ -68,7 +80,7 @@ Student-error coverage 只作诊断，不能替代 +5pp 门槛。不过 gate 时
 - 输入不包含 image/audio tokens，禁用非文本预处理。
 - 视觉与音频 encoder 全部 `requires_grad=False`；训练前后 checksum 相同且梯度始终为 `None`。
 - 固定架构不等于冻结 language model：Student 的 text projection modules 通过 LoRA 更新，其他参数冻结。
-- 首期 LoRA targets 限于 text attention 与 MLP projection；per-layer embeddings、token embeddings、LM head 和非文本模块默认冻结。准确模块名由 G0 模型 introspection 后锁定。
+- 首期 LoRA targets 限于 text attention 与 MLP projection；per-layer embeddings、token embeddings、LM head 和非文本模块默认冻结。准确模块名由 D14/C0 模型 introspection 后锁定。
 - chat template、thinking mode、special tokens、assistant loss mask 与 decoding 在所有分支一致。
 - 不做多模态 retention，因此不能声称多模态能力保持。
 
@@ -137,14 +149,14 @@ E2 同时报 warm-start/marginal（`C_arm`）、cold-start pipeline（非 OPD �
 - old policy 每个 generation batch 刷新一次；rollout/training weights 每个 generation batch 同步一次；`steps_per_generation=1` 或版本中的严格等价设置。
 - prompt/data RNG 与 rollout RNG 为独立、可复现的 stream；generation backend 在 C2 后冻结，所有正式臂一致。
 - 零 reward variance group 不更新、不重采样并计入日志；effective-group rate 低于 30% 时停止正式扩展并回到数据/难度 gate。
-- `max_completion_length` 在 G0 按预注册规则选择：2048 tokens；若冻结 pilot 的 truncation rate >5%，所有臂统一改为 4096。正式 run 后不得再改。
+- `max_completion_length` 在 D18–D20 按预注册 pilot 规则选择：2048 tokens；若 truncation rate >5%，所有臂统一改为 4096 并重新 profile。正式 run 后不得再改。
 - 监控 entropy、diagnostic KL、clip fraction、effective-group rate、长度、truncation、weight-sync lag 与独立 accuracy。
 
 ## 计划依赖
 
 - PyTorch、Transformers、Datasets、Accelerate、PEFT；
 - TRL：SFTTrainer、GRPOTrainer、DistillationTrainer；DPOTrainer 仅 shadow baseline；
-- vLLM：rollout backend，不作为算法贡献；
+- vLLM：rollout backend；其接入、同步与调度的性能收益以实测框架成果呈现；
 - math-verify、lm-evaluation-harness、MathArena；
 - W&B 或本地 JSONL：实验追踪。
 

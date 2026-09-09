@@ -9,6 +9,8 @@
 - `statistics/`：D07 correctness projection、paired item inference 与 audit；
 - `analysis/`：claim tables、Pareto、error transitions。
 
+2026-09-09 后续开发重点：D09 模型/LoRA 适配与真实参数更新、D10 统一 SFT/GRPO/OPD 循环、D11 loss/step 性能剖析与优化、D12 CPU 合成学习实验。上表包含规划边界，`analysis/` 等尚未实现；已有数据/评测/统计支持按需复用，不继续扩张通用校验系统。性能计时和可运行 benchmark 随对应模块实现。
+
 训练器不得读取 sealed evaluator answers；Teacher 接口不得返回给数据构建流程。
 
 ## 已实现

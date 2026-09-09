@@ -1,6 +1,6 @@
 # Experiment Tracker
 
-> 当前状态：D01–D08 CPU modules 已完成；所有真实模型/GPU gates 与实验 runs 均 `NOT_STARTED`。本表是预注册队列，不是结果表。
+> 2026-09-09 修订：D01–D08 CPU 完成；D09–D12 技术开发与性能实验待做，所有真实模型/GPU gates 与 runs 均 `NOT_STARTED`。本表列出开发队列与预注册正式实验，不是结果表。
 > Formal seeds：`101, 202, 303`。
 
 ## Module scope
@@ -14,34 +14,47 @@
 
 核心进度分母为 `24`，当前 `8/24`；包含延后研究线的目录总数为 `32`。12 个学习课程章节不计入执行进度。完整定义以 `docs/planning/DEVELOPMENT_MODULES.md` 为准，当前下一模块是 D09。
 
+## 近期 CPU 技术队列
+
+| Run ID | Module | 技术问题/对照 | 交付与指标 | Dependency | Status |
+|---|---|---|---|---|---|
+| DEV-D09 | D09 | tiny causal LM/LoRA 接入 CE/KL，与 dense reference 对照 | 实际参数更新、梯度误差、参数比例与内存估算 | D02,D04 | NOT_STARTED |
+| DEV-D10 | D10 | SFT/GRPO/OPD 共用当前策略采样与 update 循环 | loss/reward/KL/entropy/clip/有效组率、stage reset | DEV-D09 | NOT_STARTED |
+| PERF-CPU-CE | D11 | dense CE vs selected-position chunking | forward/backward ms、有效 tokens/s、RSS、梯度误差 | DEV-D10 | NOT_STARTED |
+| PERF-CPU-KL | D11 | dense exact KL vs chunk/recompute | 时间/内存取舍、chunk size、梯度误差 | DEV-D10 | NOT_STARTED |
+| PERF-CPU-STEP | D11 | 完整训练 step baseline vs 瓶颈驱动优化 | 分段耗时、step p50/p95、端到端有效 tokens/s | DEV-D10 | NOT_STARTED |
+| DEV-D12 | D12 | 合成可验证任务上的五臂两阶段学习 | 学习/行为/成本曲线，一个退化或失败解释 | PERF-CPU-CE/KL/STEP | NOT_STARTED |
+
+仅用本地初始化 tiny 模型和合成输入，不下载真实模型/数据或运行 MPS/CUDA。上述开发实验只需技术问题、baseline 与测量，不新增 C1/C2 式研究 claim。性能协议见 `docs/planning/PERFORMANCE_PLAN.md`；当前无这些条目的实测结果。
+
 ### GPU/full-training coverage
 
 | Module | Tracker coverage | Exit condition |
 |---|---|---|
-| D13 | G0 metadata | hardware topology、BF16/distributed/checkpoint-resume and version/allocation boundary pass |
-| D14 | C0-001 | real E2B/E4B model contract passes |
-| D15 | DATA-001/002, EVAL-001/002, EV-BASE | G1 data/evaluator freeze passes |
+| D13 | G0 metadata | accelerator 授权、BF16/distributed update 可用；初始 latency/memory/communication 测量 |
+| D14 | C0-001 | real E2B/E4B text/LoRA forward/backward/update 可用 |
+| D15 | DATA-001/002, EVAL-001/002, EV-BASE | 数据隔离与 evaluator 可用；任务分布和 Base 指标 |
 | D16 | SFT-*-OVERFIT, SFT-*-PILOT | Student/Teacher SFT recipes selected without gate leakage |
 | D17 | SFT-*-ANCHOR, C4-TEACHER-GATE | G2 and Teacher capability gate pass |
-| D18 | C2-001/002, PILOT-A1 | G3 GRPO correctness/reward audit passes |
-| D19 | C3-001/002, PILOT-A2 | G4 OPD real-model compatibility passes |
-| D20 | C5-001..005, PILOT-A0 | communication/memory/resume profiled；campaign fits with 30% buffer；configs frozen |
+| D18 | C2-001/002, PILOT-A1, PERF-GPU-ROLLOUT | GRPO 更新正确；有效组/entropy/长度动态与 rollout 开销 |
+| D19 | C3-001/002, PILOT-A2, PERF-GPU-OPD | exact KL/梯度正确；Teacher 错误迁移、大词表时间/内存取舍 |
+| D20 | C5-001..005, PILOT-A0, PERF-GPU-SFT/E2E | 瓶颈优化对照；campaign fits with 30% buffer；configs frozen |
 | D21 | all `MAIN-*` stage 1 | 15/15 midpoint checkpoints close exactly at 2M Student loss tokens |
 | D22 | all `MAIN-*` stage 2 | 15/15 endpoints close exactly at 4M cumulative tokens; G5 passes |
-| D23 | EV-MID/END, STAT-C1/C2, COST-E1E2, FAIL-001 | frozen evidence and failure analysis complete |
-| D24 | G6 plus portfolio artifacts | every public claim resolves to immutable evidence |
+| D23 | EV-MID/END, STAT-C1/C2, COST-E1E2, DYNAMICS-001, PERF-REPORT, optional FAIL-001 | 能力/动态/效率结果与失败解释完成 |
+| D24 | G6 plus portfolio artifacts | 算法/框架/性能报告和演示，量化表述对应实测 |
 
 ## Gate tracker
 
 | ID | Gate | Evidence required | Status | Blocking next |
 |---|---|---|---|---|
-| G0 | 资源与版本 | GPU inventory、框架 revisions、100-step profile | NOT_STARTED | 所有 GPU 正式运行 |
-| G1 | 数据与 evaluator | license、hash、family split、contamination、≥99% audit | NOT_STARTED | Anchor 与 formal eval |
+| G0 | 资源与授权 | GPU 授权、型号/拓扑、可用时长与版本；完整 profile 在 D20/C5 | NOT_STARTED | 所有 GPU 正式运行 |
+| G1 | 数据与 evaluator | 来源/license、family split、去污染、≥99% 人工抽查一致率 | NOT_STARTED | Anchor 与 formal eval |
 | G2 | Anchor/Teacher | E2B anchor reproducible；E4B independent gate pass | NOT_STARTED | OPD 与主矩阵 |
 | G3 | GRPO correctness | loss/reward/sync/policy-age/skipped-group tests | NOT_STARTED | A1/A3/A4 |
 | G4 | OPD correctness | tokenizer、exact KL、mask、gradient、freeze tests | NOT_STARTED | A2/A3/A4 |
 | G5 | Main repeats | 15/15 formal arm-seed runs valid | NOT_STARTED | Confirmatory claims |
-| G6 | Claim audit | immutable results、statistics、cost/claim consistency | NOT_STARTED | README/简历数字 |
+| G6 | 技术分析与作品 | 能力/动态/性能结果、失败解释、量化表述有实际支持 | NOT_STARTED | 核心作品最终交付 |
 
 ## Preflight and foundation queue
 
@@ -60,11 +73,13 @@
 | C2-002 | GRPO vLLM sync smoke | same prompts/config | policy age=1 batch；weights actually change | C2-001 | NOT_STARTED |
 | C3-001 | OPD tiny oracle | hand distributions | exact value/limit/gradient tolerance pass | C0-001 | NOT_STARTED |
 | C3-002 | OPD chunked smoke | E2B+E4B tiny batch | oracle alignment、mask/freeze、no full persistent logits | C3-001 | NOT_STARTED |
-| C5-001 | E2B LoRA profile | 100 steady steps | tokens/s、memory、FLOPs recorded | C1-001 | NOT_STARTED |
-| C5-002 | E4B LoRA SFT profile | 100 steady steps | tokens/s、memory recorded | C0-001 | NOT_STARTED |
+| C5-001 | E2B LoRA profile | 100 steady steps | tokens/s、memory、step p50/p95；FLOPs 注明估算口径 | C1-001 | NOT_STARTED |
+| C5-002 | E4B LoRA SFT profile | 100 steady steps | tokens/s、memory、forward/backward 时间 | C0-001 | NOT_STARTED |
 | C5-003 | Group-8 rollout profile | 2k cap, fixed backend | throughput、P95、truncation、sync cost | C2-002 | NOT_STARTED |
 | C5-004 | Exact OPD profile | E2B+E4B | throughput、peak memory、kernel evidence | C3-002 | NOT_STARTED |
 | C5-005 | Campaign closure | all profiles | total budget +30% fits confirmed allocation | C5-001..004 | NOT_STARTED |
+
+`PERF-GPU-SFT` 复用 C5-001/002，`PERF-GPU-ROLLOUT` 复用 C5-003，`PERF-GPU-OPD` 复用 C5-004；D20 的 `PERF-GPU-E2E` 在最大瓶颈处选择一项优化，与 baseline 做同条件复测，并将结果用于 C5-005。这些是同一组测量的技术分析视角，不重复计工作量。计时、内存和波动口径以 `PERFORMANCE_PLAN.md` 为准。
 
 ## Anchor and Teacher queue
 
@@ -123,7 +138,9 @@
 | EV-END | 15 endpoints | full frozen suite | raw item×seed predictions | NOT_STARTED |
 | STAT-C1 | A0/A1/A2 endpoints | preregistered item inference | Holm table + CIs | NOT_STARTED |
 | STAT-C2 | A3/A4 endpoints | preregistered item inference | superiority/TOST table | NOT_STARTED |
-| COST-E1E2 | all valid runs | token/FLOPs/time/memory ledgers | E1 + three-view E2 tables | NOT_STARTED |
+| COST-E1E2 | all valid runs | token/FLOPs/time/memory measurements | E1、三视角 E2 与 accuracy–cost 图 | NOT_STARTED |
+| DYNAMICS-001 | midpoints/endpoints + D_dev logs | entropy/KL/有效组率/长度/retention | 顺序切换和 Teacher 错误迁移分析 | NOT_STARTED |
+| PERF-REPORT | D11 and D18–D20 profiles | baseline/优化对照 | CPU/GPU 分列的吞吐/内存/瓶颈分析 | NOT_STARTED |
 | FAIL-001 | at most one tiny controlled run | format reward or wide parser | reward-hacking case study | DEFERRED_UNTIL_D22 |
 | SHADOW-DPO | one frozen rollout bank | DPO single seed | appendix only | DEFERRED_UNTIL_D24 |
 
@@ -157,5 +174,5 @@
 - Teacher qualified：`0 / 1`
 - Formal runs valid：`0 / 15`
 - Endpoint evals complete：`0 / 15`
-- Confirmatory claims audited：`0 / 3`
+- Confirmatory contrasts analyzed：`0 / 3`
 - Portfolio artifacts evidence-backed：`0 / 6`

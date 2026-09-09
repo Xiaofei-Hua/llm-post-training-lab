@@ -1,13 +1,15 @@
-# End-to-End Project Modules
+# 算法、框架、性能与指标开发模块
+
+> 2026-09-09 修订：保留 D01–D08 的完成事实与模块编号，重新定义未完成模块的技术交付。D09–D12 优先打通模型和训练循环、测量性能、展示学习行为；现有校验设施按需维护。
 
 ## 唯一计数口径
 
-本项目的**核心端到端链路固定为 24 个模块（D01–D24）**，不是 12 个。此前的 D01–D12 只覆盖 CPU 算法/框架开发，是完整链路的第一层。
+本项目的核心端到端链路为 **24 个模块（D01–D24）**。模块用于安排技术交付，完成数量不代表研究效果或简历价值。
 
 | 范围 | ID | 数量 | 是否计入核心完成度 |
 |---|---|---:|---|
-| CPU 算法与框架 | D01–D12 | 12 | 是 |
-| 真实模型、GPU correctness、anchors 与 pilots | D13–D20 | 8 | 是 |
+| CPU 算法、框架与性能 | D01–D12 | 12 | 是 |
+| 真实模型、GPU 性能、anchors 与 pilots | D13–D20 | 8 | 是 |
 | 五臂正式训练、评测与交付 | D21–D24 | 4 | 是 |
 | 核心完成后的研究扩展 | X01–X08 | 8 | 否 |
 
@@ -31,25 +33,32 @@
 | D06 | data registry、license/revision lineage、family split 与 contamination | immutable manifests/checksums；split determinism；exact/fuzzy contamination fixtures；泄漏失败闭锁 | COMPLETE（CPU） |
 | D07 | sealed benchmark evaluator、generation/result schema 与 metric contracts | test-answer access boundary；greedy/sampling reproducibility；item-level raw records；evaluator version hash | COMPLETE（CPU；synthetic evidence） |
 | D08 | paired statistics core | item bootstrap、paired randomization/sign-flip、Holm、TOST 与 synthetic null/effect coverage 通过；只消费 D07 correctness | COMPLETE（CPU；synthetic evidence） |
-| D09 | model/tokenizer/parameter contracts | tokenizer/vocab/hash、LoRA target allowlist、text-only freeze/checksum、nested model-output adapters 可在 fixtures 验证 | PLANNED |
-| D10 | SFT/GRPO/OPD objective runtime | shared update API；rollout/old-policy/Teacher freshness；独立 RNG；stage reset；skip/retry semantics | PLANNED |
-| D11 | provenance、双预算与成本 ledger | git/config/model/data/evaluator/checkpoint hashes；E1/E2 token/FLOP/time/memory schema；不可覆盖失败 attempt | PLANNED |
-| D12 | CPU end-to-end preflight 与 stage-gate orchestrator | 用 production code paths 和 reference fixtures 完成 resume/failure/gate dry-run；不得伪装成真实训练结果 | PLANNED |
+| D09 | 模型适配与可训练参数接入 | 本地初始化 tiny causal LM；接 D02/D04 的 hidden-state/LM-head 路径；text/LoRA 参数选择；真实 forward/backward/update 与 dense reference 对照；参数量/内存估算 | PLANNED（CPU） |
+| D10 | SFT/GRPO/OPD 统一训练循环 | 三 objective 共用 sample/score/loss/backward/update 主循环；当前 Student 采样、old-policy/Teacher detach、有效 token 更新、stage reset；输出 loss/reward/entropy/KL/clip/有效组率 | PLANNED（CPU） |
+| D11 | 性能剖析与优化 | 固定 workload 下比较 dense reference、有效位置分块与重计算；测 forward/backward、端到端 step、有效 tokens/s、CPU 峰值内存；定位瓶颈并实施至少一项有依据的优化尝试，报告收益或负结果 | PLANNED（CPU） |
+| D12 | CPU 端到端学习实验 | 用 D09–D11 实际训练路径在合成可验证任务跑通五臂两阶段；展示 loss/正确动作概率或准确率/entropy/KL/长度/成本曲线，解释一个失败或退化案例 | PLANNED（CPU；算法示例） |
 
-D01–D12 的完成只证明实现合同在 CPU 上成立，不代表真实 Gemma 4、TRL/vLLM、显存或吞吐已经通过。
+D01–D08 保留既有实现与验证记录，不追加围绕 hash/schema 的专项开发。D09–D12 用本地 tiny 模型验证算法和框架，不下载 checkpoint；CPU 测量只解释对应 workload，不预测 Gemma 的准确率或 GPU 加速。详细性能实验见 `PERFORMANCE_PLAN.md`。
+
+### 近期模块的可展示成果
+
+- D09：模型结构与参数图、可训练参数比例、adapter 接入与梯度解释。
+- D10：统一更新循环代码、GRPO/OPD 时序图、策略刷新和梯度归一化示例。
+- D11：baseline→profile→优化→复测的对照表，解释内存与时间取舍；不预设加速倍数。
+- D12：可一条命令运行的合成学习示例及行为/成本曲线，不要求出现与正式 C1/C2 相同的结论。
 
 ## Layer 2：真实模型与 GPU 训练准备（D13–D20）
 
 | ID | 交付物 | 实际工作与 exit criteria | Gate | 状态 |
 |---|---|---|---|---|
-| D13 | accelerator/distributed runtime closure | 记录 GPU 型号/拓扑、driver、CUDA、NCCL、PyTorch/Transformers/TRL/vLLM/kernel revisions；验证 BF16、gradient accumulation/checkpointing、distributed launcher、FSDP/ZeRO 候选与 checkpoint/resume；锁定 allocation 和公开边界 | G0 | PLANNED；GPU 未授权 |
-| D14 | Gemma 4 E2B/E4B real-checkpoint integration | pinned revisions 下载与 text-only forward；token IDs/vocab/hash 一致；LoRA target 命中；非文本参数 zero-grad/checksum；checkpoint save/load | C0 | PLANNED；GPU 未授权 |
-| D15 | real data/evaluator freeze | materialize 公开数据 revision；冻结 D_anchor/D_select/D_teacher_gate/D_dev/D_core/E hashes；完成污染审计、blind human audit 与 Base baseline | G1 | PLANNED |
+| D13 | accelerator 与分布式训练运行时 | 接入 BF16、gradient accumulation/checkpointing 与实际需要的 FSDP/ZeRO；测 update latency、显存和通信占比，完成必要 save/resume；确认硬件与资源授权 | G0 | PLANNED；GPU 未授权 |
+| D14 | Gemma 4 E2B/E4B 模型接入 | 真实 text forward/backward、LoRA 参数更新、模型 logit transform 与 tokenizer/token 对齐；测参数/激活内存，验证冻结参数无更新 | C0 | PLANNED；GPU 未授权 |
+| D15 | 真实数据、任务分布与 Base 指标 | 复用 D06/D07 materialize 各 split 和 benchmark；完成必要去污染/人工抽查；产出难度、长度、可解析率与 Base accuracy 分布 | G1 | PLANNED |
 | D16 | Student/Teacher SFT feasibility | E2B/E4B 各做 64-example overfit；2k×最多两档 LR sanity；只用 D_select 选 recipe；packing parity/禁用决策留证 | C1 | PLANNED；GPU 未授权 |
 | D17 | same-lineage anchors 与 Teacher qualification | 用同一 D_anchor 完成 10k E2B/E4B SFT；冻结可复现 Student anchor；一次性解封 D_teacher_gate；Teacher 同时通过 accuracy CI/+5pp/NLL/parse gate | G2/C4 | PLANNED；GPU 未授权 |
-| D18 | GRPO GPU correctness 与 D_dev pilot | no-vLLM 2-step → vLLM 2-step；验证 weight sync、old-policy age、RNG、zero-variance、cap/truncation；最多两档 LR；reward audit 通过 | G3/C2 | PLANNED；GPU 未授权 |
-| D19 | OPD GPU correctness 与 D_dev pilot | real E2B/E4B full-vocab KL parity；相同 prefix/token IDs；Teacher freeze；mask/gradient；最多两档 LR；exact kernel 无静默近似 | G4/C3 | PLANNED；GPU 未授权 |
-| D20 | 100-step profiles 与 campaign freeze | E2B backward、E4B SFT、group-8 rollout、E2B+E4B OPD 四类 steady-state profile；审计通信、显存、吞吐、save/resume；重算总成本并留 30%；冻结 precision/sharding/U/cap/config hashes/run order | C5 / execution READY | PLANNED；GPU 未授权 |
+| D18 | GRPO 学习动态与 rollout 性能 | no-vLLM→vLLM 接入并验证更新生效；分析 reward/accuracy、有效组率、entropy/clip、长度/截断；分解 rollout/sync/update 时间；最多两档 LR | G3/C2 | PLANNED；GPU 未授权 |
+| D19 | OPD 学习动态与大词表性能 | real full-vocab KL 数值/梯度、相同 prefix 与 Teacher freeze；测 chunk/recompute 的时间和内存，分析 KL/NLL/entropy 与 Teacher 错误迁移；最多两档 LR | G4/C3 | PLANNED；GPU 未授权 |
+| D20 | 端到端性能优化与训练预算 | 四类 100-step profile；针对最大瓶颈做同条件优化对照，报告内核和端到端收益/代价；重算成本并留 30%；在主训练前固定后端、精度、batch/U/cap 和 run order | C5 / execution READY | PLANNED；GPU 未授权 |
 
 D13–D20 是正式训练的必要前置条件。任何 gate 失败都先回到对应模块修正；不能用量化 Teacher、top-k KL、旧模型、删臂或单 seed 替代来绕过。
 
@@ -57,19 +66,19 @@ D13–D20 是正式训练的必要前置条件。任何 gate 失败都先回到�
 
 | ID | 交付物 | 规模 | 必须通过的 exit criteria | 状态 |
 |---|---|---:|---|---|
-| D21 | A0–A4 全部 Stage 1 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 midpoint checkpoints；每 run 精确闭合 U=2M；相同 objective config hash；无按结果删臂 | PLANNED；GPU 未授权 |
-| D22 | 统一 reset 后全部 Stage 2 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 endpoints；每 stage optimizer/scheduler 重置；累计 60M Student loss tokens；所有 invariant 与 retry 记录完整，G5 通过 | PLANNED；GPU 未授权 |
+| D21 | A0–A4 全部 Stage 1 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 midpoint checkpoints；U=2M；相同 objective recipe；学习动态和成本曲线齐备 | PLANNED；GPU 未授权 |
+| D22 | 统一 reset 后全部 Stage 2 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 endpoints；每 stage 重置 optimizer/scheduler；累计 60M；记录顺序切换后的动态和失败，G5 通过 | PLANNED；GPU 未授权 |
 
 正式矩阵只有 15 条 arm-seed run sequence，但每条包含两个有独立预算与 checkpoint 的 stage。D21 与 D22 分开，是为了在任何 Stage 2 结果出现前锁住中点证据与 reset 语义。
 
-## Layer 4：证据、审计与求职交付（D23–D24）
+## Layer 4：指标分析、技术报告与求职交付（D23–D24）
 
 | ID | 交付物 | 必须通过的 exit criteria | 状态 |
 |---|---|---|---|
-| D23 | frozen evaluation、statistics、cost 与 failure analysis | Base/anchor/Teacher、15 midpoints、15 endpoints 按冻结 revision 评测；完成 C1/C2、Holm/TOST、每 seed 结果、E1/E2 成本、error taxonomy；最多一个 reward-hacking 负例 | PLANNED |
-| D24 | claim audit、reproducibility release 与 portfolio | 每个数字可回溯 immutable result；技术报告、README result cards、配置/hashes、失败记录、复现命令、10 分钟讲稿、追问题库与简历 bullet 经 G6 审计 | PLANNED |
+| D23 | 能力、机制与效率分析 | Base/anchor/Teacher、15 midpoints/endpoints 评测；C1/C2 与每 seed 结果；entropy/KL/有效组率、Teacher 错误迁移、retention、accuracy–cost；解释至少一个负结果 | PLANNED |
+| D24 | 技术报告、框架演示与简历成果 | 公式→框架→性能→指标→结论的技术报告、可运行示例、主表/性能表、10 分钟讲稿与追问题库；量化表述核对已有测量，G6 完成 | PLANNED |
 
-D24 完成才算核心项目真正完成。训练跑完但没有 D23/D24，只能叫“产生 checkpoints”，不能叫“形成研究成果”。
+D24 完成代表核心项目交付完成。各阶段已实现的算法、框架和实测性能可以提前形成作品，按其真实验证范围表述。
 
 ## Post-core research extensions（X01–X08）
 
@@ -89,20 +98,21 @@ D24 完成才算核心项目真正完成。训练跑完但没有 D23/D24，只�
 ## 执行顺序与授权边界
 
 ```text
-D01–D12 CPU trust stack
+D01–D08 已有算法/指标 → D09 模型接入 → D10 训练循环
+        → D11 CPU 性能 → D12 合成学习实验
         ↓
-D13–D15 environment / real model / frozen data
+D13–D15 GPU runtime / real model / task baselines
         ↓
-D16–D20 SFT anchors / GRPO / OPD / compute closure
+D16–D20 SFT / GRPO / OPD / learning dynamics & performance
         ↓
 D21 Stage 1 → D22 Stage 2
         ↓
-D23 evaluation & inference → D24 claim audit & release
+D23 metrics & failure analysis → D24 technical report & portfolio
         ↓
 X01–X08 only by a new decision
 ```
 
-- 每轮只允许一个核心模块处于 `IN_PROGRESS`；完成、验证并 commit 后才移动。
+- 每轮聚焦一个主要技术目标，可修改必要依赖；完成对应验证后推进，不以额外审计、审批或 commit 仪式作为前置。
 - 当前只允许继续 D09–D12 的 CPU 工作；不得因为模块已列入计划而自动获得 GPU、模型下载或训练授权。
 - D13 进入前必须由用户明确切换 accelerator execution 状态；D20 未通过时不得启动 D21。
-- 模块状态、run 状态和 gate 状态是三套不同字段：代码完成不能代替 gate evidence，run 完成也不能代替 claim audit。
+- 区分代码完成、CPU 学习示例和真实研究结果；模块数量、测试数量与哈希记录都不能替代算法/性能结论。

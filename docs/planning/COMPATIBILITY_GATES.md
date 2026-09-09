@@ -2,6 +2,8 @@
 
 前沿 checkpoint 的框架支持仍快速变化。项目不因兼容失败退回旧模型，而是先用最小测试锁定可用版本和执行路径。
 
+2026-09-09 执行原则：本页用于 D13 以后真实模型接入时定位具体阻塞；CPU D09–D12 优先交付参数更新、学习循环和性能测量。已有 token/freeze/版本检查直接复用，按受影响路径验证，不另建一致性或审计平台。所有 GPU 步骤仍待授权。
+
 ## 已知风险（截至 2026-09-03）
 
 | 风险 | 影响 | 规划处置 |
@@ -25,7 +27,7 @@
 
 ### C1：SFT
 
-- 8 条样本 overfit，loss 连续下降；
+- 64 条样本 overfit，观察 loss/NLL 与答案学习；
 - assistant-only mask 的非 assistant token gradient 为零；
 - LoRA 只命中预注册 text projection modules；
 - packed/unpacked logits 差异低于预注册容差，否则禁用 packing。
@@ -60,6 +62,7 @@
 
 - 分别 profile E2B LoRA backward、group-8 rollout、E4B SFT 和 E2B+E4B full-vocab chunked reverse KL；
 - 记录 100-step steady-state tokens/s、峰值显存、通信与 checkpoint 开销；
+- 用同条件 baseline/优化对照解释瓶颈，报告 step p50/p95 和波动；协议见 `PERFORMANCE_PLAN.md`；
 - 以 3 seeds × A0–A4 × 4M Student loss tokens 重算总预算并保留 30% 余量；
 - 2×80 GB 或 4×48 GB 不可得且 C5 不闭合时，停止主矩阵；不得用量化 Teacher、top-k KL 或旧模型静默改变问题。
 
@@ -72,9 +75,9 @@
 ## 版本冻结规则
 
 - 环境记录 Python、CUDA、PyTorch、Transformers、TRL、vLLM 与 kernel 的精确版本/commit。
-- 只在 compatibility branch 升级依赖；主实验期间不滚动升级。
-- 升级后重复 C0–C4，旧结果与新结果不能直接拼表。
-- 保存官方 issue/release 状态快照；“最新版”不是兼容性证明。
+- 为实际功能或性能需求通过 uv 更新依赖；主实验期间固定版本。
+- 升级后验证受影响的 C0–C4 路径与性能 baseline，明确版本对结果的影响。
+- 遇到具体兼容问题时引用对应官方 issue/release 与最小复现，无需例行收集状态快照。
 
 ## 参考
 

@@ -1,11 +1,13 @@
-# 最终研究方案：Gemma 4 后训练信号与顺序归因
+# 研究方案：Gemma 4 后训练算法、框架与效率
 
-> Planning verdict：READY（独立审查 9.06/10）
-> Execution verdict：CONDITIONAL（尚未下载模型、确认 GPU 或完成 profile）
+> 当前计划：2026-09-09 technical-focus 修订；历史 9.06/10 为此前方法设计的评审记录。
+> 开发状态：D01–D08 CPU 完成，下一模块 D09；真实模型/GPU 执行仍为 CONDITIONAL。
 
 ## 研究定位
 
-本仓库不是推理服务或训练框架工程，而是一项面向基模/后训练算法实习的可复现研究：在有限算力和公开、可追溯数据下，从同一个前沿 Student SFT checkpoint 出发，受控识别不同后训练学习信号的单独作用与顺序交互。
+本仓库面向基模/后训练算法实习，以算法机制、可执行训练框架、性能优化和指标分析为四条技术主线。在有限算力和公开数据下，从同一个 Student SFT checkpoint 出发，解释不同学习信号的单独作用和顺序交互，并测量实现这些信号的真实计算代价。
+
+研发优先打通模型/LoRA、当前策略采样、Teacher/old-policy、loss/backward/update，再针对大词表 loss、rollout 和通信瓶颈优化。D05–D08 的数据、评测与统计设施直接复用；哈希、schema、审计与一致性工作只按实际阻塞维护，不再作为主要研究产出。
 
 核心实例化为：
 
@@ -23,6 +25,17 @@
 本项目只估计：**指定 same-lineage E4B Teacher 与冻结 GRPO/OPD recipe，在等 Student backward-token 预算下，对该 E2B Student 的 intervention effect。**
 
 不声称：效果仅来自参数量、E2B/E4B 除容量外完全相同、OPD 对任意 Teacher 都有效、GRPO/稠密信号存在普遍优劣，或结果达到榜单 SOTA。
+
+## 技术成果与核心问题
+
+| 方向 | 问题 | 证据与交付 |
+|---|---|---|
+| 算法 | 稀疏 reward 如何影响有效组和探索？reverse-KL 如何改变 Student 概率质量？顺序是否改变错误迁移？ | loss/gradient 实现、训练行为曲线、C1/C2、Teacher-correctness slices |
+| 框架 | 如何在共享循环内组织 SFT/GRPO/OPD 的采样、打分、更新和阶段切换？ | D09–D12 tiny 模型学习程序，D14–D19 真实模型路径 |
+| 性能 | 分块/重计算的收益在哪些形状成立？rollout、Teacher 与 backward 谁是瓶颈？ | D11 CPU baseline/优化对照，D18–D20 GPU profile 与端到端测量 |
+| 指标 | 能力、探索、长度、retention 和成本如何共同变化？ | accuracy/pass@k、entropy/KL/clip/有效组率、吞吐/内存、accuracy–cost 图 |
+
+性能结果属于独立框架/系统成果，明确限定 hardware/workload/precision 和 kernel 或端到端范围。优化无收益或 C1/C2 不显著都可以形成完整技术结论。开发数值实验、CPU 合成学习与 microbenchmark 无需新增确认性 claim；正式 recipe、数据、预算与三 seed 设计继续预注册。
 
 ## 模型与 anchor
 
@@ -62,7 +75,7 @@ E2B 与 E4B 都从 Base checkpoint 开始，只使用同一份 immutable `D_anch
 - temperature 1.0、full-vocabulary chunked reverse KL `KL(Student||Teacher)`；
 - mask 仅覆盖生成首 token 至首个 EOS（含 EOS）；
 - 逐 token 对全 vocab 求 KL，再按全 batch 有效 token 数归一；
-- exact chunked/fused kernel 必须与 tiny full-tensor value/limit/gradient oracle 对齐；top-k 不能用于主结果救场。
+- exact chunked/fused kernel 与 tiny full-tensor value/limit/gradient oracle 对齐，并测量不同 chunk size 下的内存–时间取舍；top-k 属于独立扩展。
 
 ## 数据与 benchmark
 
@@ -87,30 +100,29 @@ E2B 与 E4B 都从 Base checkpoint 开始，只使用同一份 immutable `D_anch
 
 E1 只严格匹配 Student backward loss tokens；prompt exposure、Student FLOPs与数据量都只报告，不称 matched。E2 记录全部 rollout tokens、Student/old/reference/Teacher forwards、Student backward、accelerator-seconds、GPU-hours、峰值显存和可得能耗。
 
+性能测量提前进入核心开发：D11 分开测 CE/KL forward/backward 与 D10 完整 step；D18–D20 分解 rollout/Teacher/Student/sync 成本，做优化前后对照。输出有效 tokens/s、step p50/p95、峰值内存及测量波动；FLOPs 估算与实测时间分列。具体协议见 `docs/planning/PERFORMANCE_PLAN.md`。
+
 成本拆分为：共享 Student anchor `C_anchor`、共享 Teacher SFT `C_teacher`、逐臂 `C_arm`。同时报告 marginal、cold-start pipeline 与 campaign total，Teacher 构建在 campaign 中只计一次。
 
 主矩阵共有 5×3×4M=60M Student loss tokens，但这不是端到端 token 数。Gemma 4 E2B/E4B 约 5.1B/8B total weights，官方 BF16 静态内存估计合计约29GB；推荐候选资源为2×80GB或4×48GB。450–900 GPUh 只是 profile 前排期区间。
 
 ## 执行 gates
 
-1. G0/C0：模型/processor/tokenizer、LoRA target、text-only freeze、版本组合；
+1. G0：accelerator 授权与资源；C0：模型/LoRA/text forward/backward 和 token 对齐；
 2. G1：license、split、去污染、evaluator adversarial tests 与≥99%人工一致率；
 3. G2/C4：双 SFT 可复现，独立 Teacher gate 通过；
 4. G3/C2：GRPO loss/refresh/sync/skipped-group 语义通过；
 5. G4/C3：OPD exact KL、mask、gradient 与 tokenizer 通过；
 6. C5：四类 100-step profile 后 campaign 成本有30%余量；
 7. G5：A0–A4 全部三个 seeds 完成；
-8. G6：统计、结果与简历数字经过 claim audit。
+8. G6：完成算法/性能分析与技术报告，核对结论和简历数字的实际证据。
 
-当前只完成前期规划，因此 execution status 仍是 CONDITIONAL。若 C5 不闭合，只允许所有臂同步降低 `U` 或统一缩短 cap 后重新 profile；不允许换旧模型、删臂、量化 Teacher 或近似 KL 来静默改变问题。
+当前 D01–D08 已完成 CPU 实现与验证，真实模型训练仍是 CONDITIONAL。若 C5 不闭合，只允许所有臂同步降低 `U` 或统一缩短 cap 后重新 profile；不允许换旧模型、删臂、量化 Teacher 或近似 KL 来静默改变问题。
 
-## 12 周输出
+## 近期开发与后续输出
 
-- 第1–2周：公式、数据/evaluator、兼容性与 profile；
-- 第3–4周：E2B/E4B same-lineage SFT 与 Teacher gate；
-- 第5周：冻结预算、objective configs 和统计预注册；
-- 第6–9周：GRPO/OPD correctness、A0–A4 stage 1/2；
-- 第10周：确认性/支持性评测与成本核算；
-- 第11–12周：error taxonomy、负结果、技术报告、README、10分钟讲稿与追问题库。
+近期依次完成 D09 模型接入、D10 统一训练循环、D11 CPU 性能剖析与优化、D12 合成学习实验。只使用本地 tiny 模型与合成输入，不下载模型/真实数据、不运行 MPS/CUDA。
 
-最终作品必须包含：可复现配置与 hashes、E1/E2 两张成本表、C1/C2 统计表、训练行为曲线、一次 reward-hacking 负例、失败实验记录，以及每个简历数字到 immutable result 的证据链。
+GPU 资源就绪后的约 12 周参考安排见 `docs/planning/ROADMAP.md`：D13–D17 完成真实模型与 anchors，D18–D20 分析学习动态和性能，D21–D22 训练五臂，D23–D24 形成分析和作品。正式训练前先完成 C5 成本闭合。
+
+最终作品包括算法推导与代码、训练循环演示、性能对照、C1/C2 与 E1/E2 表、训练行为曲线和至少一个负结果。可选最多一个 reward-hacking 负例；没有必要为了交付额外造负例。配置与结果入口支持复跑和数字核对即可，不以审计记录数量作为验收。
