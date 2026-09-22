@@ -551,13 +551,15 @@ def test_accumulation_and_ddp_scaling_reconstruct_global_token_mean_gradient() -
     torch.testing.assert_close(ddp_averaged_gradient, expected_gradient, rtol=1e-12, atol=1e-12)
 
 
-def test_empty_linear_shard_is_finite_and_connects_every_student_tensor() -> None:
-    student_hidden = torch.tensor([[[torch.nan, torch.inf], [1.0, 2.0]]], requires_grad=True)
+@pytest.mark.parametrize("sentinel", [torch.nan, torch.inf, 1e300])
+def test_empty_linear_shard_is_finite_and_connects_every_student_tensor(sentinel) -> None:
+    tensor_options = {"dtype": torch.float64, "requires_grad": True}
+    student_hidden = torch.tensor([[[sentinel, torch.inf], [1.0, 2.0]]], **tensor_options)
     student_weight = torch.tensor(
-        [[torch.nan, 1.0], [torch.inf, 2.0], [3.0, 4.0]],
-        requires_grad=True,
+        [[sentinel, 1.0], [torch.inf, 2.0], [3.0, 4.0]],
+        **tensor_options,
     )
-    student_bias = torch.tensor([torch.inf, 1.0, 2.0], requires_grad=True)
+    student_bias = torch.tensor([sentinel, 1.0, 2.0], **tensor_options)
     output = chunked_masked_causal_linear_reverse_kl(
         student_hidden,
         student_weight,
@@ -565,6 +567,7 @@ def test_empty_linear_shard_is_finite_and_connects_every_student_tensor() -> Non
         torch.randn((3, 4)),
         torch.zeros((1, 2), dtype=torch.bool),
         student_lm_head_bias=student_bias,
+        loss_compute_dtype=torch.float32,
         global_token_count=3,
         ddp_world_size=2,
     )
@@ -604,6 +607,22 @@ def test_d01_completion_mask_and_exact_budget_feed_d04() -> None:
     assert output.local_token_count == selection.selected_tokens == 5
     output.loss.backward()
     assert student.grad is not None
+
+
+@pytest.mark.parametrize("side", ["student", "teacher"])
+@pytest.mark.parametrize("value,scale", [(torch.inf, 1.0), (-torch.inf, 1.0), (3e38, 2.0)])
+def test_softcap_does_not_hide_selected_logit_overflow(side, value, scale) -> None:
+    student = torch.zeros((1, 2, 2), requires_grad=True)
+    teacher = torch.zeros((1, 2, 2))
+    with torch.no_grad():
+        (student if side == "student" else teacher)[0, 0, 0] = value
+    with pytest.raises(FloatingPointError, match=f"selected {side.title()}"):
+        masked_causal_reverse_kl(
+            student,
+            teacher,
+            torch.tensor([[False, True]]),
+            **{f"{side}_logit_scale": scale, f"{side}_final_logit_softcapping": 2.0},
+        )
 
 
 def test_unselected_nonfinite_logits_are_ignored_but_selected_values_fail() -> None:

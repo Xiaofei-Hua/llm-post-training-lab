@@ -360,9 +360,7 @@ def dr_grpo_token_surrogate(
     selected_positions = loss_mask.nonzero(as_tuple=False)
     local_token_count = selected_positions.shape[0]
     if local_token_count == 0:
-        anchor = current_log_probs[(0, 0)]
-        finite_anchor = torch.where(torch.isfinite(anchor), anchor, torch.zeros_like(anchor))
-        loss_sum = finite_anchor.to(dtype=compute_dtype) * 0.0
+        loss_sum = current_log_probs[:0].sum(dtype=compute_dtype)
         zero = torch.zeros((), dtype=compute_dtype, device=current_log_probs.device)
         ratio_sum = zero
         ratio_min = torch.full_like(zero, torch.nan)

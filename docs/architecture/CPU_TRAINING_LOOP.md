@@ -58,4 +58,4 @@ uv run --frozen python scripts/train_cpu_example.py
 - NaN gradient skip 后恢复；阶段切换保留权重并清空 moments/scheduler；
 - last-position head 与 dense 的采样 token、mask 和 FP64 概率一致。
 
-D13 已将同一同步、单进程 loop 扩展为 CPU/CUDA，接入 BF16、梯度累积、activation checkpointing 与 save/resume，CPU 验证见 `ACCELERATOR_RUNTIME.md`；GPU 实测暂停。distributed collectives 与跨进程 weight sync 尚未实现。这里的成功不能替代真实 Gemma 的 G2/G3/G4。
+D13 已将同一同步、单进程 loop 扩展为 CPU/CUDA，接入 BF16、梯度累积、activation checkpointing 与 save/resume，CPU 回归与单 GPU tiny 实测见 `ACCELERATOR_RUNTIME.md`。distributed collectives 与跨进程 weight sync 尚未实现。这里的成功不能替代真实 Gemma 的 G2/G3/G4。

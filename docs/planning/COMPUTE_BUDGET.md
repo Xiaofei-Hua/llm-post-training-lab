@@ -4,7 +4,7 @@
 
 GRPO 和 OPD 的成本主要由 rollout 长度、group size、Teacher forward 和实现吞吐决定。以下是既有资源假设，不是已测预算；G0 确认 accelerator 授权与资源，D20/C5 用四类 100-step profile 校准正式成本。
 
-性能属于核心研发：先在 D11 做 CPU loss/step 的时间与内存对照，再在 D18–D20 定位真实训练瓶颈并优化。具体 baseline、测量范围与波动口径见 `PERFORMANCE_PLAN.md`。当前 GPU 未授权，也无 GPU 性能实测。
+性能属于核心研发：先在 D11 做 CPU loss/step 的时间与内存对照，再在 D18–D20 定位真实训练瓶颈并优化。具体 baseline、测量范围与波动口径见 `PERFORMANCE_PLAN.md`。D13 tiny 单卡已获授权并完成 RTX 5070 Ti 实测，见 `../architecture/ACCELERATOR_RUNTIME.md`；真实模型训练及 campaign 总预算尚未闭合。
 
 ## 预算档位
 

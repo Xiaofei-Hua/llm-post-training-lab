@@ -1,6 +1,6 @@
 # 后训练性能实验计划
 
-> 2026-09-09 更新；D11 CPU 首轮已完成，实测与负结果见 `docs/performance/CPU_BENCHMARK.md`。D13 tiny GPU 运行时的测量脚本已准备，因 GPU 被另一任务使用而暂停；D18–D20 真实模型测量仍待授权。
+> 2026-09-22 更新；D11 CPU 实测与负结果见 `docs/performance/CPU_BENCHMARK.md`。D13 已完成 RTX 5070 Ti 上 12 组 tiny GPU 对照，显存/耗时取舍与 OPD 计时波动见 `docs/architecture/ACCELERATOR_RUNTIME.md`；D18–D20 真实模型测量仍待授权。
 
 ## 要回答的技术问题
 

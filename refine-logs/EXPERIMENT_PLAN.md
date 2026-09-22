@@ -1,7 +1,7 @@
 # Experiment Plan
 
 > 状态：2026-09-09 技术主线修订；C1/C2 方法设计保留，真实训练 EXECUTION-CONDITIONAL。
-> 当前：D01–D08 CPU 完成；D09–D12 开发与性能实验待做，真实模型/GPU 实验未开始。
+> 当前（2026-09-22）：D01–D13 完成，包括 CPU 合成学习和单卡 tiny CUDA 实测；D14 及真实模型/数据实验未开始。
 
 ## 1. Research question 与 claims
 
@@ -75,18 +75,18 @@
 
 ### Block E0 — 算法框架、学习验证与性能
 
-当前 CPU 阶段按以下顺序交付：
+已完成的 CPU 阶段按以下顺序交付：
 
 1. **DEV-D09**：本地 tiny causal LM 的模型适配、LoRA/text 参数接入；D02 CE/D04 KL 的真实 forward/backward/update，给出参数图与梯度解释。
 2. **DEV-D10**：共用 SFT/GRPO/OPD 主循环，打通当前策略采样、reward/Teacher、loss/backward/update 与阶段切换；输出 loss、reward、entropy/KL/clip、有效组率。
 3. **PERF-CPU-CE/KL/STEP**（D11）：dense reference 与 exact chunk/recompute 对照，测时间、内存和有效 tokens/s；依据 profile 做一项优化尝试并复测。
 4. **DEV-D12**：用同一真实代码路径在合成任务跑通五臂两阶段，生成学习/成本曲线，解释一个退化或失败案例；不要求支持正式 C1/C2。
 
-CPU 阶段不下载真实模型/数据、不运行 MPS/CUDA，不用 tiny 模型为 Gemma 选参。D01–D08 的 loss、verifier、数据、指标和统计实现直接复用，已有 synthetic 验证不再作为新开发周期。
+上述 CPU 阶段不涉及真实模型/数据或 accelerator。D13 随后在获授权的 RTX 5070 Ti 上完成 tiny CUDA/BF16、累积、续训、失败恢复及性能验证，见 `docs/architecture/ACCELERATOR_RUNTIME.md`。不使用 tiny 模型为 Gemma 选参。D01–D08 的 loss、verifier、数据、指标和统计实现直接复用，已有 synthetic 验证不再作为新开发周期。
 
 授权后的真实模型准备：
 
-- D13–D15：硬件与模型接入、真实数据分布和 Base 指标；复用已有去污染/evaluator 流程，完成必要人工抽查，避免 test 用于选参。
+- D14–D15：复用 D13 单卡 runtime，完成真实模型接入、真实数据分布和 Base 指标；复用已有去污染/evaluator 流程，完成必要人工抽查，避免 test 用于选参。
 - D16–D19：SFT 学习验证、Teacher qualification、GRPO/OPD 更新正确性与 D_dev 稳定性/动态分析。
 - D18–D20：E2B backward、E4B SFT、group-8 rollout、E2B+E4B OPD 各 100-step profile；复用 C5 队列，比较瓶颈优化前后性能。
 - D20/C5：重算五臂成本并留 30% 余量，固定正式实现/recipe；预算不闭合则按既定边界同步调整 U/cap 后重新 profile。
@@ -155,31 +155,32 @@ E1 只匹配 Student backward loss tokens，prompt exposure 与 Student FLOPs只
 - [ ] 可用硬件、总时长和 30% buffer 已确认；
 - [ ] 模型许可、数据许可、公开边界与所有 immutable revisions 已锁定；
 - [ ] D_select 与 D_teacher_gate 隔离，后者尚未被选择流程读取；
-- [ ] evaluator、loss、mask、U counter、统计实现通过 synthetic tests；
+- [x] evaluator、loss、mask、U counter、统计实现通过 synthetic tests；
 - [ ] LoRA target/non-text freeze/tokenizer/weight-sync gates 通过；
 - [ ] Teacher 独立 capability gate 通过；
 - [ ] 15 个主 run 和完整评测的 campaign budget 闭合；
 - [ ] 所有 objective config hashes、三个 seeds 和 formal run order 已在结果出现前冻结。
 
-只有全部勾选，正式训练 execution status 才能从 CONDITIONAL 改为 READY；此清单不阻塞 D09–D12 的 CPU 开发与实验。
+只有全部勾选，正式训练 execution status 才能从 CONDITIONAL 改为 READY；此清单不阻塞 D09–D13 已获授权的 tiny 开发与实验。
 
 ## 7. 端到端模块映射
 
-核心仍为 **24 个模块，已完成 8/24**。实验 block 按问题分组，D 模块按实际交付推进；详细验收见 `docs/planning/DEVELOPMENT_MODULES.md`。
+核心仍为 **24 个模块，已完成 13/24**。实验 block 按问题分组，D 模块按实际交付推进；详细验收见 `docs/planning/DEVELOPMENT_MODULES.md`。
 
 | 模块 | Block/Run | 核心交付 | 状态 |
 |---|---|---|---|
 | D01–D04 | E0 | loss-token 预算、CE、GRPO surrogate、reverse-KL 及梯度验证 | COMPLETE（CPU） |
 | D05–D08 | E0 | verifier、数据隔离、评测指标、paired statistics，后续复用 | COMPLETE（CPU；真实数据/评测待做） |
-| D09 | E0 / DEV-D09 | 模型适配、LoRA/text 参数与实际 forward/backward/update | PLANNED（CPU） |
-| D10 | E0 / DEV-D10 | 统一训练循环与学习动态指标 | PLANNED（CPU） |
-| D11 | E0 / PERF-CPU-* | 性能 baseline、瓶颈、优化与复测 | PLANNED（CPU） |
-| D12 | E0 / DEV-D12 | 五臂合成学习示例、曲线与失败解释 | PLANNED（CPU） |
-| D13–D15 | E0 / G0,C0,G1 | GPU/model runtime、真实任务分布与 Base 指标 | PLANNED；执行未授权 |
-| D16–D17 | E1 / C1,G2,C4 | SFT 学习曲线、双 anchors 与独立 Teacher gate | PLANNED；GPU 未授权 |
-| D18–D19 | E2 / G3,G4 | GRPO/OPD 学习动态、rollout 与大词表性能 | PLANNED；GPU 未授权 |
-| D20 | E0 / C5,PERF-GPU-* | 端到端优化对照、正式配置与成本闭合 | PLANNED；GPU 未授权 |
-| D21–D22 | E2+E3 / G5 | 五臂两阶段三个 paired seeds、完整动态与成本记录 | PLANNED；GPU 未授权 |
+| D09 | E0 / DEV-D09 | 模型适配、LoRA/text 参数与实际 forward/backward/update | COMPLETE（CPU tiny） |
+| D10 | E0 / DEV-D10 | 统一训练循环与学习动态指标 | COMPLETE（CPU tiny） |
+| D11 | E0 / PERF-CPU-* | 性能 baseline、瓶颈、优化与复测 | COMPLETE（CPU 合成测量） |
+| D12 | E0 / DEV-D12 | 五臂合成学习示例、曲线与失败解释 | COMPLETE（CPU 合成学习） |
+| D13 | E0 / G0 | 单卡 CUDA/BF16、累积/重计算、续训与性能 | COMPLETE（GPU tiny） |
+| D14–D15 | E0 / C0,G1 | 真实模型接入、数据分布和 Base 指标 | PLANNED；真实模型/数据执行未授权 |
+| D16–D17 | E1 / C1,G2,C4 | SFT 学习曲线、双 anchors 与独立 Teacher gate | PLANNED；真实模型训练未授权 |
+| D18–D19 | E2 / G3,G4 | GRPO/OPD 学习动态、rollout 与大词表性能 | PLANNED；真实模型训练未授权 |
+| D20 | E0 / C5,PERF-GPU-* | 端到端优化对照、正式配置与成本闭合 | PLANNED；真实模型训练未授权 |
+| D21–D22 | E2+E3 / G5 | 五臂两阶段三个 paired seeds、完整动态与成本记录 | PLANNED；真实模型训练未授权 |
 | D23 | E4 | C1/C2、retention、错误迁移、accuracy–cost、负结果 | PLANNED |
 | D24 | G6 | 算法/框架/性能技术报告、演示与求职成果 | PLANNED |
 

@@ -66,6 +66,27 @@ def examples():
     ]
 
 
+def test_accumulation_witness_rejects_scaling_hidden_by_clipping(monkeypatch):
+    from posttrain_lab.experiments import accelerator_runtime as runtime
+
+    assert len(runtime.accumulation_checks(device="cpu")) == 6
+    original = runtime.make_trainer
+
+    def doubled_split_gradient(**kwargs):
+        trainer = original(**kwargs)
+        trainer.config = replace(trainer.config, max_grad_norm=0.001)
+        if kwargs.get("microbatch") == 2:
+            for parameter in trainer.parameters:
+                parameter.register_hook(lambda gradient: gradient * 2)
+        return trainer
+
+    monkeypatch.setattr(runtime, "make_trainer", doubled_split_gradient)
+    # Both directions become nearly identical after clipping, and their AdamW
+    # steps satisfy the update formula, despite a twofold normalization error.
+    with pytest.raises(AssertionError, match="unclipped gradient norm"):
+        runtime.accumulation_checks(device="cpu")
+
+
 @pytest.mark.parametrize("objective", ["sft", "grpo", "opd"])
 @pytest.mark.parametrize("mode", ["text", "lora"])
 @pytest.mark.parametrize("checkpoint", [False, True])
@@ -152,6 +173,38 @@ def test_failed_later_microbatch_discards_all_accumulated_gradients_and_budget()
     result = trainer.step(examples())
     hook.remove()
     assert result["status"] == "skipped_nonfinite_gradient"
+    assert trainer.budget.consumed_tokens == trainer.policy_version == 0
+    assert trainer.scheduler.last_epoch == 0
+    assert not trainer.optimizer.state
+    for name, parameter in trainer.student.named_parameters():
+        assert parameter.grad is None
+        assert torch.equal(parameter, before[name])
+    assert trainer.step(examples())["status"] == "updated"
+
+
+@pytest.mark.parametrize("objective", ["sft", "grpo", "opd"])
+def test_nonfinite_later_microbatch_logits_skip_the_whole_update(monkeypatch, objective):
+    trainer = make_trainer(objective, microbatch=1)
+    before = copy.deepcopy(trainer.student.state_dict())
+    forward = trainer.student.forward_features
+    calls = 0
+
+    def corrupt_second(input_ids, attention_mask=None):
+        nonlocal calls
+        features = forward(input_ids, attention_mask)
+        # Leave on-policy generation intact; corrupt one loss microbatch after
+        # the first has already accumulated real gradients.
+        if trainer.student.training and torch.is_grad_enabled():
+            calls += 1
+            if calls == 2:
+                assert any(p.grad is not None for p in trainer.parameters)
+                return replace(features, hidden_states=features.hidden_states * torch.nan)
+        return features
+
+    monkeypatch.setattr(trainer.student, "forward_features", corrupt_second)
+    result = trainer.step(examples())
+    assert result["status"] == "skipped_nonfinite_loss"
+    assert result["microbatches"] == 1
     assert trainer.budget.consumed_tokens == trainer.policy_version == 0
     assert trainer.scheduler.last_epoch == 0
     assert not trainer.optimizer.state

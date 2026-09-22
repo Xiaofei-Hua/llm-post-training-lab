@@ -3,12 +3,12 @@
 ## Pipeline Status
 
 - language: zh
-- phase: accelerator-runtime-development
+- phase: accelerator-runtime-validated
 - project_type: algorithm-framework-performance LLM post-training portfolio
 - development_priority: algorithms, executable training framework, performance, metrics and failure analysis
 - planning_revision: 2026-09-09 technical-focus
-- execution_status: D13 implementation and CPU validation; GPU execution paused because another task is using it
-- core_modules: D01-D24 (12/24 complete); GPU/full-training begins at D13
+- execution_status: D13 single-GPU tiny-model validation complete; D14 real-model work not started
+- core_modules: D01-D24 (13/24 complete); GPU/full-training begins at D13
 - extension_modules: X01-X08 (deferred until D24; excluded from core completion)
 
 ## Problem Anchor
@@ -35,7 +35,7 @@
 5. 性能成果是独立技术贡献：记录 workload、硬件、精度、baseline、测量范围与波动；核函数加速、端到端加速和算法准确率收益分别表述，负优化也如实记录。
 6. 公开 benchmark 只用于评测，训练/选择/test 隔离并使用已有去污染流程。来源、license、revision、配置和 seed 保留最小可复现记录；已有校验信息由工具自动生成，说明文档引用即可。
 7. 不声称尚未运行的结果；区分规划、合成 CPU 实测、真实模型实测。简历可描述已实现的算法/框架能力，准确率或加速数字须有对应测量支持，不以完整五臂结束作为描述已有技术成果的前提。
-8. 2026-09-09 用户提供单 GPU 服务器并授权 tiny 模型 D13 验证，随后通知 GPU 正被另一任务使用，要求依赖走镜像、先完成其余工作并 commit/push。当前暂停 CUDA witness/训练/profile，先完成 CPU 验证与镜像环境；GPU 恢复可用后再继续 D13。不得用 tiny 结果选择正式 Gemma recipe 或推断其效果；真实模型/真实数据下载、真实训练及 D14 尚未授权。
+8. 2026-09-09 用户提供单 GPU 服务器并授权 tiny 模型 D13 验证，随后通知 GPU 正被另一任务使用，要求依赖走镜像、先完成其余工作并 commit/push。2026-09-22 用户确认当前 GPU 可用于实验并要求继续算法开发，已恢复并完成 RTX 5070 Ti 上的 D13 tiny CUDA/BF16、续训、失败恢复和性能验收。依赖继续走镜像。不得用 tiny 结果选择正式 Gemma recipe 或推断其效果；真实模型/真实数据下载、真实训练及 D14 尚未授权。
 9. Python 环境通过 `uv.lock` 复现；替换实现时移除失效 API、测试与说明，不保留废弃副本。
 10. 不得把内部文档正文、业务数据、指标、模型或同事信息提交到仓库；内部阅读笔记放在被忽略的 `notes/private/`。
 
@@ -64,7 +64,8 @@
 - 当前实现 D10：`docs/architecture/CPU_TRAINING_LOOP.md`
 - 当前实现 D11：`docs/performance/CPU_BENCHMARK.md`
 - 当前实现 D12：`docs/experiments/CPU_LEARNING_EXPERIMENT.md`
-- 当前开发 D13（GPU 实测暂停）：`docs/architecture/ACCELERATOR_RUNTIME.md`
+- 当前实现 D13（单 GPU tiny 实测完成）：`docs/architecture/ACCELERATOR_RUNTIME.md`
+- D01–D13 回顾与修复（五轮，最后两轮无新增问题）：`docs/experiments/D01_D13_REVIEW.md`
 
 ## Stage Gates
 
@@ -76,4 +77,4 @@
 - G5：A0–A4 全部完成三 paired seeds；硬件不闭合时停止，不用单 seed 结果替代主 claim。
 - G6：完成算法/性能结果分析和技术表达；研究结论与量化简历表述有实际证据。按成果范围做简短核对，复用 D08 统计，不另建审计系统。
 
-G0–G6 用于决定真实实验是否可以推进，不作为日常开发的审批链。D01–D12 已完成 CPU 验证；D13 已完成运行时代码与 CPU 验证，GPU 实测按用户要求暂停，尚不计入完成数。资源连接信息保留在被忽略的 `notes/private/compute/`，公开报告仅记录硬件规格和技术结果。D12 的五臂三 seed 是合成 CPU 实验，不替代 D21–D23 的真实训练或 C1/C2。
+G0–G6 用于决定真实实验是否可以推进，不作为日常开发的审批链。D01–D12 已完成 CPU 验证；D13 已完成运行时代码、CPU 回归与单 GPU tiny 实测，核心进度为 13/24；下一模块 D14 尚未执行。资源连接信息保留在被忽略的 `notes/private/compute/`，公开报告仅记录硬件规格和技术结果。D12 的五臂三 seed 是合成 CPU 实验，不替代 D21–D23 的真实训练或 C1/C2。

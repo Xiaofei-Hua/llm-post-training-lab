@@ -201,11 +201,11 @@ report = evaluate_generation_batch(
 )
 ```
 
-生产部署必须额外保存 generation bundle 和 evaluation report，并由 D11 provenance ledger 注册；上面的最小片段不替代运行编排。
+正式实验编排需保存 generation bundle、evaluation report 及对应 checkpoint/arm/seed 记录；上面的最小片段不替代运行编排。D11 是 CPU 性能模块，不承担额外 provenance ledger 的开发。
 
 ## 验证与后续 gate
 
-D07 定向 70 个 CPU tests 覆盖 strict schema、answer capability boundary、paired seeds、乱序/缺失/重复 backend、finish/length/truncation semantics、bundle 路径别名与 leaf-symlink/report tamper、pass@k properties、gold/infra failure、strict numeric schema、strict label、完整 runtime import closure、foreign-checkout rejection、Git dirty/untracked/root/HEAD-race/restore-after-read TOCTOU 与 raw-text exclusion。全仓 506 tests 通过；新增两个 Hypothesis properties 各执行 100 个生成案例。
+D07 定向 70 个 CPU tests 覆盖 strict schema、answer capability boundary、paired seeds、乱序/缺失/重复 backend、finish/length/truncation semantics、bundle 路径别名与 leaf-symlink/report tamper、pass@k properties、gold/infra failure、strict numeric schema、strict label、完整 runtime import closure、foreign-checkout rejection、Git dirty/untracked/root/HEAD-race/restore-after-read TOCTOU 与 raw-text exclusion。D07 验收时全仓 506 tests 通过；新增两个 Hypothesis properties 各执行 100 个生成案例。
 
 D07 交付本身只把当时的代码模块进度推进到 `7/24`。以下状态保持不变：
 

@@ -397,8 +397,9 @@ def test_accumulation_and_ddp_scaling_reconstruct_full_update_gradient() -> None
     torch.testing.assert_close(ddp_averaged_gradient, expected_gradient, rtol=1e-12, atol=1e-12)
 
 
-def test_empty_local_shard_returns_differentiable_zero() -> None:
-    current = torch.tensor([[torch.nan, torch.inf]], requires_grad=True)
+@pytest.mark.parametrize("sentinel", [torch.nan, -torch.inf, -1e300])
+def test_empty_local_shard_returns_differentiable_zero(sentinel) -> None:
+    current = torch.tensor([[sentinel, torch.inf]], dtype=torch.float64, requires_grad=True)
     output = dr_grpo_token_surrogate(
         current,
         torch.tensor([[-torch.inf, torch.nan]]),
@@ -408,6 +409,7 @@ def test_empty_local_shard_returns_differentiable_zero() -> None:
         max_completion_length=2,
         group_size=2,
         ddp_world_size=2,
+        loss_compute_dtype=torch.float32,
     )
     assert output.loss.item() == 0.0
     assert output.local_token_count == 0

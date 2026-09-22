@@ -102,7 +102,7 @@ uv run ruff check .
 uv run pytest -q
 ```
 
-D02 有 23 个 CPU tests，其中包含 100 个 Hypothesis 随机 batch；覆盖独立 log-softmax/gather value oracle、logits/hidden/weight/bias gradients、autograd gradcheck、causal shift、token mean、分块宽度、backward saved-tensor 边界、bfloat16 极值、CPU autocast、不均匀 microbatch、DDP 不均匀 rank 与空 local shard。仓库当前全量共 108 个 tests、575 个生成案例。
+D01–D04 首批验收时，D02 有 23 个 CPU tests，其中包含 100 个 Hypothesis 随机 batch；覆盖独立 log-softmax/gather value oracle、logits/hidden/weight/bias gradients、autograd gradcheck、causal shift、token mean、分块宽度、backward saved-tensor 边界、bfloat16 极值、CPU autocast、不均匀 microbatch、DDP 不均匀 rank 与空 local shard。当时全量共 108 个 tests、575 个生成案例；后续修复与当前验收见 `docs/experiments/D01_D13_REVIEW.md`。
 
 验证没有下载模型或数据，没有访问 MPS/CUDA。D02 通过不等于 tracker 的 `C1-001` 已完成：后者仍依赖 C0 的真实 Gemma 4 tokenizer/model/LoRA 集成与 8-sample overfit。
 

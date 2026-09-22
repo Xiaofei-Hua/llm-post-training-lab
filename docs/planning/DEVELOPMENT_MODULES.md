@@ -1,6 +1,6 @@
 # 算法、框架、性能与指标开发模块
 
-> 2026-09-09 更新：D01–D12 已完成 CPU 算法、模型/循环、性能测量与合成学习验收。D13 运行时代码及 CPU 验证已实现，GPU 被其他任务占用而暂停实测；现有校验设施按需维护。
+> 2026-09-22 更新：D01–D12 CPU 验收及 D13 单 GPU tiny 运行时实测已完成；下一模块 D14 尚未执行。现有校验设施按需维护。
 
 ## 唯一计数口径
 
@@ -15,11 +15,11 @@
 
 因此：
 
-- 核心项目完成分母：`24`；当前 `12/24`；
-- 包含延后研究线的完整目录：`32`；当前 `12/32`；
+- 核心项目完成分母：`24`；当前 `13/24`；
+- 包含延后研究线的完整目录：`32`；当前 `13/32`；
 - `LEARNING_CURRICULUM.md` 的 12 个知识章节只是学习索引，不是另一组执行模块，不进入上述分母。
 
-当前 D01–D12 已在 CPU 完成并验证；正在开发 D13。D13 的累积、重计算与 save/resume 已通过 CPU 测试；GPU 验证按用户要求暂停。实现与剩余验收见 `docs/architecture/ACCELERATOR_RUNTIME.md`。D14 之后的真实模型/数据执行尚未授权。
+D13 已在 RTX 5070 Ti 上完成 BF16 数值、梯度累积、重计算、精确续训、失败恢复和性能实测；核心进度 13/24。结果与边界见 `docs/architecture/ACCELERATOR_RUNTIME.md`。D14 及之后的真实模型/数据执行尚未授权。
 
 ## Layer 1：CPU 算法与框架（D01–D12）
 
@@ -51,14 +51,14 @@ D01–D08 保留既有实现与验证记录，不追加围绕 hash/schema 的专
 
 | ID | 交付物 | 实际工作与 exit criteria | Gate | 状态 |
 |---|---|---|---|---|
-| D13 | accelerator 与分布式训练运行时 | 接入 BF16、gradient accumulation/checkpointing 与实际需要的 FSDP/ZeRO；测 update latency、显存和通信占比，完成必要 save/resume；确认硬件与资源授权 | G0 | IN_PROGRESS；代码/CPU 验证完成，GPU 实测暂停 |
-| D14 | Gemma 4 E2B/E4B 模型接入 | 真实 text forward/backward、LoRA 参数更新、模型 logit transform 与 tokenizer/token 对齐；测参数/激活内存，验证冻结参数无更新 | C0 | PLANNED；GPU 未授权 |
+| D13 | accelerator 与分布式训练运行时 | 接入 BF16、gradient accumulation/checkpointing 与实际需要的 FSDP/ZeRO；测 update latency、显存和通信占比，完成必要 save/resume；确认硬件与资源授权 | G0 | COMPLETE（单 GPU tiny 实测；通信不适用） |
+| D14 | Gemma 4 E2B/E4B 模型接入 | 真实 text forward/backward、LoRA 参数更新、模型 logit transform 与 tokenizer/token 对齐；测参数/激活内存，验证冻结参数无更新 | C0 | PLANNED；真实模型执行未授权 |
 | D15 | 真实数据、任务分布与 Base 指标 | 复用 D06/D07 materialize 各 split 和 benchmark；完成必要去污染/人工抽查；产出难度、长度、可解析率与 Base accuracy 分布 | G1 | PLANNED |
-| D16 | Student/Teacher SFT feasibility | E2B/E4B 各做 64-example overfit；2k×最多两档 LR sanity；只用 D_select 选 recipe；packing parity/禁用决策留证 | C1 | PLANNED；GPU 未授权 |
-| D17 | same-lineage anchors 与 Teacher qualification | 用同一 D_anchor 完成 10k E2B/E4B SFT；冻结可复现 Student anchor；一次性解封 D_teacher_gate；Teacher 同时通过 accuracy CI/+5pp/NLL/parse gate | G2/C4 | PLANNED；GPU 未授权 |
-| D18 | GRPO 学习动态与 rollout 性能 | no-vLLM→vLLM 接入并验证更新生效；分析 reward/accuracy、有效组率、entropy/clip、长度/截断；分解 rollout/sync/update 时间；最多两档 LR | G3/C2 | PLANNED；GPU 未授权 |
-| D19 | OPD 学习动态与大词表性能 | real full-vocab KL 数值/梯度、相同 prefix 与 Teacher freeze；测 chunk/recompute 的时间和内存，分析 KL/NLL/entropy 与 Teacher 错误迁移；最多两档 LR | G4/C3 | PLANNED；GPU 未授权 |
-| D20 | 端到端性能优化与训练预算 | 四类 100-step profile；针对最大瓶颈做同条件优化对照，报告内核和端到端收益/代价；重算成本并留 30%；在主训练前固定后端、精度、batch/U/cap 和 run order | C5 / execution READY | PLANNED；GPU 未授权 |
+| D16 | Student/Teacher SFT feasibility | E2B/E4B 各做 64-example overfit；2k×最多两档 LR sanity；只用 D_select 选 recipe；packing parity/禁用决策留证 | C1 | PLANNED；真实模型执行未授权 |
+| D17 | same-lineage anchors 与 Teacher qualification | 用同一 D_anchor 完成 10k E2B/E4B SFT；冻结可复现 Student anchor；一次性解封 D_teacher_gate；Teacher 同时通过 accuracy CI/+5pp/NLL/parse gate | G2/C4 | PLANNED；真实模型执行未授权 |
+| D18 | GRPO 学习动态与 rollout 性能 | no-vLLM→vLLM 接入并验证更新生效；分析 reward/accuracy、有效组率、entropy/clip、长度/截断；分解 rollout/sync/update 时间；最多两档 LR | G3/C2 | PLANNED；真实模型执行未授权 |
+| D19 | OPD 学习动态与大词表性能 | real full-vocab KL 数值/梯度、相同 prefix 与 Teacher freeze；测 chunk/recompute 的时间和内存，分析 KL/NLL/entropy 与 Teacher 错误迁移；最多两档 LR | G4/C3 | PLANNED；真实模型执行未授权 |
+| D20 | 端到端性能优化与训练预算 | 四类 100-step profile；针对最大瓶颈做同条件优化对照，报告内核和端到端收益/代价；重算成本并留 30%；在主训练前固定后端、精度、batch/U/cap 和 run order | C5 / execution READY | PLANNED；真实模型执行未授权 |
 
 D13–D20 是正式训练的必要前置条件。任何 gate 失败都先回到对应模块修正；不能用量化 Teacher、top-k KL、旧模型、删臂或单 seed 替代来绕过。
 
@@ -66,8 +66,8 @@ D13–D20 是正式训练的必要前置条件。任何 gate 失败都先回到�
 
 | ID | 交付物 | 规模 | 必须通过的 exit criteria | 状态 |
 |---|---|---:|---|---|
-| D21 | A0–A4 全部 Stage 1 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 midpoint checkpoints；U=2M；相同 objective recipe；学习动态和成本曲线齐备 | PLANNED；GPU 未授权 |
-| D22 | 统一 reset 后全部 Stage 2 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 endpoints；每 stage 重置 optimizer/scheduler；累计 60M；记录顺序切换后的动态和失败，G5 通过 | PLANNED；GPU 未授权 |
+| D21 | A0–A4 全部 Stage 1 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 midpoint checkpoints；U=2M；相同 objective recipe；学习动态和成本曲线齐备 | PLANNED；真实模型执行未授权 |
+| D22 | 统一 reset 后全部 Stage 2 | 5 arms × 3 paired seeds × 2M = 30M Student loss tokens | 15/15 endpoints；每 stage 重置 optimizer/scheduler；累计 60M；记录顺序切换后的动态和失败，G5 通过 | PLANNED；真实模型执行未授权 |
 
 正式矩阵只有 15 条 arm-seed run sequence，但每条包含两个有独立预算与 checkpoint 的 stage。D21 与 D22 分开，是为了在任何 Stage 2 结果出现前锁住中点证据与 reset 语义。
 
@@ -113,6 +113,6 @@ X01–X08 only by a new decision
 ```
 
 - 每轮聚焦一个主要技术目标，可修改必要依赖；完成对应验证后推进，不以额外审计、审批或 commit 仪式作为前置。
-- 当前只允许继续 D09–D12 的 CPU 工作；不得因为模块已列入计划而自动获得 GPU、模型下载或训练授权。
-- D13 进入前必须由用户明确切换 accelerator execution 状态；D20 未通过时不得启动 D21。
+- 2026-09-22 用户恢复 D13 tiny GPU 实验，现已完成；GPU 可用不自动扩展到真实模型/数据下载或正式训练。
+- D14 的真实模型执行仍需明确授权；D20 未通过时不得启动 D21。
 - 区分代码完成、CPU 学习示例和真实研究结果；模块数量、测试数量与哈希记录都不能替代算法/性能结论。

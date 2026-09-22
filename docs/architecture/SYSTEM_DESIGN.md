@@ -14,7 +14,7 @@
 | Performance | 分段 timer、有效 tokens/s、峰值内存；chunk/recompute、batch/rollout 优化 | D11 CPU 已完成 → D18–D20 GPU |
 | Analysis | 学习动态、能力/retention、错误迁移、accuracy–cost | D12 合成学习已完成 → D23 真实结果 |
 
-D05–D08 为这些路径提供现成的数据、reward、评测和统计支持。CPU 阶段使用本地初始化的小模型，验证实际参数更新与学习行为；D13 的设备、累积、重计算与续训已接入同一 Trainer 并通过 CPU 测试，GPU 实测因其他任务占用暂停；真实模型下载尚未授权。性能测量见 `docs/planning/PERFORMANCE_PLAN.md`。
+D05–D08 为这些路径提供现成的数据、reward、评测和统计支持。CPU 阶段使用本地初始化的小模型，验证实际参数更新与学习行为；D13 的设备、累积、重计算与续训已接入同一 Trainer，并通过 CPU 回归与 RTX 5070 Ti 实测，结果见 `ACCELERATOR_RUNTIME.md`；真实模型下载尚未授权。性能测量见 `docs/planning/PERFORMANCE_PLAN.md`。
 
 ## 聚焦后的数据流
 

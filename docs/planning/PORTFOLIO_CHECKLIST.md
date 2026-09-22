@@ -7,8 +7,8 @@
 | 方向 | 需要讲清的技术内容 | 交付 | 当前证据范围 |
 |---|---|---|---|
 | 算法 | CE/GRPO/reverse-KL 梯度、normalization、mask、on-policy 与顺序作用 | 公式与实现、解析/reference 对照、失败案例 | D01–D04 CPU 实现已完成，真实模型效果待测 |
-| 框架 | 模型/LoRA 接入、rollout–score–update、Teacher/old-policy、stage reset | 训练循环、时序图、可运行 CPU 示例及后续 Gemma 路径 | D09–D12 CPU 已完成，Gemma 路径待做 |
-| 性能 | LM-head/KL 中间张量、分块/重计算、rollout 与通信瓶颈 | baseline/profile/优化对照、吞吐与内存图、取舍分析 | D11 CPU 已实测，包含重计算负结果；无稳定完整 step 加速结论，D18–D20 待测 |
+| 框架 | 模型/LoRA 接入、rollout–score–update、Teacher/old-policy、stage reset | 训练循环、时序图、可运行 CPU 示例及后续 Gemma 路径 | D09–D12 CPU 与 D13 单卡 tiny 已验证，Gemma 路径待做 |
+| 性能 | LM-head/KL 中间张量、分块/重计算、rollout 与通信瓶颈 | baseline/profile/优化对照、吞吐与内存图、取舍分析 | D11 CPU 和 D13 tiny GPU 已实测，包含耗时/显存取舍及波动；D18–D20 真实模型待测 |
 | 指标 | accuracy/pass@k、entropy/KL/clip/有效组率、retention、成本和错误迁移 | 主表、行为曲线、顺序图、accuracy–cost 图 | D05–D08 支持和 D12 合成模型曲线已完成；真实模型结果待测 |
 
 ## 代码与演示
@@ -41,4 +41,4 @@ DPO 推导与 shadow 实现作为学习附录；不要求为了作品完整而�
 
 每个量化字段附测量结果与配置入口即可。核函数、端到端吞吐、模型效果分别限定范围；不使用内部资产或他人成果，不把预期写成实测。G6 复核已有材料的准确性，不新建审计平台。
 
-D13 可补充“实现 token 归一化梯度累积、activation checkpointing 与精确随机续训，并通过 CPU 对照测试”。CUDA/BF16 路径目前尚未实测，不能写 GPU 训练完成、显存节省或 GPU 加速数字。
+D13 可补充“在 RTX 5070 Ti 上验证 SFT/GRPO/OPD 的 BF16 训练、token 归一化梯度累积、重计算与精确随机续训，修复非有限 loss 的整批更新清理，完成 12 组显存/延迟对照”。数值误差、AdamW 舍入放大及性能负结果见 `docs/architecture/ACCELERATOR_RUNTIME.md`。这些是 tiny GPU 框架成果；真实 Gemma 和正式算法准确率仍未测量。

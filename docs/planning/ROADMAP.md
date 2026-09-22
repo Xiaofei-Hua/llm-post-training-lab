@@ -1,8 +1,8 @@
 # 技术开发与训练路线
 
-> 2026-09-09 更新。当前 D01–D12 已完成，D13 实现及 CPU 验证就绪；GPU 被另一任务使用，实测暂停。真实模型/GPU 阶段的周数从取得资源后起算，不构成当前训练承诺。
+> 2026-09-22 更新。D01–D13 已完成，其中 D13 为 RTX 5070 Ti 上的合成 tiny 实测；下一模块 D14 真实模型接入尚未执行。后续周数为资源与授权闭合后的参考安排。
 
-## 近期：CPU 算法、框架与性能
+## 已完成：CPU 算法、框架与单卡运行时
 
 | 顺序 | 主要目标 | 实际工作 | 可展示交付 |
 |---|---|---|---|
@@ -10,11 +10,11 @@
 | D10（已完成） | 统一训练循环 | 当前策略采样→reward/Teacher→objective→backward→optimizer；SFT/GRPO/OPD 切换及 stage reset | 见 `docs/architecture/CPU_TRAINING_LOOP.md` |
 | D11（已完成） | 性能剖析与优化 | CE/KL/完整 step baseline；rollout last-position head 优化与复测 | 时间/RSS、重计算负结果；见 `docs/performance/CPU_BENCHMARK.md` |
 | D12（已完成） | CPU 学习实验 | 合成任务五臂两阶段三 seed、学习动态与错误 Teacher 对照 | 见 `docs/experiments/CPU_LEARNING_EXPERIMENT.md` |
-| D13（进行中） | 单 GPU runtime | 共享 Trainer、BF16、累积/重计算、续训已实现；CPU 测试通过，GPU 实测暂停 | 见 `docs/architecture/ACCELERATOR_RUNTIME.md` |
+| D13（已完成） | 单 GPU runtime | CUDA/BF16、累积/重计算、精确续训与失败恢复通过；12 组性能实测，保留负结果和波动 | 见 `docs/architecture/ACCELERATOR_RUNTIME.md` |
 
 每轮围绕一个主要技术目标推进，可以修改必要依赖。开发 smoke 和 microbenchmark 不要求新建确认性 claim；完成有用测量后进入下一目标。D05–D08 按需修复，不再为扩充 schema、hash 或审计报告安排独立开发周期。
 
-CPU tiny 模型用于验证训练算法和框架，不承担真实 Gemma 的选参、性能预测或 C1/C2 结论。真实模型/数据未下载，当前暂停 MPS/CUDA；D13 剩余 GPU 验收见 `docs/architecture/ACCELERATOR_RUNTIME.md`。
+CPU/GPU tiny 模型用于验证训练算法和框架，不承担真实 Gemma 的选参、性能预测或 C1/C2 结论。D13 实测见 `docs/architecture/ACCELERATOR_RUNTIME.md`；下一步 D14 需接入真实模型与 tokenizer，真实模型/数据下载和正式训练仍未执行。
 
 ## 后续：资源就绪后的约 12 周参考安排
 

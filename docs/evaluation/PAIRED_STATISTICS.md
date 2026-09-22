@@ -21,7 +21,7 @@ D08 把 D07 冻结的逐题 greedy correctness 转成可审计的确认性推断
 - 非 greedy、每题不止一个 correctness、题目数或 item ID/order 不一致；
 - 缺少 `level`、重复 report hash 或不完整 arm-seed 网格。
 
-产出的 `PairedPanel` 只含 report/checkpoint hashes、run ID、item ID/index、stratum 和 `5 arms × 3 seeds` Boolean correctness。`panel_sha256` 绑定完整规范化内容。training seed 标签来自后续 D11 run ledger；D07 本身没有能力证明调用方给 checkpoint 标注了正确的训练 seed。
+产出的 `PairedPanel` 只含 report/checkpoint hashes、run ID、item ID/index、stratum 和 `5 arms × 3 seeds` Boolean correctness。`panel_sha256` 绑定完整规范化内容。training seed 标签来自正式训练的 checkpoint/arm/seed 记录；D07 本身没有能力证明调用方给 checkpoint 标注了正确的训练 seed。D11 是 CPU 性能模块。
 
 ## 冻结 estimand
 

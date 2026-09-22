@@ -148,12 +148,12 @@ uv run python scripts/audit_data_trust.py
 
 ## 验证与未完成边界
 
-当前全仓 `436` 个 CPU tests 通过，包含累计 `1,175` 个 Hypothesis 生成案例；D06 定向 `96` 个 tests 覆盖 strict schema、license/revision、payload lineage/cycle/external ledger、Git-bound transforms、三维 family leakage、split permutation、manifest tamper/dirty-report/TOCTOU、HEAD 移动竞态、context 与跨-message aggregate、exact/fuzzy/containment/review、短答案、raw-text exclusion、transitive quarantine、golden expectation 和不可注入的 Git provenance。
+D06 验收时全仓 `436` 个 CPU tests 通过，包含累计 `1,175` 个 Hypothesis 生成案例；D06 定向 `96` 个 tests 覆盖 strict schema、license/revision、payload lineage/cycle/external ledger、Git-bound transforms、三维 family leakage、split permutation、manifest tamper/dirty-report/TOCTOU、HEAD 移动竞态、context 与跨-message aggregate、exact/fuzzy/containment/review、短答案、raw-text exclusion、transitive quarantine、golden expectation 和不可注入的 Git provenance。
 
-仍未完成：
+后续边界（2026-09-22 更新，以上计数为 D06 完成时记录）：
 
-- D07 sealed benchmark runner 与 evaluator result schema；
-- D10/D11 训练 runtime 的字段访问控制与 run provenance；
+- D07 sealed benchmark runner 与 evaluator result schema 已完成；真实 benchmark adapter、人审和 G1 仍待 D15；
+- D15 真实数据与训练 runtime 接线时落实字段访问边界，复用已有记录；D10–D13 tiny 训练与性能验证已完成，不另建 D11 provenance ledger；
 - D15 真实数据下载、card/license bytes、实际 revisions、全量污染 pair review、目标 count materialization 与 sealed manifest；
-- D15/D12 实际规模 profile 与 provenance 扩展：aggregate/超长单行、n-gram postings/match list、ledger/transform lookup 的峰值，以及 `.python-version`/`pyproject.toml` 和 Python Unicode database 版本；
+- D15 按真实数据规模测量 aggregate/超长单行、n-gram postings/match list 与 transform lookup 的内存和时间；只处理实际阻塞，D12 是已完成的 CPU 学习实验；
 - G1 只有 D07、D15 和 `EVAL-002` 全部完成后才可通过。

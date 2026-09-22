@@ -86,7 +86,7 @@ L_r,m = W × S_r,m / N_global
 
 ## 数值与失败语义
 
-- FP16/BF16/FP32 输入默认用 FP32 projection、log-softmax、KL 与累加；任一相关输入为 FP64 时默认用 FP64；显式 override 只允许 FP32/FP64；
+- FP16/BF16/FP32 输入在无 autocast 时默认用 FP32 projection；启用 autocast 时 projection 遵循其精度（D13 为 BF16），随后 log-softmax、KL 与累加用 FP32。任一相关输入为 FP64 时默认用 FP64；`loss_compute_dtype` 显式 override 只允许 FP32/FP64，FP32 override 不关闭调用方的 autocast；
 - selected raw/transformed logits、per-token KL 与 entropy 必须有限；unselected sentinel 不参与 projection 或检查；
 - KL 不做静默 clamp，避免改变 reverse-KL 梯度；极小 Teacher probability 通过有限 `log_softmax` 保留惩罚；
 - mask 必须是同 device 的 rank-2 Boolean tensor，position 0 永远不可选；
@@ -101,7 +101,7 @@ uv run pytest -q tests/test_opd_reverse_kl.py
 uv run pytest -q
 ```
 
-D04 有 37 个 CPU tests，其中包含 100 个 Hypothesis 生成 batch；覆盖 full-vocabulary value/gradient oracle、autograd gradcheck、reverse/forward 方向、零点与 logit-shift 不变性、causal shift、不同 hidden width、Teacher 隔离、scale/softcap/temperature、chunk projection 与 saved-tensor 边界、BF16/FP32、不均匀 accumulation/DDP、空 rank、D01→D04 接线及 hard failures。仓库当前全量共 108 个 tests、575 个生成案例。
+D01–D04 首批验收时，D04 有 37 个 CPU tests，其中包含 100 个 Hypothesis 生成 batch；覆盖 full-vocabulary value/gradient oracle、autograd gradcheck、reverse/forward 方向、零点与 logit-shift 不变性、causal shift、不同 hidden width、Teacher 隔离、scale/softcap/temperature、chunk projection 与 saved-tensor 边界、BF16/FP32、不均匀 accumulation/DDP、空 rank、D01→D04 接线及 hard failures。当时全量共 108 个 tests、575 个生成案例；后续修复与当前验收见 `docs/experiments/D01_D13_REVIEW.md`。
 
 验证没有下载模型或数据，没有访问 MPS/CUDA。D04 通过不等于 C3 或 G4 已完成：真实 E2B/E4B tokenizer/vocabulary、model-output parity、Teacher freeze、on-policy refresh 和 full-size memory profile 尚未运行。
 

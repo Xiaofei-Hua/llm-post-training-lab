@@ -407,6 +407,31 @@ def test_ddp_scaling_reconstructs_global_token_mean_gradient() -> None:
     torch.testing.assert_close(ddp_averaged_gradient, expected_gradient, rtol=1e-12, atol=1e-12)
 
 
+@pytest.mark.parametrize("linear", [False, True])
+@pytest.mark.parametrize("sentinel", [torch.nan, torch.inf, 1e300])
+def test_empty_shard_ignores_nonfinite_sentinels_and_has_zero_gradients(linear, sentinel):
+    tensor_options = {"dtype": torch.float64, "requires_grad": True}
+    activations = torch.tensor([[[sentinel, torch.inf], [0.0, 0.0]]], **tensor_options)
+    weight = torch.tensor([[sentinel, 1.0], [1.0, 1.0]], **tensor_options)
+    bias = torch.tensor([sentinel, 0.0], **tensor_options)
+    labels = torch.full((1, 2), -100, dtype=torch.long)
+    mask = torch.zeros((1, 2), dtype=torch.bool)
+    normalization = {
+        "global_token_count": 3, "ddp_world_size": 2, "loss_compute_dtype": torch.float32
+    }
+    if linear:
+        output = chunked_masked_causal_linear_cross_entropy(
+            activations, weight, labels, mask, lm_head_bias=bias, **normalization
+        )
+        inputs = (activations, weight, bias)
+    else:
+        output = masked_causal_cross_entropy(activations, labels, mask, **normalization)
+        inputs = (activations,)
+    assert output.loss.item() == output.loss_sum.item() == 0.0
+    for gradient in torch.autograd.grad(output.loss, inputs):
+        assert torch.equal(gradient, torch.zeros_like(gradient))
+
+
 def test_ddp_allows_empty_local_shard_when_global_count_is_positive() -> None:
     hidden = torch.randn((1, 4, 3), dtype=torch.float64, requires_grad=True)
     weight = torch.randn((5, 3), dtype=torch.float64, requires_grad=True)

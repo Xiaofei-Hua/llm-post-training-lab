@@ -265,52 +265,61 @@ class Trainer:
                         teacher_features = self.teacher.forward_features(ids, attention)
                     result["timings_ms"]["score"] += (self._timestamp() - teacher_start) * 1000
                 loss_start = self._timestamp()
-                with self.autocast():
-                    features = self.student.forward_features(ids, attention)
-                    if self.objective == "sft":
-                        output = chunked_masked_causal_linear_cross_entropy(
-                            features.hidden_states,
-                            features.lm_head_weight,
-                            ids,
-                            mask,
-                            lm_head_bias=features.lm_head_bias,
-                            max_tokens_per_chunk=self.config.max_tokens_per_chunk,
-                            global_token_count=selection.selected_tokens,
-                            ddp_world_size=1,
-                        )
-                        with torch.no_grad():
-                            _, entropy = selected_token_statistics(features, ids, mask)
-                        entropy_sum += entropy.sum().item()
-                    elif self.objective == "opd":
-                        output = chunked_masked_causal_linear_reverse_kl(
-                            features.hidden_states,
-                            features.lm_head_weight,
-                            teacher_features.hidden_states,
-                            teacher_features.lm_head_weight,
-                            mask,
-                            student_lm_head_bias=features.lm_head_bias,
-                            teacher_lm_head_bias=teacher_features.lm_head_bias,
-                            max_tokens_per_chunk=self.config.max_tokens_per_chunk,
-                            global_token_count=selection.selected_tokens,
-                            ddp_world_size=1,
-                        )
-                        entropy_sum += output.student_entropy_sum.item()
-                    else:
-                        if batch.policy_version != self.policy_version:
-                            raise RuntimeError("refuse stale-policy rollout")
-                        log_probs, entropy = selected_token_statistics(features, ids, mask)
-                        output = dr_grpo_token_surrogate(
-                            log_probs,
-                            batch.old_log_probs[rows],
-                            group.advantages[rows],
-                            mask,
-                            global_active_completion_count=group.active_completion_count,
-                            max_completion_length=rollout.max_new_tokens,
-                            group_size=rollout.group_size,
-                        )
-                        entropy_sum += entropy.sum().item()
-                        clip_sum += output.local_clip_fraction * output.local_token_count
-                        ratio_sum += output.importance_ratio_sum.item()
+                try:
+                    with self.autocast():
+                        features = self.student.forward_features(ids, attention)
+                        if self.objective == "sft":
+                            output = chunked_masked_causal_linear_cross_entropy(
+                                features.hidden_states,
+                                features.lm_head_weight,
+                                ids,
+                                mask,
+                                lm_head_bias=features.lm_head_bias,
+                                max_tokens_per_chunk=self.config.max_tokens_per_chunk,
+                                global_token_count=selection.selected_tokens,
+                                ddp_world_size=1,
+                            )
+                            with torch.no_grad():
+                                _, entropy = selected_token_statistics(features, ids, mask)
+                            entropy_sum += entropy.sum().item()
+                        elif self.objective == "opd":
+                            output = chunked_masked_causal_linear_reverse_kl(
+                                features.hidden_states,
+                                features.lm_head_weight,
+                                teacher_features.hidden_states,
+                                teacher_features.lm_head_weight,
+                                mask,
+                                student_lm_head_bias=features.lm_head_bias,
+                                teacher_lm_head_bias=teacher_features.lm_head_bias,
+                                max_tokens_per_chunk=self.config.max_tokens_per_chunk,
+                                global_token_count=selection.selected_tokens,
+                                ddp_world_size=1,
+                            )
+                            entropy_sum += output.student_entropy_sum.item()
+                        else:
+                            if batch.policy_version != self.policy_version:
+                                raise RuntimeError("refuse stale-policy rollout")
+                            log_probs, entropy = selected_token_statistics(features, ids, mask)
+                            output = dr_grpo_token_surrogate(
+                                log_probs,
+                                batch.old_log_probs[rows],
+                                group.advantages[rows],
+                                mask,
+                                global_active_completion_count=group.active_completion_count,
+                                max_completion_length=rollout.max_new_tokens,
+                                group_size=rollout.group_size,
+                            )
+                            entropy_sum += entropy.sum().item()
+                            clip_sum += output.local_clip_fraction * output.local_token_count
+                            ratio_sum += output.importance_ratio_sum.item()
+                except FloatingPointError as error:
+                    # GRPO/KL kernels reject nonfinite values before returning
+                    # a loss. Roll back earlier microbatches just as for a NaN
+                    # loss tensor; schema/programming errors still propagate.
+                    loss_ms += (self._timestamp() - loss_start) * 1000
+                    result["status"] = "skipped_nonfinite_loss"
+                    result["numerical_failure"] = str(error)
+                    break
                 loss_end = self._timestamp()
                 loss_ms += (loss_end - loss_start) * 1000
                 if not bool(torch.isfinite(output.loss)):

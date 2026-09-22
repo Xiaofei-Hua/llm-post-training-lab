@@ -197,12 +197,8 @@ def _normalization_contract(
 
 
 def _safe_differentiable_zero(*values: Tensor, dtype: torch.dtype) -> Tensor:
-    terms = []
-    for value in values:
-        anchor = value.reshape(-1)[0]
-        finite_anchor = torch.where(torch.isfinite(anchor), anchor, torch.zeros_like(anchor))
-        terms.append(finite_anchor.to(dtype=dtype) * 0.0)
-    return torch.stack(terms).sum()
+    # Empty views connect every Student tensor without reading unused values.
+    return torch.stack([value[:0].sum(dtype=dtype) for value in values]).sum()
 
 
 def _transform_logits(
@@ -216,6 +212,10 @@ def _transform_logits(
     if transform.scale != 1.0:
         transformed = transformed * transform.scale
     if transform.final_softcap is not None:
+        # tanh maps infinities to finite values, concealing upstream projection
+        # or scaling overflow and potentially producing a plausible loss.
+        if not bool(torch.isfinite(transformed).all().item()):
+            raise FloatingPointError(f"selected {name} logits must be finite before softcap")
         transformed = transform.final_softcap * torch.tanh(transformed / transform.final_softcap)
     if transform.temperature != 1.0:
         transformed = transformed / transform.temperature

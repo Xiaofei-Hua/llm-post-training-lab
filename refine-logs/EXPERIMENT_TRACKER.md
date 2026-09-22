@@ -1,6 +1,6 @@
 # Experiment Tracker
 
-> 2026-09-09 更新：D01–D12 CPU 完成，D13 代码/CPU 验证完成，GPU 实测因资源占用暂停；真实模型 runs 均 `NOT_STARTED`。D09–D12 合成实测单独保存，不属于正式研究结果。
+> 2026-09-22 更新：D01–D12 CPU 完成，D13 单 GPU tiny 实测完成；真实模型 runs 均 `NOT_STARTED`。开发合成实测单独保存，不属于正式研究结果。
 > Formal seeds：`101, 202, 303`。
 
 ## Module scope
@@ -8,13 +8,13 @@
 | Layer | IDs | Count | Completion denominator | Status |
 |---|---|---:|---|---|
 | CPU algorithm/framework | D01–D12 | 12 | core | 12 COMPLETE |
-| accelerator readiness and pilots | D13–D20 | 8 | core | 0/8；D13 CPU 已验证，GPU 实测暂停 |
-| formal campaign and evidence | D21–D24 | 4 | core | 0/4；GPU 未授权 |
+| accelerator readiness and pilots | D13–D20 | 8 | core | 1/8；D13 单 GPU tiny 已验证 |
+| formal campaign and evidence | D21–D24 | 4 | core | 0/4；正式训练未授权 |
 | post-core research extensions | X01–X08 | 8 | excluded | 0/8；DEFERRED_UNTIL_D24 |
 
-核心进度分母为 `24`，当前 `12/24`；包含延后研究线的目录总数为 `32`。12 个学习课程章节不计入执行进度。完整定义以 `docs/planning/DEVELOPMENT_MODULES.md` 为准，当前下一模块是 D13。
+核心进度分母为 `24`，当前 `13/24`；包含延后研究线的目录总数为 `32`。12 个学习课程章节不计入执行进度。完整定义以 `docs/planning/DEVELOPMENT_MODULES.md` 为准，当前下一模块是 D14。
 
-## 近期 CPU 技术队列
+## 已完成的 CPU/GPU 开发实验
 
 | Run ID | Module | 技术问题/对照 | 交付与指标 | Dependency | Status |
 |---|---|---|---|---|---|
@@ -24,14 +24,15 @@
 | PERF-CPU-KL | D11 | dense exact KL vs chunk/recompute | 两档形状、时间/RSS/梯度误差，含重计算负结果 | DEV-D10 | COMPLETE（CPU） |
 | PERF-CPU-STEP | D11 | 完整训练 step baseline vs 瓶颈驱动优化 | 最后位置 head 优化与复测；不支持稳定完整 step 加速 | DEV-D10 | COMPLETE（CPU） |
 | DEV-D12 | D12 | 合成可验证任务上的五臂两阶段学习 | 15 条 paired-seed runs、30 阶段精确预算、学习曲线与错误 Teacher 对照；`artifacts/cpu/d12_learning.json` | PERF-CPU-CE/KL/STEP | COMPLETE（CPU synthetic） |
+| DEV-D13 | D13 | CUDA BF16、累积/重计算、精确续训与数值失败恢复 | 六组数值/累积/续训、六组故障恢复、12 组性能对照；`artifacts/gpu/d13_runtime.json` | DEV-D12 | COMPLETE（single-GPU tiny synthetic） |
 
-仅用本地初始化 tiny 模型和合成输入，不下载真实模型/数据或运行 MPS/CUDA。上述开发实验只需技术问题、baseline 与测量，不新增 C1/C2 式研究 claim。已运行结果见 D09 模型说明、D11 `docs/performance/CPU_BENCHMARK.md` 与 D12 `docs/experiments/CPU_LEARNING_EXPERIMENT.md`；下方真实实验状态保持未开始。
+仅用本地初始化 tiny 模型和合成输入。D09–D12 在 CPU 运行，D13 使用单 GPU；不下载真实模型/数据。上述开发实验只需技术问题、baseline 与测量，不新增 C1/C2 式研究 claim。已运行结果见 D09 模型说明、D11 `docs/performance/CPU_BENCHMARK.md` 与 D12 `docs/experiments/CPU_LEARNING_EXPERIMENT.md`；下方真实实验状态保持未开始。
 
 ### GPU/full-training coverage
 
 | Module | Tracker coverage | Exit condition |
 |---|---|---|
-| D13 | G0 metadata | accelerator 授权、BF16/distributed update 可用；初始 latency/memory/communication 测量 |
+| D13 | DEV-D13 / G0 tiny scope | 单卡授权、BF16 update/续训/失败恢复与 latency/memory 实测完成；通信不适用 |
 | D14 | C0-001 | real E2B/E4B text/LoRA forward/backward/update 可用 |
 | D15 | DATA-001/002, EVAL-001/002, EV-BASE | 数据隔离与 evaluator 可用；任务分布和 Base 指标 |
 | D16 | SFT-*-OVERFIT, SFT-*-PILOT | Student/Teacher SFT recipes selected without gate leakage |
@@ -48,7 +49,7 @@
 
 | ID | Gate | Evidence required | Status | Blocking next |
 |---|---|---|---|---|
-| G0 | 资源与授权 | D13 tiny 单卡范围已确认；用户因其他任务占用暂停 GPU，kernel/性能待测；真实模型资源闭合留待 D20/C5 | PARTIAL / GPU_PAUSED | 所有 GPU 正式运行 |
+| G0 | 资源与授权 | D13 tiny 单卡授权、CUDA/BF16 与性能实测完成；真实模型授权与 campaign 资源闭合仍待完成 | COMPLETE_D13 / PARTIAL_REAL | 所有 GPU 正式运行 |
 | G1 | 数据与 evaluator | 来源/license、family split、去污染、≥99% 人工抽查一致率 | NOT_STARTED | Anchor 与 formal eval |
 | G2 | Anchor/Teacher | E2B anchor reproducible；E4B independent gate pass | NOT_STARTED | OPD 与主矩阵 |
 | G3 | GRPO correctness | loss/reward/sync/policy-age/skipped-group tests | NOT_STARTED | A1/A3/A4 |

@@ -94,6 +94,7 @@ def make_trainer(
     checkpoint=False,
     seed=13,
     budget=257,
+    device="cuda:0",
 ) -> Trainer:
     student = TinyCausalLM(SMALL, seed=seed)
     teacher = TinyCausalLM(replace(SMALL, hidden_size=48, intermediate_size=96), seed=seed + 10)
@@ -104,7 +105,7 @@ def make_trainer(
         teacher=teacher,
         reward_fn=lambda c, e: float(c[0] >= 8),
         config=TrainerConfig(
-            device="cuda:0",
+            device=device,
             precision=precision,
             rollout=RolloutConfig(max_new_tokens=3),
             microbatch_size=microbatch,
@@ -201,14 +202,17 @@ def numerical_precision() -> list[dict]:
     return results
 
 
-def accumulation_checks() -> list[dict]:
+def accumulation_checks(*, device="cuda:0") -> list[dict]:
     results = []
     for mode in ("text", "lora"):
         for objective in ("sft", "grpo", "opd"):
-            full = make_trainer(objective=objective, mode=mode, budget=11)
+            full = make_trainer(objective=objective, mode=mode, budget=11, device=device)
             split = make_trainer(
-                objective=objective, mode=mode, microbatch=2, checkpoint=True, budget=11
+                objective=objective, mode=mode, microbatch=2, checkpoint=True,
+                budget=11, device=device,
             )
+            initial = vector(full.student).clone().double()
+            assert torch.equal(vector(full.student), vector(split.student))
             a, b = full.step(EXAMPLES), split.step(EXAMPLES)
             assert a["status"] == b["status"] == "updated"
             assert a["loss_tokens"] == b["loss_tokens"]
@@ -216,19 +220,59 @@ def accumulation_checks() -> list[dict]:
             grad_error = difference(
                 vector(split.student, gradients=True), vector(full.student, gradients=True)
             )
+            loss_error = abs(a["loss"] - b["loss"])
+            norm_error = abs(a["gradient_norm"] - b["gradient_norm"]) / max(
+                abs(a["gradient_norm"]), 1e-12
+            )
+            # Clipping erases global scaling mistakes; compare the norm that
+            # Trainer records BEFORE clipping as well as the clipped direction.
+            assert loss_error < 5e-6, (mode, objective, "loss", loss_error)
+            assert norm_error < 5e-5, (mode, objective, "unclipped gradient norm", norm_error)
             parameter_error = difference(vector(split.student), vector(full.student))
             assert grad_error["relative_l2"] < 5e-5, (mode, objective, grad_error)
-            assert parameter_error["max_absolute"] < 2e-5, (mode, objective, parameter_error)
+            # On CUDA, changing the GEMM batch shape changes FP32 reduction
+            # rounding. AdamW's first step can amplify tiny gradient differences
+            # near epsilon, so parameter closeness is not a gradient oracle.
+            # Verify BOTH actual updates against the independent FP64 formula
+            # for t=1, zero weight decay and the observed clipped gradients.
+            # Keep the unfiltered cross-batch parameter drift in the report.
+            references, update_errors = [], []
+            for current, record in ((full, a), (split, b)):
+                group = current.optimizer.param_groups[0]
+                assert group["weight_decay"] == 0
+                gradient = vector(current.student, gradients=True).double()
+                expected = initial - record["learning_rate"] * gradient / (
+                    gradient.abs() + group["eps"]
+                )
+                error = difference(vector(current.student).double(), expected)
+                assert error["max_absolute"] < 2e-7, (mode, objective, error)
+                references.append(expected)
+                update_errors.append(error)
             results.append(
                 {
                     "mode": mode,
                     "objective": objective,
                     "gradient_error": grad_error,
                     "parameter_error": parameter_error,
-                    "loss_error": abs(a["loss"] - b["loss"]),
+                    "adamw_reference_error": dict(
+                        zip(("full", "split"), update_errors, strict=True)
+                    ),
+                    "predicted_parameter_difference": difference(references[1], references[0]),
+                    "optimizer_reference": "FP64 theta0 - lr * clipped_grad / (abs(clipped_grad) "
+                    "+ eps); AdamW first update, zero weight decay",
+                    "loss_error": loss_error,
+                    "unclipped_gradient_norm": {
+                        "full": a["gradient_norm"], "split": b["gradient_norm"]
+                    },
+                    "unclipped_gradient_norm_relative_error": norm_error,
                     "microbatches": b["microbatches"],
                     "loss_tokens": b["loss_tokens"],
-                    "tolerance": {"gradient_relative_l2": 5e-5, "parameter_absolute": 2e-5},
+                    "tolerance": {
+                        "gradient_relative_l2": 5e-5,
+                        "unclipped_gradient_norm_relative": 5e-5,
+                        "loss_absolute": 5e-6,
+                        "adamw_reference_absolute": 2e-7,
+                    },
                 }
             )
     return results
@@ -296,6 +340,62 @@ def resume_checks(checkpoint_directory: Path) -> list[dict]:
                     "stages_loss_tokens": [257, 7],
                     "checkpoint_bytes": path.stat().st_size,
                     "records": trainer.records,
+                }
+            )
+    return results
+
+
+def nonfinite_checks() -> list[dict]:
+    """A later bad microbatch must discard the whole BF16 logical update."""
+    results = []
+    for objective in ("sft", "grpo", "opd"):
+        for failure in ("loss", "gradient"):
+            trainer = make_trainer(
+                objective=objective, precision="bf16", microbatch=1, checkpoint=True
+            )
+            initial = vector(trainer.student).clone()
+            calls = 0
+
+            def corrupt_second(value):
+                nonlocal calls
+                calls += 1
+                return value * torch.nan if calls == 2 else value
+
+            def corrupt_loss(module, inputs, output, corrupt=corrupt_second):
+                if module.training and torch.is_grad_enabled():
+                    return corrupt(output)
+                return output
+
+            hook = (
+                trainer.student.final_norm.register_forward_hook(corrupt_loss)
+                if failure == "loss"
+                else trainer.student.token_embedding.weight.register_hook(corrupt_second)
+            )
+            try:
+                skipped = trainer.step(EXAMPLES)
+            finally:
+                hook.remove()
+            assert calls >= 2
+            assert skipped["status"] == f"skipped_nonfinite_{failure}"
+            assert trainer.budget.consumed_tokens == trainer.policy_version == 0
+            assert not trainer.optimizer.state and trainer.scheduler.last_epoch == 0
+            assert all(p.grad is None for p in trainer.parameters)
+            assert torch.equal(initial, vector(trainer.student))
+            recovered = trainer.step(EXAMPLES)
+            assert recovered["status"] == "updated"
+            assert not torch.equal(initial, vector(trainer.student))
+            results.append(
+                {
+                    "objective": objective,
+                    "failure": failure,
+                    "precision": "bf16",
+                    "microbatch_size": 1,
+                    "activation_checkpointing": True,
+                    "parameters_unchanged_after_skip": True,
+                    "optimizer_and_budget_unchanged_after_skip": True,
+                    "gradients_cleared_after_skip": True,
+                    "skipped": skipped,
+                    "recovered": recovered,
                 }
             )
     return results
@@ -444,6 +544,7 @@ def main(argv=None):
             "scope": "D13 synthetic tiny-model single-GPU runtime; no real-model/data training",
             "environment": {
                 "python": platform.python_version(),
+                "platform": platform.platform(),
                 "torch": str(torch.__version__),
                 "cuda_build": torch.version.cuda,
                 "gpu": torch.cuda.get_device_name(0),
@@ -470,6 +571,8 @@ def main(argv=None):
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
         result["resume"] = resume_checks(checkpoint_dir)
         print("BF16 exact resume and stage transition checks passed", flush=True)
+        result["nonfinite"] = nonfinite_checks()
+        print("BF16 nonfinite loss/gradient rollback and recovery checks passed", flush=True)
         gc.collect()
         torch.cuda.empty_cache()
         result["profiles"] = []

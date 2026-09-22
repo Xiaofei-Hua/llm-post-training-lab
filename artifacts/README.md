@@ -12,4 +12,6 @@
 - `audits/D07_EVALUATOR_AUDIT.json`：D07 synthetic sealed-evaluator fixture 的正式 CPU audit；绑定 implementation `c948fe2eae50289b78513a3a9513e188bff54a98`，canonical report hash `a6c1bed7e74fcc9bf3448fa095535237c27f183cd67938799d9d96bc40b8abf4`。报告只包含 implementation/runtime/fixture/evaluator/record/report hashes 与 greedy/sampling 计数，不含 prompt、prediction、candidate 或 reference。它证明冻结评测机制可复现，不是 Gemma 4/MATH-500 结果，也不代表官方 adapter、人审或 G1 已完成。
 - `audits/D08_PAIRED_STATISTICS_AUDIT.json`：D08 synthetic paired-statistics fixture 的正式 CPU audit；绑定 implementation `9a5cee946c617acca6d9e5a167fa725d67798eef`，canonical audit hash `099b4251e2056f990aa7175485334506d4c1a03a3c3b5d914928fe15f406c5d9`。报告包含 outcome-independent RNG design、完整 10k/100k analysis、runtime/input/Git hashes 与 synthetic decisions，不含 prompt、generation 或 reference。8-item effect/null/equivalence 是 regression oracle，不是算法效果，也不完成真实 STAT-C1/C2 或 G5/G6。
 
-D13 的 GPU 验证目前暂停，尚无 `gpu/d13_runtime.json` 或 GPU 性能图表；后续仅实际运行通过后保存。训练 checkpoint 写入忽略的 `outputs/d13/checkpoints/`，不提交。
+`gpu/d13_runtime.json`：RTX 5070 Ti 上的 D13 CUDA witness、六组精度/累积/续训对照、六组 BF16 数值失败恢复与 12 组性能测量；只包含本地 tiny 模型的合成配置和指标。`gpu/d13_opd_repeat.json` 保留因首轮计时波动而执行的一次 OPD 四配置复测，原始首轮未覆盖。训练 checkpoint 写入忽略的 `outputs/d13/checkpoints/`，不提交。
+
+`gpu/d13_review_validation.json`：D01–D13 回顾修复后的 CUDA 正确性复验，重新运行六组精度、累积、续训和数值失败恢复；累积验收增加 loss 与裁剪前梯度范数检查。该文件没有重跑性能，也不覆盖此前性能记录；复现与审阅结论见 `docs/experiments/D01_D13_REVIEW.md`。

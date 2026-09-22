@@ -70,4 +70,4 @@ Student 更接近 Teacher，正确性却下降；这验证了 loss 下降不保�
 
 D12 已完成实际五臂两阶段更新、学习/行为/成本曲线以及退化案例；Teacher 在主矩阵过程中保持参数不变且无梯度。独立 evaluator 单元测试另外核对完整输出概率的乘积语义，并确认评测不改变 Student 参数、训练模式或 CPU RNG。
 
-目前核心进度 **12/24**，CPU D01–D12 均完成。下一模块 **D13：accelerator 与分布式训练运行时**，需先满足 G0：取得 GPU 执行授权、连接方式、GPU 型号/数量/显存、可用时间与资源预算。之后才接入 BF16、实际所需的分布式/累积运行时、显存/通信测量与必要的 save/resume。真实模型和数据下载、Gemma 接入属于后续已授权范围才能执行的工作；当前没有执行这些动作。
+D12 的历史结果仍限定为 CPU 合成学习。后续 D13 已于 2026-09-22 完成单 GPU tiny 运行时验证，见 `../architecture/ACCELERATOR_RUNTIME.md`；当前模块进度以 `../planning/DEVELOPMENT_MODULES.md` 为准。真实模型和数据下载、Gemma 接入及正式训练尚未执行。

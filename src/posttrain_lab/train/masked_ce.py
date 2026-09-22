@@ -176,8 +176,9 @@ def _chunk_size(value: int) -> int:
 
 
 def _differentiable_zero(*values: Tensor, dtype: torch.dtype) -> Tensor:
-    terms = [value[(0,) * value.ndim].to(dtype=dtype) * 0.0 for value in values]
-    return torch.stack(terms).sum()
+    # Empty views retain gradient connections without reading sentinels or
+    # overflowing a finite FP64 anchor when the loss uses FP32.
+    return torch.stack([value[:0].sum(dtype=dtype) for value in values]).sum()
 
 
 def _validate_linear_dtypes(
