@@ -66,6 +66,16 @@ def examples():
     ]
 
 
+@pytest.mark.parametrize("backend", ["default", "cublas"])
+def test_bf16_split_k_policy_requires_supported_backend(backend):
+    # Otherwise PyTorch raises from the first GEMM, after expensive placement.
+    with pytest.raises(ValueError, match="split-K requires"):
+        TrainerConfig(device="cuda:0", precision="bf16", cuda_blas_backend=backend)
+    TrainerConfig(
+        device="cuda:0", precision="bf16", cuda_blas_backend=backend, bf16_allow_split_k=True
+    )
+
+
 def test_accumulation_witness_rejects_scaling_hidden_by_clipping(monkeypatch):
     from posttrain_lab.experiments import accelerator_runtime as runtime
 

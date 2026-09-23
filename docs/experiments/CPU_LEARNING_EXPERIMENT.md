@@ -70,4 +70,4 @@ Student 更接近 Teacher，正确性却下降；这验证了 loss 下降不保�
 
 D12 已完成实际五臂两阶段更新、学习/行为/成本曲线以及退化案例；Teacher 在主矩阵过程中保持参数不变且无梯度。独立 evaluator 单元测试另外核对完整输出概率的乘积语义，并确认评测不改变 Student 参数、训练模式或 CPU RNG。
 
-D12 的历史结果仍限定为 CPU 合成学习。后续 D13 已于 2026-09-22 完成单 GPU tiny 运行时验证，见 `../architecture/ACCELERATOR_RUNTIME.md`；当前模块进度以 `../planning/DEVELOPMENT_MODULES.md` 为准。真实模型和数据下载、Gemma 接入及正式训练尚未执行。
+D12 的历史结果仍限定为 CPU 合成学习。后续 D13 已于 2026-09-22 完成单 GPU tiny 运行时验证，D14 已于 2026-09-23 完成真实 E2B/E4B Base 下载与接入，分别见 `../architecture/ACCELERATOR_RUNTIME.md`、`../architecture/GEMMA4_INTEGRATION.md`；当前模块进度以 `../planning/DEVELOPMENT_MODULES.md` 为准。真实训练数据与正式训练尚未执行。

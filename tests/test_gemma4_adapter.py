@@ -9,7 +9,12 @@ from transformers import Gemma4Config, Gemma4ForConditionalGeneration, Gemma4Tex
 from posttrain_lab.models import LoRAConfig, LoRALinear, freeze_model
 from posttrain_lab.models.gemma4 import Gemma4TextAdapter
 from posttrain_lab.train import causal_lm_opd_loss, causal_lm_sft_loss
-from posttrain_lab.train.rollout import selected_token_statistics
+from posttrain_lab.train.rollout import (
+    RolloutConfig,
+    TrainingExample,
+    sample_completions,
+    selected_token_statistics,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -142,11 +147,81 @@ def test_bf16_base_fp32_lora_updates_and_freeze():
     assert all(not n.startswith("layers.2.self_attn.k_proj") for n in adapter.lora_targets)
 
 
-def test_multimodal_tokens_rejected_before_text_execution():
+def control_token_ids(adapter):
+    keys = (
+        "image_token_id", "audio_token_id", "video_token_id", "boi_token_id",
+        "eoi_token_id", "boa_token_id", "eoa_token_index",
+    )
+    for value, key in enumerate(keys, start=10):
+        setattr(adapter.config, key, value)
+    return tuple(range(10, 17))
+
+
+@pytest.mark.parametrize("checkpoint", [False, True])
+def test_generated_control_prefix_matches_native_loss_and_gradients(checkpoint):
     adapter = small_gemma()
-    adapter.config.image_token_id = 15
-    with pytest.raises(ValueError, match="multimodal"):
-        adapter(torch.tensor([[2, 15, 1]]))
+    controls = control_token_ids(adapter)
+    adapter.configure_lora(config=LoRAConfig(rank=2, alpha=4))
+    with torch.no_grad():
+        for module in adapter.modules():
+            if isinstance(module, LoRALinear):
+                module.lora_B.fill_(0.02)
+    reference = copy.deepcopy(adapter)
+    adapter.set_activation_checkpointing(checkpoint)
+    ids = torch.tensor([[2, 5, *controls, 0, 1]])
+    attention = torch.ones_like(ids, dtype=torch.bool)  # Generated PAD is a real token.
+    mask = attention.clone()
+    mask[:, :2] = False
+    actual = causal_lm_sft_loss(
+        adapter, ids, mask, attention_mask=attention, max_tokens_per_chunk=2
+    ).loss
+    native = reference.model(ids, attention_mask=attention, use_cache=False).logits
+    expected = -native[:, :-1].log_softmax(-1).gather(-1, ids[:, 1:, None])
+    expected = expected.squeeze(-1)[mask[:, 1:]].mean()
+    actual.backward()
+    expected.backward()
+    torch.testing.assert_close(actual, expected, atol=2e-7, rtol=3e-5)
+    for (name, parameter), (_, oracle) in zip(
+        adapter.named_parameters(), reference.named_parameters(), strict=True
+    ):
+        if parameter.requires_grad:
+            assert parameter.grad is not None, name
+            torch.testing.assert_close(parameter.grad, oracle.grad, atol=2e-6, rtol=3e-4)
+        else:
+            assert parameter.grad is None, name
+
+
+@pytest.mark.parametrize("projection", ["dense", "last"])
+def test_full_policy_rollout_can_continue_after_control_tokens(monkeypatch, projection):
+    adapter = small_gemma()
+    completion = (*control_token_ids(adapter), 0, 1)
+    draws = iter(completion)
+
+    def controlled_draw(probabilities, count, *, generator):
+        assert count == 1
+        token = next(draws)
+        assert bool((probabilities[:, token] > 0).all())
+        return torch.full((len(probabilities), 1), token, dtype=torch.long)
+
+    monkeypatch.setattr(torch, "multinomial", controlled_draw)
+    batch = sample_completions(
+        adapter,
+        [TrainingExample("short", (2, 5), (1,)), TrainingExample("long", (2, 6, 7), (1,))],
+        RolloutConfig(max_new_tokens=len(completion), eos_token_id=1, head_projection=projection),
+        generator=torch.Generator().manual_seed(11),
+        policy_version=0,
+    )
+    assert batch.completions == (completion, completion)
+    assert not bool(batch.truncated.any())
+    with torch.no_grad():
+        logp, _ = selected_token_statistics(
+            adapter.forward_features(batch.input_ids, batch.attention_mask),
+            batch.input_ids, batch.completion_mask,
+        )
+    torch.testing.assert_close(
+        logp[batch.completion_mask], batch.old_log_probs[batch.completion_mask],
+        atol=5e-7, rtol=2e-6,
+    )
 
 
 def small_tokenizer():

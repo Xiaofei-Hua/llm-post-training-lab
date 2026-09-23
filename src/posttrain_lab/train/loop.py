@@ -42,7 +42,9 @@ class TrainerConfig:
     final_lr_fraction: float = 0.1
     device: str = "cpu"
     precision: Literal["full", "bf16"] = "full"
+    cuda_blas_backend: Literal["default", "cublas", "cublaslt"] = "cublaslt"
     bf16_reduced_precision_reduction: bool = False
+    bf16_allow_split_k: bool = False
     microbatch_size: int | None = None  # Completion rows, including expanded GRPO rows.
     activation_checkpointing: bool = False
 
@@ -59,8 +61,17 @@ class TrainerConfig:
             raise ValueError("only explicit CPU or single CUDA device execution is supported")
         if self.precision not in {"full", "bf16"}:
             raise ValueError("precision must be full or bf16")
-        if not isinstance(self.bf16_reduced_precision_reduction, bool):
-            raise ValueError("bf16_reduced_precision_reduction must be Boolean")
+        if self.cuda_blas_backend not in {"default", "cublas", "cublaslt"}:
+            raise ValueError("cuda_blas_backend must be default, cublas or cublaslt")
+        if any(not isinstance(value, bool) for value in (
+            self.bf16_reduced_precision_reduction, self.bf16_allow_split_k
+        )):
+            raise ValueError("BF16 reduction and split-K settings must be Boolean")
+        if (
+            self.precision == "bf16" and not self.bf16_allow_split_k
+            and self.cuda_blas_backend != "cublaslt"
+        ):
+            raise ValueError("disabling BF16 split-K requires cuda_blas_backend=cublaslt")
         if self.precision == "bf16" and torch.device(self.device).type != "cuda":
             raise ValueError("this runtime validates BF16 on CUDA only")
         if self.microbatch_size is not None and (
@@ -129,12 +140,15 @@ class Trainer:
         self.last_batch = None
 
     def autocast(self):
+        if self.device.type == "cuda":
+            torch.backends.cuda.preferred_blas_library(self.config.cuda_blas_backend)
         if self.config.precision == "bf16":
             # cuBLAS reduction is process-global. Retain the configured policy
             # through backward/checkpoint replay, which happen after autocast
             # exits. Each active Trainer reapplies it before its forward.
             torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = (
-                self.config.bf16_reduced_precision_reduction
+                self.config.bf16_reduced_precision_reduction,
+                self.config.bf16_allow_split_k,
             )
         return (
             torch.autocast(device_type="cuda", dtype=torch.bfloat16)

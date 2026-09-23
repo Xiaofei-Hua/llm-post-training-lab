@@ -67,6 +67,7 @@
 - 当前实现 D13（单 GPU tiny 实测完成）：`docs/architecture/ACCELERATOR_RUNTIME.md`
 - 当前实现 D14（真实 E2B/E4B Base 实测完成）：`docs/architecture/GEMMA4_INTEGRATION.md`
 - D01–D13 回顾与修复（五轮，最后两轮无新增问题）：`docs/experiments/D01_D13_REVIEW.md`
+- D01–D14 全进度复审（三轮，最后两轮无新增问题；控制 token 与 BLAS 精度修复）：`docs/experiments/D01_D14_REVIEW.md`
 
 ## Stage Gates
 

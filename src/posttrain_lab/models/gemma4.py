@@ -131,27 +131,17 @@ class Gemma4TextAdapter(CausalLMAdapter):
             raise ValueError("input_ids must be on the text embedding device")
         if bool(((input_ids < 0) | (input_ids >= self.text_config.vocab_size)).any()):
             raise ValueError("input token IDs are outside the text vocabulary")
-        # The multimodal wrapper normally interprets these IDs as feature slots.
-        # A text-only call must fail rather than silently treat them as text.
-        forbidden = [
-            getattr(self.config, key, None)
-            for key in (
-                "image_token_id",
-                "audio_token_id",
-                "video_token_id",
-                "boi_token_id",
-                "eoi_token_id",
-                "boa_token_id",
-                "eoa_token_index",
-            )
-        ]
-        if any(value is not None and bool((input_ids == value).any()) for value in forbidden):
-            raise ValueError("multimodal token IDs are not allowed in the text adapter")
-        embeds = self.text_model.embed_tokens(input_ids)
+        # Full-vocabulary sampling can emit control/placeholder IDs. Match the
+        # native wrapper without media features: only image/audio/video slots
+        # use PAD embeddings and PLE; boundary markers keep their own lookup.
+        # Keep the original token IDs and attention for scoring and loss budgets.
+        image, video, audio = self.model.model.get_placeholder_mask(input_ids=input_ids)
+        lookup_ids = torch.where(image | video | audio, self.text_config.pad_token_id, input_ids)
+        embeds = self.text_model.embed_tokens(lookup_ids)
         per_layer = None
         if self.text_config.hidden_size_per_layer_input:
             ple_device = self.text_model.embed_tokens_per_layer.weight.device
-            per_layer = self.text_model.get_per_layer_inputs(input_ids.to(ple_device), None)
+            per_layer = self.text_model.get_per_layer_inputs(lookup_ids.to(ple_device), None)
             per_layer = per_layer.to(embeds.device)
         hidden = self.text_model(
             inputs_embeds=embeds,

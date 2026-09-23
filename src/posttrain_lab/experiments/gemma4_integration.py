@@ -9,6 +9,7 @@ import platform
 import time
 from dataclasses import asdict, replace
 from pathlib import Path
+from unittest.mock import patch
 
 import torch
 import transformers
@@ -62,6 +63,102 @@ def gradient_error(model, oracle):
             norm_sq += expected.double().square().sum().item()
             max_error = max(max_error, delta.abs().max().item())
     return {"relative_l2": (error_sq / max(norm_sq, 1e-30)) ** 0.5, "max_abs": max_error}
+
+
+def control_prefix_checks(model, trainer) -> dict:
+    """Exercise rare full-policy IDs without claiming naturally sampled accuracy."""
+    controls = {
+        key: getattr(model.config, key)
+        for key in (
+            "image_token_id", "audio_token_id", "video_token_id", "boi_token_id",
+            "eoi_token_id", "boa_token_id", "eoa_token_index",
+        )
+    }
+    rollout = trainer.config.rollout
+    completion = (*dict.fromkeys(controls.values()), rollout.pad_token_id, rollout.eos_token_id)
+    ids = torch.tensor([[2, 5, *completion]], device=trainer.device)
+    attention = torch.ones_like(ids, dtype=torch.bool)
+    mask = attention.clone()
+    mask[:, :2] = False
+    original_lookup = model.text_model.get_per_layer_inputs
+
+    def cpu_lookup(input_ids, inputs_embeds):
+        # Native wrapper independently maps placeholders. Only move its frozen
+        # PLE lookup to CPU, preserving the native text/marker interpretation.
+        assert input_ids is not None
+        return original_lookup(input_ids.cpu(), None).to(trainer.device)
+
+    model.set_activation_checkpointing(False)
+    model.zero_grad(set_to_none=True)
+    model.train()
+    with trainer.autocast():
+        with patch.object(model.text_model, "get_per_layer_inputs", side_effect=cpu_lookup):
+            hidden = model.model.model(
+                input_ids=ids, attention_mask=attention, use_cache=False
+            ).last_hidden_state
+        with torch.no_grad():
+            actual = model.forward_features(ids, attention).hidden_states
+            hidden_error = (hidden.float() - actual.float()).abs().max().item()
+            assert hidden_error == 0.0
+        raw = torch.nn.functional.linear(hidden[:, :-1], model.model.lm_head.weight).float()
+        cap = model.text_config.final_logit_softcapping
+        logp = (cap * (raw / cap).tanh()).log_softmax(-1)
+        dense = -logp.gather(-1, ids[:, 1:, None]).squeeze(-1)[mask[:, 1:]].mean()
+    dense.backward()
+    expected_loss, oracle = dense.item(), gradient_snapshot(model)
+    model.zero_grad(set_to_none=True)
+    del hidden, actual, raw, logp, dense
+    model.set_activation_checkpointing(True)
+    with trainer.autocast():
+        chunked = causal_lm_sft_loss(
+            model, ids, mask, attention_mask=attention, max_tokens_per_chunk=2
+        ).loss
+    chunked.backward()
+    error = gradient_error(model, oracle)
+    loss_error = abs(chunked.item() - expected_loss)
+    assert loss_error < 2e-5 and error["relative_l2"] < 0.02
+    assert all(p.grad is None for p in model.parameters() if not p.requires_grad)
+    assert all(
+        p.grad is not None and torch.isfinite(p.grad).all()
+        for p in model.parameters() if p.requires_grad
+    )
+    model.zero_grad(set_to_none=True)
+    del oracle, chunked
+    draws = iter(completion)
+
+    def controlled_draw(probabilities, count, *, generator):
+        token = next(draws)
+        assert count == 1 and bool((probabilities[:, token] > 0).all())
+        return torch.full(
+            (len(probabilities), 1), token, device=trainer.device, dtype=torch.long
+        )
+
+    with patch("torch.multinomial", side_effect=controlled_draw), trainer.autocast():
+        batch = sample_completions(
+            model, [TrainingExample("control-prefix", (2, 5), (rollout.eos_token_id,))],
+            replace(rollout, max_new_tokens=len(completion)),
+            generator=torch.Generator(device=trainer.device).manual_seed(101), policy_version=0,
+        )
+    assert batch.completions == (completion,)
+    with torch.no_grad(), trainer.autocast():
+        recomputed, _ = selected_token_statistics(
+            model.forward_features(batch.input_ids, batch.attention_mask),
+            batch.input_ids, batch.completion_mask,
+        )
+    logp_error = (
+        recomputed[batch.completion_mask] - batch.old_log_probs[batch.completion_mask]
+    ).abs().max().item()
+    assert logp_error < 0.1, f"control-prefix sampling/recompute log-prob error: {logp_error}"
+    model.set_activation_checkpointing(trainer.config.activation_checkpointing)
+    return {
+        "scope": "deterministic positive-probability draws; no optimizer update or accuracy claim",
+        "control_token_ids": controls, "completion_ids": list(completion),
+        "native_hidden_max_abs": hidden_error, "dense_loss": expected_loss,
+        "chunked_checkpoint_loss_abs_error": loss_error, "lora_gradient_error": error,
+        "all_trainable_gradients_finite": True, "frozen_gradients_absent": True,
+        "rollout_recomputed_logp_max_abs": logp_error, "sampling_logp_bound": 0.1,
+        "passed": True,
+    }
 
 
 def run(model_id: str) -> dict:
@@ -139,6 +236,7 @@ def run(model_id: str) -> dict:
     }
     print("Checking frozen weights and native text projection", flush=True)
     frozen_before = frozen_digest(model)
+    report["control_prefix_checks"] = control_prefix_checks(model, trainer)
     batch = supervised_batch(examples, rollout, device=device)
     ids, attention, mask = batch.input_ids, batch.attention_mask, batch.completion_mask
     model.eval()
