@@ -65,7 +65,7 @@ L = (1/N_global) Σ_t M_t d_t
 - `chunked_masked_causal_linear_reverse_kl(...) -> MaskedReverseKLOutput`：主内存路径；分别接收 Student/Teacher hidden states、LM-head weight/bias 和模型级 logit transform；
 - 输出包含 raw local `loss_sum`、detached `student_entropy_sum`、local/global token 计数、chunk size、temperature 与 DDP normalization 元数据。
 
-production linear path 每次最多产生两块 `[max_tokens_per_chunk, vocabulary]` logits，默认 chunk size 为 128；Student chunk 使用 activation checkpoint，在 backward 时重算而不持久保存 vocabulary logits。Teacher projection 始终在 `no_grad` 中执行。该设计避免 `[batch, sequence, vocabulary]` 全量 logits 常驻，但真实 Gemma 4 峰值内存仍须由 C5 profile 验证。
+production linear path 每次最多产生两块 `[max_tokens_per_chunk, vocabulary]` logits，默认 chunk size 为 128；Student chunk 使用 activation checkpoint，在 backward 时重算而不持久保存 vocabulary logits。Teacher projection 始终在 `no_grad` 中执行。D14 接入 BF16 冻结 LM head 后，autocast 路径直接使用原始 head，避免先复制整个 FP32 head 再降精度 GEMM；非 autocast 的 D04 projection 精度合同不变。该设计避免 `[batch, sequence, vocabulary]` 全量 logits 常驻，但真实双模型 OPD 峰值内存仍须由 D19/C5 profile 验证。
 
 ## Teacher 与 on-policy 边界
 

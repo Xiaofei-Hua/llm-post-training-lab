@@ -35,6 +35,8 @@ N = Σ_b Σ_t M[b,t]
 
 输入 `[batch, sequence, hidden]` hidden states 与 `[vocabulary, hidden]` LM-head weight。实现先选择预测有效 targets 的 hidden rows，再逐块执行 LM-head projection 和 CE，不构造 `[batch, sequence, vocabulary]` 的完整 logits 张量；weight tying 不影响梯度流。需要梯度时，每个 chunk 使用 PyTorch 非重入 activation checkpoint，backward 重算 LM-head/CE，而不是持久保存 vocabulary logits。
 
+D14 增加 `logit_scale` 与 `final_logit_softcapping`，由模型 adapter 显式传入；顺序为 projection → loss dtype 下的 scale/softcap → CE，与 sampling/GRPO/OPD 使用同一模型变换。softcap 前检查 raw logits 有限，防止 tanh 掩盖 overflow。materialized-logit API 的输入已经是最终模型 logits，不重复变换。
+
 `max_tokens_per_chunk=128` 是当前默认值。D02 保证每次 LM-head projection 的 token 维不超过该值，并用额外一次 LM-head 计算换取更小的保存张量；真实模型峰值显存仍取决于 PyTorch backend、Transformer activations 与编译策略，必须在 C5 profile 后才能声称硬件闭合。
 
 ## Logical update、gradient accumulation 与 DDP

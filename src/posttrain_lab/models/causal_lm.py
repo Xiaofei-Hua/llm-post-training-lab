@@ -15,6 +15,8 @@ import torch.nn.functional as F
 from torch import Tensor, nn
 from torch.utils.checkpoint import checkpoint
 
+from posttrain_lab.logits import transform_logits, validate_logit_transform
+
 
 @dataclass(frozen=True)
 class CausalLMFeatures:
@@ -22,18 +24,41 @@ class CausalLMFeatures:
 
     No vocabulary logits are allocated until ``logits`` is called. D02/D04
     consume these tensors directly and perform their own causal target shift.
-    This boundary currently describes models with an untransformed linear head.
+    Model scaling/softcap travel with the head, including through chunked losses.
     """
 
     hidden_states: Tensor
     lm_head_weight: Tensor
     lm_head_bias: Tensor | None = None
+    logit_scale: float = 1.0
+    final_logit_softcapping: float | None = None
+
+    def __post_init__(self) -> None:
+        validate_logit_transform(self.logit_scale, self.final_logit_softcapping)
+
+    def project(self, hidden_states: Tensor) -> Tensor:
+        logits = F.linear(hidden_states, self.lm_head_weight, self.lm_head_bias)
+        if self.logit_scale == 1.0 and self.final_logit_softcapping is None:
+            return logits
+        return transform_logits(
+            logits,
+            scale=self.logit_scale,
+            softcap=self.final_logit_softcapping,
+            compute_dtype=torch.float64 if logits.dtype == torch.float64 else torch.float32,
+        )
 
     def logits(self) -> Tensor:
-        return F.linear(self.hidden_states, self.lm_head_weight, self.lm_head_bias)
+        return self.project(self.hidden_states)
 
 
 class CausalLMAdapter(nn.Module, ABC):
+    @property
+    def input_device(self) -> torch.device:
+        return next(self.parameters()).device
+
+    def place_for_training(self, device: torch.device) -> CausalLMAdapter:
+        return self.to(device)
+
     def set_activation_checkpointing(self, enabled: bool) -> None:
         if enabled:
             raise NotImplementedError("this adapter does not support activation checkpointing")

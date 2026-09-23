@@ -1,6 +1,6 @@
 # 算法、框架、性能与指标开发模块
 
-> 2026-09-22 更新：D01–D12 CPU 验收及 D13 单 GPU tiny 运行时实测已完成；下一模块 D14 尚未执行。现有校验设施按需维护。
+> 2026-09-23 更新：D01–D12 CPU、D13 tiny GPU 与 D14 真实 E2B/E4B Base 接入验收完成；下一模块为 D15。现有校验设施按需维护。
 
 ## 唯一计数口径
 
@@ -15,11 +15,11 @@
 
 因此：
 
-- 核心项目完成分母：`24`；当前 `13/24`；
+- 核心项目完成分母：`24`；当前 `14/24`；
 - 包含延后研究线的完整目录：`32`；当前 `13/32`；
 - `LEARNING_CURRICULUM.md` 的 12 个知识章节只是学习索引，不是另一组执行模块，不进入上述分母。
 
-D13 已在 RTX 5070 Ti 上完成 BF16 数值、梯度累积、重计算、精确续训、失败恢复和性能实测；核心进度 13/24。结果与边界见 `docs/architecture/ACCELERATOR_RUNTIME.md`。D14 及之后的真实模型/数据执行尚未授权。
+D13 已在 RTX 5070 Ti 上完成 BF16 数值、梯度累积、重计算、精确续训、失败恢复和性能实测；核心进度 14/24。结果与边界见 `docs/architecture/ACCELERATOR_RUNTIME.md`。2026-09-23 用户授权 D14；已完成两模型的真实接入验收，见 `docs/architecture/GEMMA4_INTEGRATION.md`。D15 数据与后续正式训练仍待执行。
 
 ## Layer 1：CPU 算法与框架（D01–D12）
 
@@ -52,7 +52,7 @@ D01–D08 保留既有实现与验证记录，不追加围绕 hash/schema 的专
 | ID | 交付物 | 实际工作与 exit criteria | Gate | 状态 |
 |---|---|---|---|---|
 | D13 | accelerator 与分布式训练运行时 | 接入 BF16、gradient accumulation/checkpointing 与实际需要的 FSDP/ZeRO；测 update latency、显存和通信占比，完成必要 save/resume；确认硬件与资源授权 | G0 | COMPLETE（单 GPU tiny 实测；通信不适用） |
-| D14 | Gemma 4 E2B/E4B 模型接入 | 真实 text forward/backward、LoRA 参数更新、模型 logit transform 与 tokenizer/token 对齐；测参数/激活内存，验证冻结参数无更新 | C0 | PLANNED；真实模型执行未授权 |
+| D14 | Gemma 4 E2B/E4B 模型接入 | 真实 text forward/backward、LoRA 参数更新、模型 logit transform 与 tokenizer/token 对齐；测参数/激活内存，验证冻结参数无更新 | C0 | COMPLETE（真实 Base；单 GPU、CPU PLE lookup） |
 | D15 | 真实数据、任务分布与 Base 指标 | 复用 D06/D07 materialize 各 split 和 benchmark；完成必要去污染/人工抽查；产出难度、长度、可解析率与 Base accuracy 分布 | G1 | PLANNED |
 | D16 | Student/Teacher SFT feasibility | E2B/E4B 各做 64-example overfit；2k×最多两档 LR sanity；只用 D_select 选 recipe；packing parity/禁用决策留证 | C1 | PLANNED；真实模型执行未授权 |
 | D17 | same-lineage anchors 与 Teacher qualification | 用同一 D_anchor 完成 10k E2B/E4B SFT；冻结可复现 Student anchor；一次性解封 D_teacher_gate；Teacher 同时通过 accuracy CI/+5pp/NLL/parse gate | G2/C4 | PLANNED；真实模型执行未授权 |
@@ -114,5 +114,5 @@ X01–X08 only by a new decision
 
 - 每轮聚焦一个主要技术目标，可修改必要依赖；完成对应验证后推进，不以额外审计、审批或 commit 仪式作为前置。
 - 2026-09-22 用户恢复 D13 tiny GPU 实验，现已完成；GPU 可用不自动扩展到真实模型/数据下载或正式训练。
-- D14 的真实模型执行仍需明确授权；D20 未通过时不得启动 D21。
+- 2026-09-23 用户授权的 D14 真实模型接入已完成；D15/后续正式训练另按任务范围推进，D20 未通过时不得启动 D21。
 - 区分代码完成、CPU 学习示例和真实研究结果；模块数量、测试数量与哈希记录都不能替代算法/性能结论。

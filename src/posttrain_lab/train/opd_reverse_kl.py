@@ -16,6 +16,8 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch.utils.checkpoint import checkpoint
 
+from posttrain_lab.logits import transform_logits
+
 from .loss_budget import MaskValidationError
 
 _INTEGER_DTYPES = {
@@ -208,20 +210,14 @@ def _transform_logits(
     compute_dtype: torch.dtype,
     name: str,
 ) -> Tensor:
-    transformed = logits.to(dtype=compute_dtype)
-    if transform.scale != 1.0:
-        transformed = transformed * transform.scale
-    if transform.final_softcap is not None:
-        # tanh maps infinities to finite values, concealing upstream projection
-        # or scaling overflow and potentially producing a plausible loss.
-        if not bool(torch.isfinite(transformed).all().item()):
-            raise FloatingPointError(f"selected {name} logits must be finite before softcap")
-        transformed = transform.final_softcap * torch.tanh(transformed / transform.final_softcap)
-    if transform.temperature != 1.0:
-        transformed = transformed / transform.temperature
-    if not bool(torch.isfinite(transformed).all().item()):
-        raise FloatingPointError(f"selected {name} logits must remain finite after transforms")
-    return transformed
+    return transform_logits(
+        logits,
+        scale=transform.scale,
+        softcap=transform.final_softcap,
+        temperature=transform.temperature,
+        compute_dtype=compute_dtype,
+        name=name,
+    )
 
 
 def _reverse_kl_sums_from_logits(
@@ -256,6 +252,23 @@ def _reverse_kl_sums_from_logits(
     return per_token_reverse_kl.sum(), per_token_student_entropy.sum()
 
 
+def _project_linear(
+    hidden: Tensor, weight: Tensor, bias: Tensor | None, compute_dtype: torch.dtype
+) -> Tensor:
+    # Frozen Gemma heads are BF16. Under autocast, promoting an entire head to
+    # FP32 only to downcast it in F.linear wastes gigabytes without changing the
+    # GEMM. Preserve D04's explicit FP32/FP64 projection outside autocast.
+    if compute_dtype == torch.float32 and torch.is_autocast_enabled(hidden.device.type):
+        allowed = {torch.float32, torch.get_autocast_dtype(hidden.device.type)}
+        if all(value.dtype in allowed for value in (hidden, weight, bias) if value is not None):
+            return F.linear(hidden, weight, bias)
+    return F.linear(
+        hidden.to(dtype=compute_dtype),
+        weight.to(dtype=compute_dtype),
+        None if bias is None else bias.to(dtype=compute_dtype),
+    )
+
+
 def _linear_reverse_kl_sums(
     student_hidden: Tensor,
     student_weight: Tensor,
@@ -267,16 +280,10 @@ def _linear_reverse_kl_sums(
     teacher_transform: _LogitTransform,
     compute_dtype: torch.dtype,
 ) -> tuple[Tensor, Tensor]:
-    student_logits = F.linear(
-        student_hidden.to(dtype=compute_dtype),
-        student_weight.to(dtype=compute_dtype),
-        None if student_bias is None else student_bias.to(dtype=compute_dtype),
-    )
+    student_logits = _project_linear(student_hidden, student_weight, student_bias, compute_dtype)
     with torch.no_grad():
-        teacher_logits = F.linear(
-            teacher_hidden.to(dtype=compute_dtype),
-            teacher_weight.to(dtype=compute_dtype),
-            None if teacher_bias is None else teacher_bias.to(dtype=compute_dtype),
+        teacher_logits = _project_linear(
+            teacher_hidden, teacher_weight, teacher_bias, compute_dtype
         )
     return _reverse_kl_sums_from_logits(
         student_logits,

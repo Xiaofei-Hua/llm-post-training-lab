@@ -2,6 +2,8 @@
 
 2026-09-22：用户确认当前 GPU 可用并恢复实验，已在 **RTX 5070 Ti / 16GB / WSL2** 完成 CUDA witness、数值/梯度、实际参数更新、精确续训、失败更新恢复和 12 组性能测量。**D13 COMPLETE；核心进度 13/24**。原始记录见 [d13_runtime.json](../../artifacts/gpu/d13_runtime.json)。只使用本地初始化 tiny 模型和合成输入；D14 真实 Gemma 接入、模型/数据下载及正式训练仍未执行。
 
+2026-09-23 后续进展：D14 真实 Base 接入已完成，核心进度更新为 14/24，见 [D14](GEMMA4_INTEGRATION.md)。D14 增加 BF16 冻结基座/FP32 LoRA，并默认禁用 cuBLAS BF16 低精度中间累加；上文和下方性能表保留 D13 当日的历史测量范围。
+
 ## 实现与正确性
 
 `Trainer` / `TrainerConfig` 在 D10 路径上支持显式 `cpu` 或单个 `cuda:N`，默认 CPU，没有第二套 trainer。模型与 LoRA 在 CPU 上按 seed 初始化、选定可训练参数，再迁移设备并创建 optimizer；采样 generator、tokens 和 mask 跟随模型设备。CPU 默认路径不初始化 CUDA。锁定的 PyTorch 2.14 在 AdamW 健康检查中会查询 accelerator/current stream，训练器对全 CPU 参数跳过该检查，CUDA 参数仍保留上游检查；优化公式和 state 不变。

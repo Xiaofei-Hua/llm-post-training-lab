@@ -32,7 +32,7 @@ finite loss → backward → finite gradient / norm → clip → AdamW step
 
 - `sample_completions` 使用与模型同设备的 `torch.Generator`、全词表、temperature 1，无 top-k/top-p、重试或隐式补采。每行生成到首个 EOS（含）或 cap；生成出的 pad ID 是真实 token，只有 attention mask 为零的槽位才是 padding。
 - 同一 GRPO prompt 完整采样 `group_size` 个 completion。old log probabilities 在采样当刻保存，不由更新后的 Student 重算；每次更新后都刷新 rollout。当前只做每批一次更新，因此正常的初始 importance ratio 约为 1、clip fraction 为 0，这不是 clipping 未接入。
-- reward、advantage、old-policy 概率和 Teacher 均无梯度。OPD 的 Teacher 必须预先冻结、eval，随后由 Trainer 迁移到配置设备；Student/Teacher 消费相同 prefix。D14 再验证真实 tokenizer 与模型特有 logit transforms。
+- reward、advantage、old-policy 概率和 Teacher 均无梯度。OPD 的 Teacher 必须预先冻结、eval，随后由 Trainer 调用 adapter 的 `place_for_training` 放置；Student/Teacher 消费相同 prefix。真实 tokenizer、模型 logit transforms 与 PLE 放置见 [D14 接入说明](GEMMA4_INTEGRATION.md)。
 - Dr.GRPO 分母仍是**预算截断前 active completion 数 × 固定 cap**。D01 末批可以只留下一个 group 的部分 token，不能据此缩小分母；这是与独立 clipped objective 对照的测试重点。
 - 零方差 group 被排除；整批无有效 token 时记录 skip、实际 rollout 成本和有效组率，不更新参数、不消耗预算、不推进 scheduler。`run_stage` 有 attempt 上限，预算无法完成时抛出 `StageBudgetIncomplete`，不会无限补采。
 - 非有限 loss/gradient 时跳过更新、清空 gradient、不计预算，记录明确失败状态。后续有效 attempt 可以继续。optimizer 本身抛异常属于致命执行失败，调用方不能把它当成正常 skip 后继续假定状态完好。

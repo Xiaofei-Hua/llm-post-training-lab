@@ -15,6 +15,8 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch.utils.checkpoint import checkpoint
 
+from posttrain_lab.logits import transform_logits, validate_logit_transform
+
 from .loss_budget import MaskValidationError
 
 _INTEGER_DTYPES = {
@@ -209,8 +211,15 @@ def _linear_cross_entropy_sum(
     lm_head_bias: Tensor | None,
     targets: Tensor,
     compute_dtype: torch.dtype,
+    logit_scale: float,
+    final_logit_softcapping: float | None,
 ) -> Tensor:
-    logits = F.linear(hidden_states, lm_head_weight, lm_head_bias).to(dtype=compute_dtype)
+    logits = transform_logits(
+        F.linear(hidden_states, lm_head_weight, lm_head_bias),
+        scale=logit_scale,
+        softcap=final_logit_softcapping,
+        compute_dtype=compute_dtype,
+    )
     return F.cross_entropy(logits, targets, reduction="sum")
 
 
@@ -298,6 +307,8 @@ def chunked_masked_causal_linear_cross_entropy(
     loss_mask: Tensor,
     *,
     lm_head_bias: Tensor | None = None,
+    logit_scale: float = 1.0,
+    final_logit_softcapping: float | None = None,
     ignore_index: int = -100,
     max_tokens_per_chunk: int = 128,
     loss_compute_dtype: torch.dtype | None = None,
@@ -313,6 +324,7 @@ def chunked_masked_causal_linear_cross_entropy(
     states, LM-head weight, and optional bias.
     """
 
+    validate_logit_transform(logit_scale, final_logit_softcapping)
     _validate_float_tensor(hidden_states, name="hidden_states", ndim=3)
     _validate_float_tensor(lm_head_weight, name="lm_head_weight", ndim=2)
     batch_size, sequence_length, hidden_size = hidden_states.shape
@@ -371,6 +383,8 @@ def chunked_masked_causal_linear_cross_entropy(
                     lm_head_bias,
                     chunk_targets,
                     compute_dtype,
+                    logit_scale,
+                    final_logit_softcapping,
                     use_reentrant=False,
                     preserve_rng_state=False,
                 )
@@ -381,6 +395,8 @@ def chunked_masked_causal_linear_cross_entropy(
                     lm_head_bias,
                     chunk_targets,
                     compute_dtype,
+                    logit_scale,
+                    final_logit_softcapping,
                 )
             chunk_sums.append(chunk_sum)
         loss_sum = torch.stack(chunk_sums).sum()

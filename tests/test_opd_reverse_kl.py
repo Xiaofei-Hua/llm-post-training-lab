@@ -495,6 +495,38 @@ def test_mixed_low_precision_linear_inputs_use_float32_projection_and_loss() -> 
     assert torch.isfinite(student_weight.grad).all()
 
 
+def test_autocast_reuses_frozen_bf16_head_without_full_fp32_copy(monkeypatch):
+    from posttrain_lab.train import opd_reverse_kl as module
+
+    hidden = torch.randn(1, 3, 5, dtype=torch.bfloat16, requires_grad=True)
+    weight = torch.randn(11, 5, dtype=torch.bfloat16)
+    teacher = torch.randn(1, 3, 5, dtype=torch.bfloat16)
+    original = module.F.linear
+    seen = []
+
+    def observe(inputs, head, bias=None):
+        seen.append((head.data_ptr(), head.dtype))
+        return original(inputs, head, bias)
+
+    monkeypatch.setattr(module.F, "linear", observe)
+    with torch.autocast("cpu", dtype=torch.bfloat16):
+        loss = chunked_masked_causal_linear_reverse_kl(
+            hidden,
+            weight,
+            teacher,
+            weight,
+            torch.tensor([[False, True, True]]),
+            student_final_logit_softcapping=0.3,
+            teacher_final_logit_softcapping=0.3,
+            max_tokens_per_chunk=1,
+        ).loss
+    loss.backward()
+    assert seen and all(
+        pointer == weight.data_ptr() and dtype == weight.dtype for pointer, dtype in seen
+    )
+    assert torch.isfinite(loss) and torch.isfinite(hidden.grad).all()
+
+
 def test_accumulation_and_ddp_scaling_reconstruct_global_token_mean_gradient() -> None:
     generator = torch.Generator().manual_seed(83)
     base = torch.randn((4, 4, 5), dtype=torch.float64, generator=generator) - 2.0

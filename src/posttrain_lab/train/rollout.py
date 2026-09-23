@@ -115,7 +115,7 @@ def sample_completions(
     IDs sampled before EOS remain genuine generated tokens, not masked padding.
     """
     _check_examples(examples)
-    device = next(model.parameters()).device
+    device = model.input_device
     if generations_per_prompt < 1 or generator.device != device:
         raise ValueError(
             "positive generation count and a generator on the model device are required"
@@ -143,9 +143,7 @@ def sample_completions(
                     ids[:, :prefix_length], attention[:, :prefix_length]
                 )
                 last_hidden = features.hidden_states[rows, write_positions - 1]
-                logits = torch.nn.functional.linear(
-                    last_hidden, features.lm_head_weight, features.lm_head_bias
-                )
+                logits = features.project(last_hidden)
             else:
                 logits = model(ids[:, :prefix_length], attention[:, :prefix_length])[
                     rows, write_positions - 1
@@ -194,7 +192,7 @@ def selected_token_statistics(
     """Target-aligned policy log probs with detached entropy; only selected rows."""
     rows, positions = mask.nonzero(as_tuple=True)
     hidden = features.hidden_states[rows, positions - 1]
-    logits = torch.nn.functional.linear(hidden, features.lm_head_weight, features.lm_head_bias)
+    logits = features.project(hidden)
     logp = logits.to(torch.float64 if logits.dtype == torch.float64 else torch.float32).log_softmax(
         -1
     )

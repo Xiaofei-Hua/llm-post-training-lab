@@ -2,7 +2,7 @@
 
 前沿 checkpoint 的框架支持仍快速变化。项目不因兼容失败退回旧模型，而是先用最小测试锁定可用版本和执行路径。
 
-2026-09-22 状态：D09–D12 CPU 与 D13 单卡 tiny CUDA 已验证；本页用于 D14 起的真实模型接入，定位具体阻塞。已有 token/freeze/版本检查直接复用，按受影响路径验证，不另建一致性或审计平台。真实模型/数据下载和正式训练仍待授权。
+2026-09-23 状态：D09–D12 CPU、D13 tiny CUDA 与 D14 真实 E2B/E4B Base 接入均已验证；本页跟踪后续真实训练门槛。已有 token/freeze/版本检查直接复用，按受影响路径验证，不另建一致性或审计平台。D14 授权范围和实测见 `../architecture/GEMMA4_INTEGRATION.md`；真实数据与正式训练仍待后续任务。
 
 ## 已知风险（截至 2026-09-03）
 
@@ -18,12 +18,14 @@
 
 ## 兼容性测试矩阵
 
-### C0：模型与 processor
+### C0：模型与 processor（D14 Base 接入已通过）
 
 - E2B Base 与 E4B Base/same-lineage SFT Teacher text-only forward 通过；
 - 不插入 image/audio tokens；
 - 非文本 encoder 参数冻结且 checksum 可复核；
 - tokenizer hash/token IDs/vocab size 检查通过。
+
+D14 已在 RTX 5070 Ti 顺序完成两种真实 Base 的 forward/backward、两次 LoRA 更新和冻结检查；原始证据见 `artifacts/gpu/d14_e2b.json`、`d14_e4b.json`。该 C0 不代表 same-lineage SFT Teacher 已构建或通过 C4。
 
 ### C1：SFT
 
@@ -48,7 +50,7 @@
 - `num_iterations=1`，每次 update 前由当前 policy 新生成 completion；
 - KL 只 mask 生成 completion 首 token 至第一个 EOS（含 EOS），prompt/padding/EOS 后位置为零；
 - reverse KL 的 CPU 数值、极限与梯度 oracle 已由 D04 通过，且按全 batch 有效 completion token 数归一化；真实模型 parity 仍待验证；
-- full-vocab chunked loss 已与独立的小型精确 full-logit reference 对齐；E2B/E4B 接线仍待验证；
+- full-vocab chunked loss 已与独立的小型精确 full-logit reference 对齐；D14 已验证两模型各自的文本/softcap，真实双模型 OPD 接线与梯度仍待 D19 验证；
 - Teacher 永久 stop-gradient，Student rollout token IDs stop-gradient。
 
 ### C4：Teacher quality

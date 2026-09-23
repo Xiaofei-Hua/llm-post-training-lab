@@ -27,7 +27,7 @@ Teacher：全部冻结 + eval + no_grad forward
 
 padding key 对有效 query 不可见；左侧或全 padding query 使用一个 dummy self key，避免全 `-inf` softmax 产生 NaN，最终将 padding hidden state 清零。位置编号按有效 token 累加，因此左右 padding 不改变同一有效序列的输出。
 
-`src/posttrain_lab/models/parameters.py` 实现 `W(x) + (alpha/r) B A x`，B 初始化为零，保持接入前后的初始输出完全一致。默认 targets 为每层 `q/k/v/o_proj` 与 `gate/up/down_proj`，拒绝 LM head 或未知 targets；不合并 BA，也不改变线性 LM-head 接口。配置需在 CPU 上、迁移设备和创建 optimizer 前完成；恢复时先构造同配置模型及 LoRA，再由 `Trainer.load_checkpoint` 恢复权重与训练状态。D13 扩展了设备与重计算路径，GPU 验证尚待执行。
+`src/posttrain_lab/models/parameters.py` 实现 `W(x) + (alpha/r) B A x`，B 初始化为零，保持接入前后的初始输出完全一致。默认 targets 为每层 `q/k/v/o_proj` 与 `gate/up/down_proj`，拒绝 LM head 或未知 targets；不合并 BA，也不改变线性 LM-head 接口。配置需在 CPU 上、迁移设备和创建 optimizer 前完成；恢复时先构造同配置模型及 LoRA，再由 `Trainer.load_checkpoint` 恢复权重与训练状态。D13 的设备与重计算 GPU 验证已完成，见 [D13](ACCELERATOR_RUNTIME.md)。D14 增加 BF16 冻结基座上的 FP32 LoRA 主参数。
 
 零初始化 B 意味着第一步 `∂L/∂A = 0`，B 更新后第二步 A 才开始接收非零梯度。这是初始化的预期行为；测试同时检查 A/B 的两步更新，避免将第一步 A 梯度为零误判为断图。
 
@@ -75,6 +75,6 @@ text 模式实际改变 26 个参数 tensor，LoRA 模式实际改变 28 个 A/B
 
 `tests/test_model_adapter.py` 覆盖因果性、左右/全 padding、RNG 恢复、LoRA 初始等价与 target 选择、SFT/OPD × text/LoRA × tied/untied 的 FP64 loss/gradient/两步 SGD 对照、Teacher 冻结、避免模型完整 logits、不等长 microbatch 全局归一化、state_dict 恢复与参数存储核对。
 
-D09 的接口当前仅承诺无额外 logit transform 的线性 LM head，tiny attention 为便于检查的 dense 实现。Gemma 的 hybrid attention、模型特有 scale/softcap、PLE、tokenizer 与多模态 freeze/LoRA introspection 属于 D14；不能直接把此 tiny fixture 当作 Gemma adapter。
+D09 初版只提供无额外变换的线性 LM head。D14 已将模型 scale/softcap 纳入 `CausalLMFeatures`，并传播到 sampling、SFT、GRPO log-prob 与 OPD；Gemma 的原生 hybrid attention、PLE、tokenizer 与冻结/LoRA 选择由独立的 [Gemma adapter](GEMMA4_INTEGRATION.md) 实现。此处 tiny fixture 与历史 CPU 结果不代表真实 Gemma。
 
 后续 **D10：SFT/GRPO/OPD 统一训练循环** 已完成，见 `CPU_TRAINING_LOOP.md`。复用 D09 模型、D01 预算和 D02–D05 算法，接通当前 Student 采样、reward/Teacher、old-policy 快照与刷新、loss/backward/update、阶段 optimizer/scheduler reset，并输出 loss/reward/entropy/KL/clip/有效组率。D09 已完成模型参数路径；D12 的合成五臂学习已验收，见 `../experiments/CPU_LEARNING_EXPERIMENT.md`。

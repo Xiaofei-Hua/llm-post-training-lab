@@ -1,6 +1,6 @@
 # Experiment Tracker
 
-> 2026-09-22 更新：D01–D12 CPU 完成，D13 单 GPU tiny 实测完成；真实模型 runs 均 `NOT_STARTED`。开发合成实测单独保存，不属于正式研究结果。
+> 2026-09-23 更新：D01–D14 完成；D14 为真实 E2B/E4B Base 的有界接入实测。确认性训练 runs 仍 `NOT_STARTED`，开发 smoke 单独保存，不属于正式研究结果。
 > Formal seeds：`101, 202, 303`。
 
 ## Module scope
@@ -8,11 +8,11 @@
 | Layer | IDs | Count | Completion denominator | Status |
 |---|---|---:|---|---|
 | CPU algorithm/framework | D01–D12 | 12 | core | 12 COMPLETE |
-| accelerator readiness and pilots | D13–D20 | 8 | core | 1/8；D13 单 GPU tiny 已验证 |
+| accelerator readiness and pilots | D13–D20 | 8 | core | 2/8；D13 tiny GPU、D14 真实 Base 已验证 |
 | formal campaign and evidence | D21–D24 | 4 | core | 0/4；正式训练未授权 |
 | post-core research extensions | X01–X08 | 8 | excluded | 0/8；DEFERRED_UNTIL_D24 |
 
-核心进度分母为 `24`，当前 `13/24`；包含延后研究线的目录总数为 `32`。12 个学习课程章节不计入执行进度。完整定义以 `docs/planning/DEVELOPMENT_MODULES.md` 为准，当前下一模块是 D14。
+核心进度分母为 `24`，当前 `14/24`；包含延后研究线的目录总数为 `32`。12 个学习课程章节不计入执行进度。完整定义以 `docs/planning/DEVELOPMENT_MODULES.md` 为准，当前下一模块是 D15。
 
 ## 已完成的 CPU/GPU 开发实验
 
@@ -25,8 +25,9 @@
 | PERF-CPU-STEP | D11 | 完整训练 step baseline vs 瓶颈驱动优化 | 最后位置 head 优化与复测；不支持稳定完整 step 加速 | DEV-D10 | COMPLETE（CPU） |
 | DEV-D12 | D12 | 合成可验证任务上的五臂两阶段学习 | 15 条 paired-seed runs、30 阶段精确预算、学习曲线与错误 Teacher 对照；`artifacts/cpu/d12_learning.json` | PERF-CPU-CE/KL/STEP | COMPLETE（CPU synthetic） |
 | DEV-D13 | D13 | CUDA BF16、累积/重计算、精确续训与数值失败恢复 | 六组数值/累积/续训、六组故障恢复、12 组性能对照；`artifacts/gpu/d13_runtime.json` | DEV-D12 | COMPLETE（single-GPU tiny synthetic） |
+| DEV-D14 | D14 / C0-001 | 真实 Base 文本/LoRA、统一 softcap、CPU PLE lookup 与 BF16 累加精度 | 两模型各两次更新、loss/gradient、冻结与内存；`artifacts/gpu/d14_e2b.json` / `d14_e4b.json` | DEV-D13 | COMPLETE（real Base integration smoke） |
 
-仅用本地初始化 tiny 模型和合成输入。D09–D12 在 CPU 运行，D13 使用单 GPU；不下载真实模型/数据。上述开发实验只需技术问题、baseline 与测量，不新增 C1/C2 式研究 claim。已运行结果见 D09 模型说明、D11 `docs/performance/CPU_BENCHMARK.md` 与 D12 `docs/experiments/CPU_LEARNING_EXPERIMENT.md`；下方真实实验状态保持未开始。
+D09–D13 仅用本地初始化 tiny 模型和合成输入。D09–D12 在 CPU 运行，D13 使用单 GPU；不下载真实模型/数据。上述开发实验只需技术问题、baseline 与测量，不新增 C1/C2 式研究 claim。已运行结果见 D09 模型说明、D11 `docs/performance/CPU_BENCHMARK.md` 与 D12 `docs/experiments/CPU_LEARNING_EXPERIMENT.md`；D14 使用真实权重与两条手写字符串完成 C0；下方正式数据/训练状态保持未开始。
 
 ### GPU/full-training coverage
 
@@ -49,7 +50,7 @@
 
 | ID | Gate | Evidence required | Status | Blocking next |
 |---|---|---|---|---|
-| G0 | 资源与授权 | D13 tiny 单卡授权、CUDA/BF16 与性能实测完成；真实模型授权与 campaign 资源闭合仍待完成 | COMPLETE_D13 / PARTIAL_REAL | 所有 GPU 正式运行 |
+| G0 | 资源与授权 | D13 tiny 与 D14 真实 Base 接入授权/实测完成；正式 campaign 资源与成本仍待 C5 闭合 | COMPLETE_D13_D14 / PARTIAL_CAMPAIGN | 所有 GPU 正式运行 |
 | G1 | 数据与 evaluator | 来源/license、family split、去污染、≥99% 人工抽查一致率 | NOT_STARTED | Anchor 与 formal eval |
 | G2 | Anchor/Teacher | E2B anchor reproducible；E4B independent gate pass | NOT_STARTED | OPD 与主矩阵 |
 | G3 | GRPO correctness | loss/reward/sync/policy-age/skipped-group tests | NOT_STARTED | A1/A3/A4 |
@@ -68,7 +69,7 @@
 | DATA-002 | Contamination audit | all train/eval text + traces | frozen threshold；reviewed borderline pairs | DATA-001 | NOT_STARTED |
 | EVAL-001 | Verifier attack suite | frozen 257-case corpus | 257/257；corpus/policy/backend/source/lock/Git hashes recorded | none | COMPLETE_CPU |
 | EVAL-002 | Blind human audit | ≥100 outputs | agreement ≥99%；error matrix saved | EVAL-001 | NOT_STARTED |
-| C0-001 | E2B/E4B introspection | pinned model revisions | tokenizer IDs/hash、module map、freeze assertions | G0 metadata | NOT_STARTED |
+| C0-001 | E2B/E4B Base integration | pinned revisions；DEV-D14 | 真实前向/反向/更新、tokenizer、softcap、冻结与内存 | G0 D14 scope | COMPLETE_REAL_BASE |
 | C1-001 | Mask/CE oracle | synthetic batches | value/gradient + U counter exact | C0-001 | NOT_STARTED |
 | C2-001 | GRPO no-vLLM smoke | 8–64 prompts | 2 updates、finite metrics、no hidden resample | C0-001,EVAL-001 | NOT_STARTED |
 | C2-002 | GRPO vLLM sync smoke | same prompts/config | policy age=1 batch；weights actually change | C2-001 | NOT_STARTED |

@@ -1,7 +1,7 @@
 # Experiment Plan
 
 > 状态：2026-09-09 技术主线修订；C1/C2 方法设计保留，真实训练 EXECUTION-CONDITIONAL。
-> 当前（2026-09-22）：D01–D13 完成，包括 CPU 合成学习和单卡 tiny CUDA 实测；D14 及真实模型/数据实验未开始。
+> 当前（2026-09-23）：D01–D14 完成，包括 CPU/tiny CUDA 与真实 Base 接入 smoke；D15 真实数据和确认性训练尚未开始。
 
 ## 1. Research question 与 claims
 
@@ -165,7 +165,7 @@ E1 只匹配 Student backward loss tokens，prompt exposure 与 Student FLOPs只
 
 ## 7. 端到端模块映射
 
-核心仍为 **24 个模块，已完成 13/24**。实验 block 按问题分组，D 模块按实际交付推进；详细验收见 `docs/planning/DEVELOPMENT_MODULES.md`。
+核心仍为 **24 个模块，已完成 14/24**。实验 block 按问题分组，D 模块按实际交付推进；详细验收见 `docs/planning/DEVELOPMENT_MODULES.md`。
 
 | 模块 | Block/Run | 核心交付 | 状态 |
 |---|---|---|---|
@@ -176,7 +176,8 @@ E1 只匹配 Student backward loss tokens，prompt exposure 与 Student FLOPs只
 | D11 | E0 / PERF-CPU-* | 性能 baseline、瓶颈、优化与复测 | COMPLETE（CPU 合成测量） |
 | D12 | E0 / DEV-D12 | 五臂合成学习示例、曲线与失败解释 | COMPLETE（CPU 合成学习） |
 | D13 | E0 / G0 | 单卡 CUDA/BF16、累积/重计算、续训与性能 | COMPLETE（GPU tiny） |
-| D14–D15 | E0 / C0,G1 | 真实模型接入、数据分布和 Base 指标 | PLANNED；真实模型/数据执行未授权 |
+| D14 | E0 / C0 | E2B/E4B Base 文本/LoRA、tokenizer、logit transform、冻结与内存 | COMPLETE（真实 Base GPU 接入 smoke） |
+| D15 | E0 / G1 | 真实数据分布和 Base 指标 | PLANNED；真实数据执行未开始 |
 | D16–D17 | E1 / C1,G2,C4 | SFT 学习曲线、双 anchors 与独立 Teacher gate | PLANNED；真实模型训练未授权 |
 | D18–D19 | E2 / G3,G4 | GRPO/OPD 学习动态、rollout 与大词表性能 | PLANNED；真实模型训练未授权 |
 | D20 | E0 / C5,PERF-GPU-* | 端到端优化对照、正式配置与成本闭合 | PLANNED；真实模型训练未授权 |

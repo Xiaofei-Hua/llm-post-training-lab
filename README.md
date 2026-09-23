@@ -94,7 +94,7 @@ Base
 
 ## 当前状态
 
-2026-09-22，核心进度为 **13/24**：D01–D04 已完成 loss-token 预算、masked CE、Dr.GRPO surrogate 与 full-vocab reverse-KL；D05–D08 已提供 verifier、数据隔离、评测与配对统计；D09–D12 已打通 CPU tiny causal LM/LoRA、统一 SFT/GRPO/OPD 循环、性能测量与合成学习实验。
+2026-09-23，核心进度为 **14/24**：D01–D04 已完成 loss-token 预算、masked CE、Dr.GRPO surrogate 与 full-vocab reverse-KL；D05–D08 已提供 verifier、数据隔离、评测与配对统计；D09–D12 已打通 CPU tiny causal LM/LoRA、统一 SFT/GRPO/OPD 循环、性能测量与合成学习实验。
 
 D09 的四组合成固定 prefix 示例均完成 12 次 CPU 更新；可复跑命令、损失变化和参数内存估算见 [模型接入说明](docs/architecture/MODEL_ADAPTER.md)，原始数值见 [CPU 示例记录](artifacts/cpu/d09_model_adapter.json)。这些结果验证模型和 loss 的连接，不代表真实模型能力或 on-policy 训练完成。
 
@@ -104,7 +104,9 @@ D12 已完成 **5 臂 × 2 阶段 × 3 个 CPU paired seeds**，30 个阶段均�
 
 **D13 已完成单 GPU tiny 实测**：RTX 5070 Ti 上的 BF16/FP32 loss 与梯度、累积/重计算、六组 text/LoRA 精确续训均通过；修复了 GRPO/OPD 非有限 loss 异常绕过整批梯度清理的问题。回顾修复后全量 620 项 CPU 测试通过，问题与逐轮复审记录见 [D01–D13 回顾](docs/experiments/D01_D13_REVIEW.md)。12 组 GPU 性能对照展示显存与耗时取舍，并保留 OPD 计时波动；不能据此声称稳定 GPU 加速。数值现象、原始数据与复跑命令见 [D13 报告](docs/architecture/ACCELERATOR_RUNTIME.md)。
 
-D14–D20 规划真实模型接入、GPU 性能和训练 pilots；D21–D22 为真实五臂两阶段三 seed 训练；D23–D24 为指标分析、技术报告与求职交付。X01–X08 扩展仍延后。当前已完成本地 tiny CUDA 实验，尚未下载真实模型或训练数据、没有真实 Gemma 准确率结果；tiny 模型验证不能代替 D14 及后续真实训练。
+**D14 已完成真实 E2B/E4B Base 接入**：单 RTX 5070 Ti 上保留 BF16 基座，冻结 PLE lookup 放在 CPU；两模型均通过 tokenizer/原生文本/softcap、分块 loss 与梯度、两次 LoRA 更新及冻结检查。修复 cuBLAS 默认 BF16 低精度累加导致的梯度偏差；全量 633 项 CPU 测试通过，D13 CUDA 数值、累积、续训与失败恢复回归通过。实测数据和边界见 [D14 报告](docs/architecture/GEMMA4_INTEGRATION.md)。
+
+D15–D20 规划真实数据、GPU 性能和训练 pilots；D21–D22 为真实五臂两阶段三 seed 训练；D23–D24 为指标分析、技术报告与求职交付。X01–X08 扩展仍延后。当前已完成 tiny CUDA 实验和真实 Base 模型接入；D14 两条手写样例只用于学习链路验证。真实训练数据、正式 SFT/GRPO/OPD 与 benchmark 准确率仍待后续模块，不能由 smoke 推断。
 
 开发环境通过 `uv.lock` 复现。四轮历史方法评审见 `refine-logs/REVIEW_SUMMARY.md`，不作为本次修订或未运行实验的验收结论。
 

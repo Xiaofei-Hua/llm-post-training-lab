@@ -1,0 +1,79 @@
+{
+  "model_id": "google/gemma-4-E2B",
+  "revision": "d29ff6b45f081a49ee2733a859c9c9c2d95d1a6f",
+  "hardware": "NVIDIA GeForce RTX 5070 Ti",
+  "torch": "2.14.0+cu130",
+  "transformers": "5.17.0",
+  "scope": "Real Base weights, two handwritten D14 arithmetic strings, LoRA rank32/alpha64, seed101. No optimizer update in this numerical diagnosis.",
+  "initial_failure": {
+    "relative_l2_bound": 0.02,
+    "relative_l2_observed": 0.023440075975293895
+  },
+  "baseline_bf16_reduced_precision_reduction": true,
+  "baseline": [
+    {
+      "name": "dense",
+      "loss": 2.9889297485351562
+    },
+    {
+      "name": "chunk2",
+      "loss": 2.9889297485351562,
+      "vs_dense": {
+        "relative_l2": 0.023440075975293895,
+        "max_abs": 0.016357421875
+      }
+    },
+    {
+      "name": "chunk2_ckpt",
+      "loss": 2.9889297485351562,
+      "vs_dense": {
+        "relative_l2": 0.023440075975293895,
+        "max_abs": 0.016357421875
+      },
+      "vs_same_chunk_without_ckpt": {
+        "relative_l2": 0.0,
+        "max_abs": 0.0
+      }
+    },
+    {
+      "name": "chunk6",
+      "loss": 2.9889297485351562,
+      "vs_dense": {
+        "relative_l2": 0.023440075975293895,
+        "max_abs": 0.016357421875
+      }
+    },
+    {
+      "name": "real_hidden_fp32_head",
+      "dense_loss": 2.9792118072509766,
+      "chunked_loss": 2.9792137145996094,
+      "grad_relative_l2": 9.199618034472223e-06,
+      "grad_max_abs": 1.6763806343078613e-07
+    }
+  ],
+  "corrected_bf16_reduced_precision_reduction": false,
+  "corrected": [
+    {
+      "name": "dense",
+      "loss": 2.9792659282684326
+    },
+    {
+      "name": "chunk",
+      "loss": 2.9792659282684326,
+      "vs_dense": {
+        "relative_l2": 0.011083292167753014,
+        "max_abs": 0.0078125
+      }
+    },
+    {
+      "name": "checkpoint",
+      "loss": 2.9792659282684326,
+      "vs_dense": {
+        "relative_l2": 0.011083292167753014,
+        "max_abs": 0.0078125
+      }
+    }
+  ],
+  "conclusion": "Keep the original 2% dense/chunked gradient bound. Disable cuBLAS BF16 reduced-precision reduction in Trainer; identical chunking with/without checkpointing has identical gradients. FP32 head check on real baseline hidden states independently verifies loss/gradient algebra.",
+  "primary_reference": "https://docs.pytorch.org/docs/stable/notes/cuda.html#reduced-precision-reduction-in-bf16-gemms"
+}

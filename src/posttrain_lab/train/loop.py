@@ -42,6 +42,7 @@ class TrainerConfig:
     final_lr_fraction: float = 0.1
     device: str = "cpu"
     precision: Literal["full", "bf16"] = "full"
+    bf16_reduced_precision_reduction: bool = False
     microbatch_size: int | None = None  # Completion rows, including expanded GRPO rows.
     activation_checkpointing: bool = False
 
@@ -58,6 +59,8 @@ class TrainerConfig:
             raise ValueError("only explicit CPU or single CUDA device execution is supported")
         if self.precision not in {"full", "bf16"}:
             raise ValueError("precision must be full or bf16")
+        if not isinstance(self.bf16_reduced_precision_reduction, bool):
+            raise ValueError("bf16_reduced_precision_reduction must be Boolean")
         if self.precision == "bf16" and torch.device(self.device).type != "cuda":
             raise ValueError("this runtime validates BF16 on CUDA only")
         if self.microbatch_size is not None and (
@@ -105,15 +108,16 @@ class Trainer:
         if teacher is student:
             raise ValueError("Teacher and Student must be distinct model instances")
         if self.config.precision == "bf16" and any(
-            p.dtype != torch.float32
+            (p.requires_grad and p.dtype != torch.float32)
+            or (not p.requires_grad and p.dtype not in {torch.float32, torch.bfloat16})
             for model in (student, teacher)
             if model is not None
             for p in model.parameters()
         ):
             raise ValueError("BF16 autocast requires FP32 master parameters")
-        self.student = student.to(self.device)
+        self.student = student.place_for_training(self.device)
         self.student.set_activation_checkpointing(self.config.activation_checkpointing)
-        self.teacher = teacher.to(self.device) if teacher is not None else None
+        self.teacher = teacher.place_for_training(self.device) if teacher is not None else None
         self.reward_fn = reward_fn
         self.parameters = [p for p in student.parameters() if p.requires_grad]
         if not self.parameters:
@@ -125,6 +129,13 @@ class Trainer:
         self.last_batch = None
 
     def autocast(self):
+        if self.config.precision == "bf16":
+            # cuBLAS reduction is process-global. Retain the configured policy
+            # through backward/checkpoint replay, which happen after autocast
+            # exits. Each active Trainer reapplies it before its forward.
+            torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = (
+                self.config.bf16_reduced_precision_reduction
+            )
         return (
             torch.autocast(device_type="cuda", dtype=torch.bfloat16)
             if self.config.precision == "bf16"
@@ -275,6 +286,8 @@ class Trainer:
                                 ids,
                                 mask,
                                 lm_head_bias=features.lm_head_bias,
+                                logit_scale=features.logit_scale,
+                                final_logit_softcapping=features.final_logit_softcapping,
                                 max_tokens_per_chunk=self.config.max_tokens_per_chunk,
                                 global_token_count=selection.selected_tokens,
                                 ddp_world_size=1,
@@ -291,6 +304,12 @@ class Trainer:
                                 mask,
                                 student_lm_head_bias=features.lm_head_bias,
                                 teacher_lm_head_bias=teacher_features.lm_head_bias,
+                                student_logit_scale=features.logit_scale,
+                                teacher_logit_scale=teacher_features.logit_scale,
+                                student_final_logit_softcapping=features.final_logit_softcapping,
+                                teacher_final_logit_softcapping=(
+                                    teacher_features.final_logit_softcapping
+                                ),
                                 max_tokens_per_chunk=self.config.max_tokens_per_chunk,
                                 global_token_count=selection.selected_tokens,
                                 ddp_world_size=1,
@@ -416,7 +435,13 @@ class Trainer:
         config = getattr(model, "config", None)
         return {
             "class": f"{type(model).__module__}.{type(model).__qualname__}",
-            "config": asdict(config) if is_dataclass(config) else None,
+            "config": (
+                asdict(config)
+                if is_dataclass(config)
+                else config.to_dict()
+                if hasattr(config, "to_dict")
+                else None
+            ),
             "lora_scaling": {
                 name: module.scaling
                 for name, module in model.named_modules()

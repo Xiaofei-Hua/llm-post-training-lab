@@ -1,7 +1,7 @@
 # 研究方案：Gemma 4 后训练算法、框架与效率
 
 > 当前计划：2026-09-09 technical-focus 修订；历史 9.06/10 为此前方法设计的评审记录。
-> 开发状态（2026-09-22）：D01–D13 完成，包括 CPU 算法/学习验证和单卡 tiny CUDA 实测；下一模块 D14，真实模型/数据下载与正式训练仍为 CONDITIONAL。
+> 开发状态（2026-09-23）：D01–D14 完成，包括 CPU/tiny CUDA 和真实 E2B/E4B Base 接入验收；下一模块 D15。正式数据与训练仍待后续门槛，不以两步 smoke 推断 C1/C2。
 
 ## 研究定位
 
@@ -117,11 +117,11 @@ E1 只严格匹配 Student backward loss tokens；prompt exposure、Student FLOP
 7. G5：A0–A4 全部三个 seeds 完成；
 8. G6：完成算法/性能分析与技术报告，核对结论和简历数字的实际证据。
 
-当前 D01–D13 已完成算法、CPU 学习与单卡 tiny 运行时验证，真实模型训练仍是 CONDITIONAL。若 C5 不闭合，只允许所有臂同步降低 `U` 或统一缩短 cap 后重新 profile；不允许换旧模型、删臂、量化 Teacher 或近似 KL 来静默改变问题。
+当前 D01–D14 已完成算法、CPU 学习、单卡 tiny 运行时和真实 Base 模型接入验证，正式研究训练仍是 CONDITIONAL。若 C5 不闭合，只允许所有臂同步降低 `U` 或统一缩短 cap 后重新 profile；不允许换旧模型、删臂、量化 Teacher 或近似 KL 来静默改变问题。
 
 ## 近期开发与后续输出
 
-已完成 D09 tiny 模型接入、D10 统一训练循环、D11 CPU 性能对照、D12 合成学习实验与 D13 单卡 CUDA 数值/恢复/性能验证。全部使用本地 tiny 模型与合成输入；结果见对应模块报告，不用于真实 Gemma 选参或 C1/C2 推断。下一步为 D14 真实模型接入，仍需真实模型/数据范围的授权。
+已完成 D09 tiny 模型接入、D10 统一训练循环、D11 CPU 性能对照、D12 合成学习实验与 D13 单卡 CUDA 数值/恢复/性能验证。全部使用本地 tiny 模型与合成输入；结果见对应模块报告，不用于真实 Gemma 选参或 C1/C2 推断。2026-09-23 授权的 D14 真实 Base 接入现已验收，两模型各完成两次 LoRA 更新；见 `docs/architecture/GEMMA4_INTEGRATION.md`。下一步为 D15 真实数据与 Base 评测准备。
 
 GPU 资源就绪后的约 12 周参考安排见 `docs/planning/ROADMAP.md`：D13–D17 完成真实模型与 anchors，D18–D20 分析学习动态和性能，D21–D22 训练五臂，D23–D24 形成分析和作品。正式训练前先完成 C5 成本闭合。
 

@@ -43,19 +43,25 @@ class LoRALinear(nn.Module):
     LM-head contract therefore stays intact and never needs a dense BA merge.
     """
 
-    def __init__(self, base: nn.Linear, config: LoRAConfig) -> None:
+    def __init__(
+        self, base: nn.Linear, config: LoRAConfig, *, adapter_dtype: torch.dtype | None = None
+    ) -> None:
         super().__init__()
         self.base = base
         freeze_model(self.base)
         self.scaling = config.alpha / config.rank
-        self.lora_A = nn.Parameter(base.weight.new_empty(config.rank, base.in_features))
-        self.lora_B = nn.Parameter(base.weight.new_zeros(base.out_features, config.rank))
+        self.lora_A = nn.Parameter(
+            base.weight.new_empty(config.rank, base.in_features, dtype=adapter_dtype)
+        )
+        self.lora_B = nn.Parameter(
+            base.weight.new_zeros(base.out_features, config.rank, dtype=adapter_dtype)
+        )
         nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
 
     def forward(self, inputs: Tensor) -> Tensor:
-        return self.base(inputs) + F.linear(F.linear(inputs, self.lora_A), self.lora_B) * (
-            self.scaling
-        )
+        base_output = self.base(inputs)
+        update = F.linear(F.linear(inputs.to(self.lora_A.dtype), self.lora_A), self.lora_B)
+        return base_output + (update * self.scaling).to(base_output.dtype)
 
 
 def freeze_model(model: nn.Module) -> None:
